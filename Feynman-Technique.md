@@ -22,18 +22,19 @@ ___
 ----Isang Terminal base interface nag nagbibigay ng way para magamit mo ang comptuter ng hindi na dumadaan sa GUI ng Desktop
 
 **Pano Gamitin?**
-----Ctrl + Alt F1....F6
-	login: username
-	password: <!-- ******* --> 
-	$ls
-	<!-- Display the list of contents -->
+**`Ctrl + Alt F1....F6`**
+`login: username
+`password: <!-- ******* --> 
+**`$ls`**
+<!-- Display the list of contents -->
+
 **Kailan ginagamit?**
 - It manage servers without graphics
 - Rescue system when GUI fails, since this one runs on system level
 - Lightweight and fast (*Good for Admin, system recovery, scripting, and low resource env*)
 
 
-### Version Control
+#### Version Control
 ----Napaka useful method/system para ma revert ang state ng isang project kung sakaling may mistake or undesireable changes.
 
 **Practical Example of How it works | But no Git, full manual**
@@ -51,3 +52,14 @@ ___
 ###### Branch and Merging in Git
 ----pwede ka gumawa ng mga experimento/possible outcome ng project or bagong features, tapos isasam/*merge* sa main branch ng project pag okay na. 
 -----Hindi nito na aapektuhan ang main branch ng project ( karaniwang ang *main* o *master*)
+
+----
+
+### Feb 23
+#### Bakit isinasama ang .gitignore sa git add. ? 
+-  Ang **`.gitignore`** ay isang _configuration file_ na nagsasabi kay Git kung aling mga files/folders ang hindi dapat i-track.
+- Ang **`.gitignore`** ay hindi lang basta lagayan ng mga ignored files for **`git add.`** . Ito rin ang mag sisilbing automatic rules para sa mga collaborators. To avoid accidentally commit ng build files or secrets 
+- Ang **`.gitignore`** file ay: 
+	- Hindi personal preferences
+	- Hindi system level config
+	- Bahagi ito ng strucutre ng project  

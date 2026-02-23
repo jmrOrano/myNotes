@@ -13,7 +13,9 @@
 3. <!-- ***bold + italic***-->
 4. <!-- ~~strikethough~~ -->
 5. <!-- ==MarksAsImportant  --> 
-
+6. <!-- `*word`* --> :  for *`documentation`* style noting | For *`commandNames`*  
+7. <!-- **`word`** --> : same sa number 6 pero naka bold instead na italize
+8. <!-- `word` --> : Usually sapat na for `emphasis` 
 #### For Links & References 
 1.  <!-- [[NoteGoesHere]] -->  : For lingking notes/referencing         
 2.  <!-- [Google](https://linkgoesheredotcom) --> : External Link
