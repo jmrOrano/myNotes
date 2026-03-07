@@ -5,13 +5,13 @@
 1.  <!-- # Header1Title --> : For Header 1 to 6.
 	1. <!-- # H1  to  ###### H6 --> 
 2. <!--  - Item 1 --> : For Bullet Item 
-3. <!--  [space] --> : For Todo List
+3. <!--  - [space] --> : For Todo List
 
 #### For Text Formatting
 1. <!-- **Bold** -->
 2. <!-- *italic* -->
 3. <!-- ***bold + italic***-->
-4. <!-- ~~strikethough~~ -->
+4. <!-- ~~strikethrough~~ -->
 5. <!-- ==MarksAsImportant  --> 
 6. <!-- `*word`* --> :  for *`documentation`* style noting | For *`commandNames`*  
 7. <!-- **`word`** --> : same sa number 6 pero naka bold instead na italize
@@ -30,8 +30,9 @@
 1. <!-- ---  --> : For visual separation
 
 ##### Tables
-<!--       |Column 1 |Column 2 | -->
+<!--       |Column 1 | Column 2 | -->
 <!--       |:---:                                    --> 
+
 
 
 
@@ -41,10 +42,17 @@
 
 
 **TODO  : TEMP : FEB 22 
-- [ ] Learning using Git and Github
-- [ ] Implement sa Obsidian
+- [x] Learning using Git and Github
+- [x] Implement sa Obsidian
 - [ ] Install Niri
 - [ ] Continue learning sa Labex Linux Journey
 
 
+**TODO : LEARN CONCEPS : FEB 26**
+- [ ] What is the `syslog` file in *`/var/log/syslog`*
 
+---
+##### MARCH
+
+**WALLPAPERS**
+[Repo](https://github.com/dharmx/walls)]

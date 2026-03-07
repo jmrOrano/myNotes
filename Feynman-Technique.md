@@ -1,3 +1,4 @@
+use h3 for date and h4 for topics
 ### |Feb 21
 #### Ano ang difference ng Terminal vs Shell? 
 	Isipin mo na ang Terminal ay isang application na similar sa mga GUI apps. Pero, sa halip na Graphical User Interface, ang Terminal ay Text Base Interface.
@@ -63,3 +64,27 @@ ___
 	- Hindi personal preferences
 	- Hindi system level config
 	- Bahagi ito ng strucutre ng project  
+
+
+### FEB 25
+#### ANO ANG SYMBOLIC LINKS? 
+`Shortcut(.Ink file)`
+***Symbolic link*** ay isang shortcut file pero mas low level 
+
+Madalas gamitin sa folders or files.
+##### Core Idea
+Kapag gumawa ka ng symbolic link:
+- Hindi nito kinokopya ang file
+- Hindi ito duplicate
+- Isa lang itong “pointer” papunta sa original file
+###### Example
+Original File:
+***`/home/userName/Documents/report.txt`***
+
+Creating symbolic link:
+***`ln -s /home/orano/Documents/report.txt ~/Desktop/report-link.txt`***
+
+###### Visual Example
+`ls -l` Outputs:
+**`report-link.txt -> /home/orano/Documents/report.txt`**
+Makikita sa arrow (*`->`*) kung nasan yung shortcut 
