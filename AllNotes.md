@@ -17,7 +17,7 @@ Use H5 for header and H3 for Dates
 [[Feynman-Technique#Ano ang difference ng Terminal vs Shell?|Diff of Terminal and Shell]]
 
 ---
-
+## FEB 2026
 ### Feb 22
 
 [[Feynman-Technique#TTY Teletype Writer| Ano ang TTY Teletype Writer]]  
@@ -45,6 +45,7 @@ Use H5 for header and H3 for Dates
 [[Commands#Tip in find command|Tip in find command]]
 [[Whatis#The `env` (environment variables)|About environment variables]]
 
+## MARCH 2026
 
 ### March 01
 [[Commands#Some Basic Git command or Workflow| Basic Git Commands]]
@@ -52,3 +53,31 @@ Use H5 for header and H3 for Dates
 
 ### March 02
 [[Commands#THE `grep` Commaand | The grep command]]
+
+### March 07
+[[Feynman-Technique#WHAT DOES GIT COLLABORATION WITHOUT GITHUB BACK THEN?|Git without github back then]]
+[Git Branching Explained](https://youtu.be/hXNkvBX5F1c?si=MZfSP9ZG8Je1z_hA)]
+[[Commands#GIT UNDOING COMMITS|Git Undoing Commits]]
+
+### March 14
+[[Feynman-Technique#The ZRAM technology|The Zram Technology]]
+
+### March 15
+[[Feynman-Technique#Using sudo vs logging in as root|Using sudo vs logging in as root]]
+[[Whatis#The User User Management Files|The User User Management Files]]
+[[Commands#User Management Basic Command|User management basic commands]]
+
+### March 16
+[[Whatis#File permissions|Understanding File Permissions]]
+
+### March 22
+[[Whatis#Special Permissions| Understanding Special Permissions]]
+[[Commands#Chmod command|Chmod command]]
+[[Commands#The chown command|Chown Command]]
+
+
+### March 27
+[[Whatis#GNU| What is GNU?]]
+[[Whatis#Deamons|What is Daemons]]
+[[Commands#The ps command|The ps commad]]
+
