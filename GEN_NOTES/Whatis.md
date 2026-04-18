@@ -227,3 +227,24 @@ Shortcut way para malaman:
 `sshd`   → SSH daemon
 `httpd`  → web server daemon
 `crond ` → cron daemon
+
+
+---
+
+#### GPG Key
+- isang **digital key** use para mag-sign in at mag verify ng files of packages.
+- Parang **digital signature** sa documents, pero sa software.
+- It has private and public key
+	- **Private key** - use by dev to sign in
+	- **Public key** - use by regular user to verify that the package is legit.
+
+ **Difference ng app sa repo vs apps na kailangan ng GPG keys**
+
+**Apps already in Repo**
+- These are apps na already included in distros official repo.
+- Automatic trust, they are presigned ng distro
+
+**App that needs GPG key**
+- Not part of the default distro
+- Comes from third pary-repo
+- 

@@ -15,7 +15,8 @@
 5. <!-- ==MarksAsImportant  --> 
 6. <!-- `*word`* --> :  for *`documentation`* style noting | For *`commandNames`*  
 7. <!-- **`word`** --> : same sa number 6 pero naka bold instead na italize
-8. <!-- `word` --> : Usually sapat na for `emphasis` 
+8. <!-- `word` --> : Usually sapat na for `emphasis`
+9. <!--      ```  --> to enable console
 #### For Links & References 
 1.  <!-- [[NoteGoesHere]] -->  : For lingking notes/referencing         
 2.  <!-- [Google](https://linkgoesheredotcom) --> : External Link
@@ -25,6 +26,49 @@
 ***Great for highlighting important points or references
 1. <!--  > This is quote or important note -->
 2. <!--  >> For nesting the quotes -->
+
+#### Callouts
+<!--
+    >[!Note]  --- General use  
+    
+	>[!Info]  --- for details and clarification
+	>
+	>[!Todo] --- for Tasks or action items
+	>
+	>[!Example] --- for illustration or sample context
+	>
+	>[!Bug]--- Tecnicl issue or glitches
+	>
+	>FOR SUMMARIES OR OVERVIEWS
+	>[!Abstract]
+	>[!Summary]
+	>[!tldr]
+	>
+	>FOR ALERTS OR THINGS TO WATCH OUT FOR
+	>[!Warning]
+	>[!Caution]
+	>[!Attention]
+	>
+	>FOR ADVICE OR BEST PRACTICE
+	>[!Important]
+	>[!Hint]
+	>[!Tip]
+	>
+	>FOR HIGHLIGHTED QUOTATION
+	>[!Quote]
+	>[!Cite]
+	>
+	>Tip : adding a dash - for collapsible note [!Example]- Collapsible Note
+	>Tip: A callout can be nested example shown below
+	>
+	>[!Note] Main Note
+	>This is the outer callout
+	>
+	>>[!Tip] Nested Tip
+	>>This is a callout inside another callout
+-->
+
+
 
 #### Horizontal Rule
 1. <!-- ---  --> : For visual separation

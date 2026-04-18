@@ -132,6 +132,7 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 |    `[]`    | `grep "s[ae]lls file.txt`   | searches for `a or e` between sa `s and ll`     | usefull pag may ilang possible characters. |
 |   `[^]`    | `grep "sh[^e]ll`            | excludes the `e`                                | usefull for exclusion some certain         |
 |  `[a-c]`   | `grep "d[a-c]g file.txt`    | paghahanap ng range `a-c`                       |                                            |
+|            |                             |                                                 |                                            |
 
 ### March 14
 
@@ -175,6 +176,10 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 
 **Using `sudo` command**
 -- Normal user but `temporary only` 
+
+**Test if your user acc can use sudo**
+`sudo test` if no message appears, then it can
+
 
 ---
 

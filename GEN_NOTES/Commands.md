@@ -1,27 +1,65 @@
 use h4
 #### Some useful command RANDOM
 
-|                   Commands                   | Desc                                                                                                                    |
-| :------------------------------------------: | ----------------------------------------------------------------------------------------------------------------------- |
-|             the **`inxi`** tool              | *to show complete info ng system in readable format*                                                                    |
-|                **`inxi -F`**                 | Display Full system info                                                                                                |
-|     **`inxi -Fxz`**<br>**`inxi -Fxxxz`**     | Full + extra details<br>`-F` - *full output*<br>`-x` - *extra details*<br>`-z` - *hide sensitive info (IP, MAC Address* |
-|                **`inxi -G`**                 | Display:<br>`-GPU Model`<br>`-Driver in use`<br>`-Res`<br>`-Refresh Rate`                                               |
-|                    `lshw`                    | list hardware                                                                                                           |
-|         `dpkg -l \| grep <appname>`          | check if app is installed                                                                                               |
-| or  `apt list --installed \| grep <appname>` |                                                                                                                         |
-|              `which <appname>`               | check if the executable is in path. Mostly useful for checking path configuration.                                      |
+|                                               Commands                                               | Desc                                                                                                                                                                                                                             |                                                                     |
+| :--------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+|                                         the **`inxi`** tool                                          | *to show complete info ng system in readable format*                                                                                                                                                                             |                                                                     |
+|                                            **`inxi -F`**                                             | Display Full system info                                                                                                                                                                                                         |                                                                     |
+|                                 **`inxi -Fxz`**<br>**`inxi -Fxxxz`**                                 | Full + extra details<br>`-F` - *full output*<br>`-x` - *extra details*<br>`-z` - *hide sensitive info (IP, MAC Address*                                                                                                          |                                                                     |
+|                                            **`inxi -G`**                                             | Display:<br>`-GPU Model`<br>`-Driver in use`<br>`-Res`<br>`-Refresh Rate`                                                                                                                                                        |                                                                     |
+|                                                `lshw`                                                | list hardware                                                                                                                                                                                                                    |                                                                     |
+|                                     `dpkg -l \| grep <appname>`                                      | check if app is installed                                                                                                                                                                                                        |                                                                     |
+|                             or  `apt list --installed \| grep <appname>`                             |                                                                                                                                                                                                                                  |                                                                     |
+|                                           **APT COMMANDS**                                           | **APT COMMANDS**                                                                                                                                                                                                                 |                                                                     |
+| `apt search <appname>`<br>`apt search ^appname$`<br>`apt-cache search appname`<br>`apt show appname` | - to search if an app is available in repo<br>-search for exact package name using [[Feynman-Technique#Regex-Regular Expression\|Regex]]<br>-faster but idk how it works compare to others.<br>-display info if the app is found | OUTPUT LABEL<br>`v` - virtual<br>`i` - installed<br>`p` - available |
+|                                          `which <appname>`                                           | check if the executable is in path. Mostly useful for checking path configuration.                                                                                                                                               |                                                                     |
+|                                          CLEANING UP SPACES                                          | CLEAN UP SPACES                                                                                                                                                                                                                  |                                                                     |
+|                                        `sudo apt autoremove`                                         | cleanups unused dependencie                                                                                                                                                                                                      |                                                                     |
+|                                     `sudo apt purge <pkg_name>`                                      | removes pkg and its config files.                                                                                                                                                                                                |                                                                     |
+|                                           `sudo apt clean`                                           | clean apt cache                                                                                                                                                                                                                  |                                                                     |
+|                                        `du -h --max-depth=1`                                         | find large/unecessary files.                                                                                                                                                                                                     |                                                                     |
+|                                          `rm -rf ~/.cache`                                           | cleans the cache at home dir for user                                                                                                                                                                                            | reminder :some apps will be slower as they will re-build cache      |
 
-|   **NETWORKING COMMANDS**    |                                                                                                                                    |
-| :--------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- |
-|             `ss`             | Socket statistics - a faster and more detailed replacement for netstat. Shows active connection and listening ports                |
-|           `ss -ol`           | Display `established` and `listening`                                                                                              |
-|       `mtr google.com`       | combination of `ping` and `traceroute` that provides continuous, real time and report of network response and connectivity to host |
-|       `ip route show`        | Display the kernel IP routing table.                                                                                               |
-|       `dig google.com`       | query DNS name servers and retrieving detaled information about DNS record                                                         |
-|        `lshw -C net`         |                                                                                                                                    |
-|           ifconfig           | display ip, mac addr info etc                                                                                                      |
-| `iwconfig yourinterfacename` | display info about sa networ interface.                                                                                            |
+|    **NETWORKING COMMANDS**     |                                                                                                                                    |
+| :----------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- |
+|              `ss`              | Socket statistics - a faster and more detailed replacement for netstat. Shows active connection and listening ports                |
+|            `ss -ol`            | Display `established` and `listening`                                                                                              |
+|        `mtr google.com`        | combination of `ping` and `traceroute` that provides continuous, real time and report of network response and connectivity to host |
+|        `ip route show`         | Display the kernel IP routing table.                                                                                               |
+|        `dig google.com`        | query DNS name servers and retrieving detaled information about DNS record                                                         |
+|         `lshw -C net`          | list hardware                                                                                                                      |
+|            ifconfig            | display ip, mac addr info etc                                                                                                      |
+|  `iwconfig yourinterfacename`  | display info about sa networ interface.                                                                                            |
+| `iw dev [interfacename] link`  | (for wireless) updated version ng `iwconfig`                                                                                       |
+|             `ip a`             | display the `Ip addr, Mac address , Interface state, interface name`                                                               |
+|   `ethtool [interfacename]`    | (for ehternet port only) check the status ng interface                                                                             |
+|          **FOR ARP**           | **FOR ARP**                                                                                                                        |
+| `ip neigh`f<br>`ip neigh show` | neighbor command -  the standard for managing and viewing the ARP table                                                            |
+|      `cat /proc/net/arp`       | everything is a file in linux, this is for raw Kernel ARP table                                                                    |
+
+
+**DOCKER COMMON COMMANDS**
+
+| Commands                                                                                               | Des                                                                                                                                    |                                                                                                                                       |
+| :----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `docker ps or ps -a`                                                                                   | list run                                                                                                                               |                                                                                                                                       |
+| **RUN CONTAINER**                                                                                      |                                                                                                                                        |                                                                                                                                       |
+| `docker run nginx or any service`<br>`docker run -d -p 8080:80 nginx`                                  | <br>-`d` is for detached (back)<br>- `p` for mapping                                                                                   |                                                                                                                                       |
+| **LIST RUNNING CONTAINERS**                                                                            | **LIST RUNNING CONTAINERS**                                                                                                            |                                                                                                                                       |
+| `docker ps`<br>`docker ps -a`                                                                          | <br>- list all (including stopped)                                                                                                     |                                                                                                                                       |
+| **STOP/STARTagain CONTAINERS**                                                                         |                                                                                                                                        |                                                                                                                                       |
+| ` docker stop  <containerID or Name>`<br>`docker start <docker>`                                       |                                                                                                                                        |                                                                                                                                       |
+| **REMOVE CONTAINER**                                                                                   |                                                                                                                                        |                                                                                                                                       |
+| `docker rm <containerID>`<br>`docker rm -f <containerID>`<br>`docker compose down`                     | <br>-force remove<br><br>- stops the container and removes                                                                             |                                                                                                                                       |
+| **DOCKER COMPOSE**                                                                                     | **DOCKER COMPOSE**                                                                                                                     |                                                                                                                                       |
+| `docker compose up -d`<br><br><br><br>                                                                 | -start a services<br>-`up` - means create + start everything defined in the compose file.<br>-`-d` - detached mode (in background)<br> | 1.Reads the composer.yml<br>  2. Pull images(if not present)<br>  3.Create containers<br>  4.Create network<br>  5.Start all services |
+| `docker compose -f config.yml up -d`                                                                   | specify the filename of config                                                                                                         |                                                                                                                                       |
+| `docker compose down`<br>`docker logs -f minecraft-server`                                             | -stop services<br>-view logs                                                                                                           |                                                                                                                                       |
+| `docker images`                                                                                        | -list images at `/var/lib/docker`                                                                                                      |                                                                                                                                       |
+| **ENTER DOCKERS**                                                                                      |                                                                                                                                        |                                                                                                                                       |
+| `docker exec -it <container> bash  or sh`<br><br>`docker exec -u 1000 -it <container> bash  or sh`<br> |                                                                                                                                        |                                                                                                                                       |
+ 
+
 	
 use H4 for titles 
 #### The *`lsblk`*  command
@@ -153,19 +191,28 @@ Sample output:
 ---
 
 #### About the *`cp and mv`* command
-*This is one the essential commands. So taking note of this is i think necessary*
 
-**Reminders**
-- **`mv`** and **`cp`** works both for files and directory.
-- if same path, it just `renames` or `updates`. No dups or extra space consumed.
-	- example : `you're in /home/username/Desktop`
-		- `mv bigFolder [space] /home/username/Desktop`
-- if the path is diff file system. It behaves recursively .
-- in using ***`cp`*** to copy dir to another. using the `-r --recursively` is a must
-	- example: `you're in /home/username/Desktop`
-		- `cp -r movethisDir/ [space] tothisDir/`
-			- or you can set the destination/target first 
-		- `cp -r -t tothisDir/ [space] movethisDir/`
+>[!Reminder]
+>
+>- **`mv`** and **`cp`** works both for files and directory.
+>  - if same path, it just `renames` or `updates`. No dups or extra space consumed.
+
+>[!Example]
+>
+>**You're in** `/home/username/Desktop`
+>
+>`mv bigFolder [space] /home/username/Desktop`
+		
+- **if the path is diff file system. It behaves recursively .**
+- **in using *`cp`* to copy dir to another. using the `-r --recursively` is a must**
+>[!Example]
+>**You're in** `/home/username/Desktop`
+>
+`cp -r movethisDir/ [space] tothisDir/`
+>
+or you can set the destination/target first 
+`cp -r -t tothisDir/ [space] movethisDir/`
+
 
 Running the `--help` is good, but can be overwhelming. So, i'll list some commonly use flags
 
@@ -241,28 +288,16 @@ Pinaka useful for searching patterns.
 ---
 
 #### User Management Basic Command
-1. **`useradd`** :  `sudo useradd bob`
-		--*Flow*
-			1. root is required since may babaguhin sa system files tulad ng 
-				1./etc/passwd/
-				2. /etc/shadow
-				3. /etc/group
-			2. add ang user sa `/etc/passwd`
-				`bob:x:1001:1001:Bob User:/home/bob:/bin/bash`
-			3. add ng entry sa `/etc/shadow`
-				bob:$6$ab23kd...hashedpassword...:19800:0:99999:7:::
-			4. add ng entry sa `/etc/group`
-				bob:x:1001:
-			5. gagawa ng homedir at /home/dir
-			
-2. **`userdel`** : 
-		`sudo userdel bob` : may not delete the home dir so use the `-r` flag
-		
-3. **`passwd`** : `passwd bob`
-	- for changing password
-	-  can be done by nomal users but a prompt pass will appear
-	- can be done by root without any prompt pass
 
+|                 Commands                  | Desc                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| :---------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|    **`useradd`**<br>`sudo useradd bob`    | --*Flow*<br>			1. root is required since may babaguhin sa system files tulad ng <br>				1./etc/passwd/<br>				2. /etc/shadow<br>				3. /etc/group<br>				<br>			2. add ang user sa `/etc/passwd`<br>				`bob:x:1001:1001:Bob User:/home/bob:/bin/bash`<br>				<br>			3. add ng entry sa `/etc/shadow`<br>				bob:$6$ab23kd...hashedpassword...:19800:0:99999:7:::<br>				<br>			4. add ng entry sa `/etc/group`<br>				bob:x:1001:<br>				<br>			5. gagawa ng homedir at /home/dir<br> |
+|               **`userdel`**               | **`sudo userdel bob` : may not delete the home dir so use the `-r` flag**                                                                                                                                                                                                                                                                                                                                                                                                              |
+|      **`passwd`** <br>: `passwd bob`      | - for changing password<br>-  can be done by nomal users but a prompt pass will appear<br>- can be done by root without any prompt pass                                                                                                                                                                                                                                                                                                                                                |
+|              **FOR GROUPS**               | **FOR GROUPS**                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **`groupadd`**<br>`sudo groupadd devteam` |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+1. **`groupadd devteam`**
 #### Chmod command
 -- a powerful command to change file permissions.
 -- There are **two main methods** 
@@ -356,3 +391,10 @@ Pinaka useful for searching patterns.
 |                      `-eL`                       | - shows threads                                                                                                                           |
 |                  pstree -p 1234                  |                                                                                                                                           |
 |               `pstree -linuxuser`                |                                                                                                                                           |
+
+
+
+
+
+
+
