@@ -169,3 +169,16 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 5. Enable the world auto saving again
    `docker exec -u 1000 -it minecraft-sever rcon-cli "save-on"`
 
+
+
+>[!Info] OPTIMIATION (WHAT MATTERS MORE)
+> 
+>Kung gusto mo real optimization:
+> 1. **CPU behavior (very important sa Minecraft)**
+> 2. **Disk I/O (lalo na world saving)**
+> 3. **Docker limits**
+>4. **JVM tuning (later)
+>   
+>   👉 zram + swappiness = supporting role lang
+ 
+

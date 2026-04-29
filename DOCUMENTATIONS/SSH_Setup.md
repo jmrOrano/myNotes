@@ -151,6 +151,7 @@ Purpose: *To keep track of how i configured it and set it up*
 
 1. Install fail2ban 
    `sudo apt update && sudo apt install fail2ban`
+	
 2. Configure fail2ban, make a 'local' copy of the `jail.conf` file in `etc/fail2ban/`
    ```
    cd /etc/fail2ban
@@ -158,8 +159,9 @@ Purpose: *To keep track of how i configured it and set it up*
    ```
    Now edit the file:
    `sudo nano jail.local`
+	
 3. CONFIGURATION
-   ```
+```
    [sshd]
    enabled = true
    port = 2222
@@ -179,4 +181,7 @@ Purpose: *To keep track of how i configured it and set it up*
    systemctl restart fail2ban
    sudo fail2ban-client status sshd
    
-   ```
+```
+4. Checking status
+	`sudo fail2ban-client status sshd`
+	`sudo cat /var/log/fail2ban.log.1`

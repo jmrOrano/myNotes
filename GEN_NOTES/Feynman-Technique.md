@@ -38,36 +38,7 @@ ___
 - Lightweight and fast (*Good for Admin, system recovery, scripting, and low resource env*)
 
 
-#### Version Control
-----Napaka useful method/system para ma revert ang state ng isang project kung sakaling may mistake or undesireable changes.
-
-**Practical Example of How it works | But no Git, full manual**
-----Imagine mo may project ka na nasa thousands ang bilang ng files na nasa multiple directories. Then as you progress, marami ka nang nabago then biglang may mga error/mistake ka na nagawa and hindi mo na alam ayusin. 
----Buti na nalang may nag create ka ng copy ng buong folder ng project mo so you can restore it. *But this can be stressful and impractical kung ang laki ng size ng project mo*
-----**Buti na lang may [[Feynman-Technique#Version Control System But with Git| Version Control System]] ka.
-
-###### Version Control System :  But with Git
-----Sa pag gamit ng tamang tools for Version Control System like ***Git***. Mas efficient dahil : 
-- Hindi mo na need mag create ng multiple copies ng project. 
-- With git, nag lo-log lang ito ng mga pag babago and differences sa files
-- Not only this allows to have multiple versions throughout the progress ng project mo. Ma aallow pa nito ang collaborations.
-- At also may dagdag feature na [[Feynman-Technique#Branch and Merging in Git| Branch and Merging]]
-
-###### Branch and Merging in Git
-----pwede ka gumawa ng mga experimento/possible outcome ng project or bagong features, tapos isasam/*merge* sa main branch ng project pag okay na. 
------Hindi nito na aapektuhan ang main branch ng project ( karaniwang ang *main* o *master*)
-
 ----
-
-### Feb 23
-#### Bakit isinasama ang .gitignore sa git add. ? 
--  Ang **`.gitignore`** ay isang _configuration file_ na nagsasabi kay Git kung aling mga files/folders ang hindi dapat i-track.
-- Ang **`.gitignore`** ay hindi lang basta lagayan ng mga ignored files for **`git add.`** . Ito rin ang mag sisilbing automatic rules para sa mga collaborators. To avoid accidentally commit ng build files or secrets 
-- Ang **`.gitignore`** file ay: 
-	- Hindi personal preferences
-	- Hindi system level config
-	- Bahagi ito ng strucutre ng project  
-
 
 ### FEB 25
 #### ANO ANG SYMBOLIC LINKS? 

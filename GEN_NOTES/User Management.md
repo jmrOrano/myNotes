@@ -1,8 +1,37 @@
 
+
+
+>[!Note]- Table of Contents
+>[[User Management]]
+>- [[User Management#**USER ADD**|useradd]]
+>- [[User Management#**ADDUSER**|adduser]]
+>- [[User Management#**USER DEL**|userdel]]
+>- [[User Management#**USERMOD**|usermod]]
+>- [[User Management#**passwd**|passwd]]
+>
+>[[User Management#GROUPS|Groups]]
+>- [[User Management#**groupadd**|groupadd]]
+>- [[User Management#**groupdel**|groupdel]]
+>- [[User Management#**gpasswd**|gpasswd]]
+>- [[User Management#**usermod -aG**|usermod -aG]]
+>
+>[[User Management#PERMISSIONS|Permissions]]
+>- [[User Management#chmod|chmod]]
+>- [[User Management#**chown**|Chown]]
+>
+> [[User Management#SPECIAL PERMISSIONS|Special Permissions]]
+> - [[User Management#**SUID**|suid]]
+> - [[User Management#**SGID**|sgid]]
+> - [[User Management#**STICKY BIT**|sticky bit]]
+> 
+> **OTHERS**
+> - [[#The User User Management Files]]
+
+
 *This section covers the essential concepts and commands for managing users in Linux. It includes creating and deleting user accounts, modifying user information, managing groups, and setting permissions.*
 
 
-*TEMPLETE FOR NOW*
+
 ### USER ACCOUNT 
 *Overview : Involves creating, modifying, and deleting user accounts*
 **User** : is not just a linux name. Its a :
@@ -114,6 +143,10 @@ What does it do?
 >- in `/etc/passwd`
 >- in /home/ or use `ls -ld /home/<usernmae> `
 >- run `ps -u <username>` to see if it still has process running
+>
+>**Handling leftover files**
+>- even using the `-r` flag will still left some files in other directories.
+>- run `sudo find / -user <theID>` to locate and delete them.
 
 
 #### **USERMOD**
@@ -348,25 +381,294 @@ Verify changes:
 > `-G` = overwrite  
 > `-aG` = add safely
 ### PERMISSIONS
-chown
-chmod
-understanding rwx
+*Overview:*  *Permissions control **who can read, write, or execute a file or directory in Linux**.*
+
+>[!Note] **Core Concepts**
+>Every file has 3 permission layers: 
+>- **User (owner)** - the person who own the file
+>- **Group** - Users in the same group
+>- **Others** - everyone else
+>  
+>Permission Types (`rwx`)
+>- `r` - read (view file / list directory)
+>- `w` - write (modify a file)
+>- `x` - execute (run file / access directory)
+
+>[!Note] How to see Permissions
+>
+>`ls -l`
+>
+>*Example output*
+>```Bash
+>drwxr-xr-x 2 linuxuser linuxuser 4096 Apr  2 18:38 Desktop
+>```
+>>[!Important] Breakdown(Understanding Permission String)
+>>
+>>The first char : `d`
+>>- `d` - directory 
+>>- `-` -symbolic link/regular file
+>>- `c` - character device etc....
+>>
+>>The next 9 Characters : `rwxr-xr-x`
+>>*Lets divide it into 3 groups* : `rwx | r-x | r-x |`
+>>
+>>- `rwx` - **Owner** permission
+>>- `r-x` - **Groups** permission
+>>- `r-x` - **Others** Permission
+>
+>For files:
+>- `r` - read contents
+>- `w` - modify contents
+>- `x` - execute a file (for scripting)
+>
+>For directories
+>- `r` - list files (ls)
+>- `w` - create/delete files
+>- `x` - enter directories (cd)
+
+>[!Tip] 
+>Think of permissions like layers of access control:
+>
+>- **Owner** = full control
+>- **Group** = shared access
+>- **Others** = public access (limited)
+>
+>
+>- Most important habit: always run `ls -l` before changing permissions
+>
+
+#### chmod
+*Overview:  
+Changes the permissions (r, w, x) of a file or directory.*
+
+>[!Note] There are two main methods
+>1. [[User Management#Symbolic Mode|Symbolic Mode]]
+>2. [[User Management#Numeric Mode|Numeric Mode]]
+>
+
+>[!Syntax]
+>`chmod [options] <permissions> <file/dir>`
+##### Symbolic Mode
+*Overview: easier to read, uses letters*
+
+>[!Example] 
+>``` Bash
+>chmod u+x <file> /add execute to user
+> chmod g-w <file> /remove write to group`
+>chmod o=r <file> /set others to read only
+>```
+>
+>>[!Important] Characters breakdown
+>>`u` - user/owner
+>>`g` - group 
+>>`o` - others
+>>`a` - all
+>>
+>>Operators
+>>`+` -- add permission
+>>`-` -- remove permission
+>>`=` -- set exact permission
+>
+>>[!Tip] 
+>>- You can modify multiple permission at once
+>>	`chmod ug+w <file>`
+>
+##### Numeric Mode
+*Overview: faster, widely use, uses numbers, but has a bit of understanding curve to it*
+
+>[!Example] 
+>`chmod 755 <file>`
+>
+>Meaning:
+>- User : 7 (rwx)
+>- Group : 5 (r-x)
+>- Others : 5 (r-x)
+>
+>>[!Important] Values Breakdown
+>>`r` = `4` 
+>>`w` = `2`
+>>`x` = `1` 
+>>
+>> Now add them
+>> `rwx` = `7`
+>> `rw-` = `6`
+>> `r-x` = `5`
+>> 
+>
+>>[!Warning]
+>>- the `chmod 777 <file>` gives full access but is unsafe
+
+>[!Tip] Tip
+>- You can lock yourself from a file : `chmod 000 file.txt`. But it doesnt require a sudo to bring it back `chmod 640 file.txt`, because the `chmod` command **relies on file ownership, not on file permission itself**
+>
+> - "*Explicit is better than implicit*" : By default,  script files `.sh` is doesnt have execute permission thats why it only treated as regular file once created. So it better to *"explicitly"* give it a execute permission `chmod +x file.sh`
+
+
+#### **chown**
+*Overview: Changes the **owner (user)** and/or **group** of a file or directory.*
+
+>[!Syntax]
+> `chown [options] <user>[:group] <file>`
+
+>[!Example]
+>Change `owner` only:
+>`sudo chown <username> <file>`
+>
+>Change `owner and group`
+>`sudo chown <username>:<groupname> [file]`
+>
+>Change `groupname` only
+>`sudo chown :<groupname> [file]`
+
+>[!Info] Common Flags
+>`-R` -> *recursive* apply to directories and all contents
+
+>[!Tip] 
+>Always verify after changing ownership:
+>`ls -l`
+>
+>Use `-R` carefully, it affects all files inside
+
 
 ### SPECIAL PERMISSIONS
-suid
-sgid
-stickt bit
+*Overview : modify how execution and access behave beyond standard `rwx`.*
+
+>[!Type]
+> - **SUID**(Set User ID) value of 4
+> - **SGID**(Set Group ID) value of 2
+> - **Sticky Bit** value of 1
+
+#### **SUID**
+*Overview: **Applies to executables only.** When set, the program runs with the **file owner’s privileges**, not the user who launched it.*
+
+>[!Example]
+>`ls -l /usr/bin/passwd`
+>Output : `-rwsr-xr-x`. Notice the `s` instead of `x` 
+>
+>- `/bin/passwd` lets normal users change their password, but it runs with **root privileges** because of SetUID.
+
+>[!How to set]
+>`chmod u+s <file>`
+>`chmod 4744 <file>`
 
 
-### CONFIGURATION FILES
-#### /etc/passwd
-/etc/shadow
-/etc/group
+>[!Tip]
+>- Used for programs that need elevated privilages (*changing passwords*)
+>- Can be dangerous if misused (privilage escalation risk)
+
+#### **SGID**
+*Overview: **
+- *On files = runs with group owner privilages.*
+- *On directories = files created inside inherit the **parent directory’s group**, not the creator’s group.*
+	- Useful for **shared project folders** where all files should belong to the same group.
+
+>[!Example]
+>`chmod g+s <dir/file>`
+>`chmod 2755 <file/dir>`
 
 
+#### **STICKY BIT**
+Overview: 
+- **Applies to directories only**
+- Ensure that only the file's owner (or root) can delete or rename files inside, even if others have write access.
+- Commonly used in `/tmp` to prevent users from deleting each other's file.
 
+>[!Example] Example and how to Identify
+>`ls -ld /tmp` 
+>- the `t` in the `others` section of the permission.
+>
+>`chmod +t <folder>` 
+>`chmod 1750 <folder/file>`
+>-  Set permission
+
+>[!Warning]
+>- SETUID/SETGID can be dangerous if misused. A vuln program with SetUID root can allow attackers to gain full system access.
+>> [!Note]
+>>- Sticky bit is safer, mainly used for shared directories
+>>- Always audit which binaries have SetUID/SetGID set `find / -perm -4000` for SetUID, `-2000` for SetGID.
+
+#### **umask**
+Overview : 
+*-- change the permission sa mga susunod na created file or dir*
+-- base sa session ng terminal, meaning once run sa terminal its now active.
+-- *change the [[Whatis#The ~/.profile / ~/.xprofile|`.profile`]] to make it persist*
+
+>[!Syntax]
+>`umask <value>`
+>
+>**Check current umask**
+>- `umask`
+>-
+
+>[!Info]
+>**How it works**
+>- Linux starts with default permissions, then subracts umask
+>
+>**Default values are:**
+>-Files - 666 (rw-rw-rw)
+>Dir - 777 (rwx-rwx-rwx)
+
+>[!Example]
+>**Files**
+>`666 - 022 = 644`
+>`rw-, r--, r--` 
+>
+>**Dir**
+>`777 - 022 = 755`
+>`rwx, r-x, r-x`
+>
+>
 
 
 >[!Tip]- Some usefull commands for all of these
 >
 >`getent` - short for get entries
+>`getent group <groupname>` - list those in group
+>`id <username>` - for getting user information
+>`
+
+
+>[!Warning]
+> - for script files. removing the `x` (`sudo chmod 644`) doesnt fully prevent execution.  
+> 	>>[!Note]
+> 	>> There are 2 ways to run a file: Direct and Interpreter. 
+> 	>> 1. Direct Execution (needs `x` permission)
+> 	>> 	`./script.sh`
+> 	>> 	kernel ang tatawag
+> 	>> 	
+> 	>> 2. Interpreter Execution (needs `r` permission)
+> 	>> 	`bash script.sh`
+> 	>> 	bash interpreter ang mag babasa ng file
+> 	>> 	requries read permission
+> 	>
+
+___
+
+### The User User Management Files
+For commands : [command ]
+
+1.  The `sudoers` file
+	- located at /etc/sudoers
+	- it lists of the users and groups who can use sudo command
+	- must be edited with the `visudo` command as root for safer method.
+2. The `passwd` file
+	- located at /etc/passwd
+	- contains the mapping between usernames and UIDs
+		- `root:x:0:0:root:/root:/bin/bash` 
+		- `root` - the user
+		- `x`        - indicate encrypted pass in the /etc/shadow
+		- `*`         - if its asterisk, acc is locked and cannot be used for login
+		- `0`          - the `UID` the root is always zero
+		- `0`          - the iditentifier of user in a primary group
+	- editing is possible but heavily discourage, causing typo can cause system locking.
+	- more reliable to use `useradd, usermod, userdel` command util to manage.
+3. the `shadow` file
+	 - located at `/etc/shadow`
+	 - it stores encrypted user password 
+		 - `root:!:20495:0:99999:7:::`
+			- each user is seperated by colon
+4. the `group` file
+	- located at `/etc/group` 
+	- for managing permissions for multiple users
+		- `root:x:0:`
+		- each group is seperated by colon

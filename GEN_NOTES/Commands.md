@@ -1,4 +1,4 @@
-use h4
+
 #### Some useful command RANDOM
 
 |                                               Commands                                               | Desc                                                                                                                                                                                                                             |                                                                     |
@@ -93,100 +93,6 @@ Sample output:
 
 
 
-#### Git Command-Marking a dir as safe
-`git config --global --add safe.directory yourDriveLetter:/pathToyourRepo`
-
-**WHEN TO USE??**
---when using the **`git status`** and lumabas ang message na ito :
-
-	`$ git status fatal: detected dubious ownership in repository at 'F:/ObsidianNotes' 
-	'F:/ObsidianNotes' is on a file system that does not record ownership To add an exception for this directory, call:
-	    
-	git config --global --add safe.directory F:/ObsidianNotes`
-
----
-
-#### Some Basic Git command or Workflow
-
-**COMMON WORKFLOW**
-
-| Command (for initial workflow)                                                                | Desc                                                                                                      |
-| :-------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `git config --global user.name "YourName`<br>`git config --global user.email "yourEmail"`<br> | The initial setup<br>- for it to know kung sino gumagawa ng changes                                       |
-| `navigate to your working dir` <br>then<br>`git init`                                         | - initialize a git repo sa iyong working dir                                                              |
-| `git status`                                                                                  | - this is self explanatory                                                                                |
-| add a `.gitignore` file                                                                       | - learn more here [[Feynman-Technique#Bakit isinasama ang .gitignore sa git add. ?\| about `.gitignore`]] |
-| `git add . `<br>`git add file1 file2 etc`                                                     | - ang dot `.` = lahat ng files<br>-pwede i specify each ang mga files na may changes lang                 |
-| `git commit -m "Your message here" `                                                          | `-m` = ang message or notes mo<br>                                                                        |
-| `git push`                                                                                    | to share it sa internet.                                                                                  |
-
-**GIT DIFF**
-
-|                                                       Commands (for Viewing & Comparing)                                                       | Desc                                                                                                        |
-| :--------------------------------------------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------------------- |
-|                                                                   `git log`                                                                    | -show commit history                                                                                        |
-|                                                        `git log --oneline --graph -all`                                                        | -for compact view                                                                                           |
-|                                                                   `git diff`                                                                   | show diff ng **working dir vs last staged/git add**<br>-may  `-` and `+` sign sa kung ano added and removed |
-|                                                `git diff --staged`<br>or<br>`git diff --cached`                                                | -Show diff ng **staged vs last commit**<br>-*usually done before commit*                                    |
-|                                                                `git diff HEAD`                                                                 | -show diff **working dir + stageing area vs last commit**                                                   |
-|                   `git diff HEAD~1 HEAD`<br>`HEAD~1` - one commit before head<br>`HEAD~2` - two commits before head<br><br>                    | -compare previous commit to current commit                                                                  |
-| `git diff <commit>`<br><br>- for `<commit>` arguments.  Ay pwede ang `commit hash` , `partial hash`,  or `tags` or `main` or `branch name`<br> | -show diff **working dir + stageing area vs specified commit**                                              |
-|                                                           `git diff commit1 commit2`                                                           | -compare two commits                                                                                        |
-|                                                           `git diff --colors-words`                                                            | -ipakita lang ang pagbabago sa words hindi buong line diff                                                  |
-**CREATING GITHUB REPO**
-*Ang `github` ay isang platform lamang hindi ito ang git. Maramin pang platform*
-1. Pumunta sa Github
-2. Click **New Repo**
-3. Do not initialize or Do initialize *ReadMe*
-4. Then Done
-5. You will see instructions like:
-	1. `git remote add origin https://github.com/username/project.git`
-	2. `git branch -M main`
-	3. git push -u origin main
-
-#### GIT UNDOING COMMITS
-
-**`git checkout <commitID>`**
---mag rereflect sa working dir kung ano laman ng commit na ito.
---ang `HEAD` ay lilipat sa commit na yon
---But ang main pointer is linear lang. 
-*Example:*
-		`c1<-----c2<-----c3<Pointer & HEADpointer`
-		`git checkout c2`
-		`c1<-----c2[head]<-----c3<Pointer`
-		
-*Can you do add and commit pag detached HEAD state?*
---Yes, pero not recommended dahil di ito technically connected sa parent commit, unless mag perform ng branching. 
-*Example workflow*
-	`c1<-----c2<-----c3<Pointer & HEADpointer`
-	`git checkout c2`
-	`c1<-----c2[head]<-----c3<Pointer`
-	`git add . `
-	`git commit -m "new branch"`
-	`git switch -c firstBranch`
-*Modern workflow*
-	`c1<-----c2<-----c3<Pointer & HEADpointer`
-	`git switch -c <branchName> <targetCommitParent>`
-	`git add`
-	`git commit -m "message" `
-. Usually `branching` ay ginagawa kung mag pperform ng experimental thing to seperate sa main.
-
-**`git restore`**
--gamit para i-undo o -revert ang changes sa `working dir or staging area`. 
-1. *Basic Concept*
-	-May dalawang lugar kung saan pwede may changes:
-		1. Working dir - mga files na nagbago pero di pa na git add.
-		2. Staging Area - files na na-add na pero di pa na commit.
-*Commands*
-
-|                         Commands                          | desc                                                                                                                                                                                         |
-| :-------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                   `git restore <file>`                    | -*undo ang changes sa working dir(di pa commit)*<br>-ibabalik ang file from latest commit to your working dir.<br>-kung may na edit pero gusto tanggalin ito. Ito ang gamitin.               |
-|               `git restore --staged <file>`               | -*undo ang mga na git add na*<br>--tanggalin ang file sa staging area **hindi binabago ang working dir**<br>-useful kung na add by accidents                                                 |
-|                 `git checkout -- <file>`                  | -undo from staged to working dir<br>-mag rereflect sa working dir ang staged file.                                                                                                           |
-|            `git restore --source=HEAD <file>`             | -undo from latest commit to working dir<br>-mag rereflect sa working dir ang file from file na commited.                                                                                     |
-| `git restore --source=HEAD --staged --worktree -- <file>` | -*undo changes both working dir and sa staging area*<br>1. kukuha ng version mula sa HEAD commit.<br>2. ilalagay ang source ver sa staging area<br>3. Ilalagay ang source ver sa working dir |
-|                                                           |                                                                                                                                                                                              |
 
 ---
 
@@ -397,4 +303,29 @@ Pinaka useful for searching patterns.
 
 
 
+
+
+### LINUX
+>[!Note] User Management
+>[[User Management]]
+>- [[User Management#**USER ADD**|useradd]]
+>- [[User Management#**ADDUSER**|adduser]]
+>- [[User Management#**USER DEL**|userdel]]
+>- [[User Management#**USERMOD**|usermod]]
+>- [[User Management#**passwd**|passwd]]
+>
+>[[User Management#GROUPS|Groups]]
+>- [[User Management#**groupadd**|groupadd]]
+>- [[User Management#**groupdel**|groupdel]]
+>- [[User Management#**gpasswd**|gpasswd]]
+>- [[User Management#**usermod -aG**|usermod -aG]]
+>
+>[[User Management#PERMISSIONS|Permissions]]
+>- [[User Management#chmod|chmod]]
+>- [[User Management#**chown**|Chown]]
+>
+> [[User Management#SPECIAL PERMISSIONS|Special Permissions]]
+> - [[User Management#**SUID**|suid]]
+> - [[User Management#**SGID**|sgid]]
+> - [[User Management#**STICKY BIT**|sticky bit]]
 

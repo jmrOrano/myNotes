@@ -1,0 +1,231 @@
+{
+  "main": {
+    "id": "9e539229e01b7e74",
+    "type": "split",
+    "children": [
+      {
+        "id": "dfb7dda051a3f2c1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6b73605dbd64555b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GEN_NOTES/Commands.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Commands"
+            }
+          },
+          {
+            "id": "d2f728329010b94a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GEN_NOTES/User Management.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "User Management"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "79cef8438f3c6f18",
+    "type": "split",
+    "children": [
+      {
+        "id": "2a7d1179c45b0696",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2ae8b0dbc6bd08c9",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "ba3e42ceb51e2203",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "regex",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "fd8b0675c6334919",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 371.5110321044922
+  },
+  "right": {
+    "id": "6b367cb62b5d1f38",
+    "type": "split",
+    "children": [
+      {
+        "id": "a89e87d0b84e398d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "17eb10f93a322b75",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "35527f380cf23715",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "0f5c1d335bbee46e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "7125585d226ba314",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "3709b391f476d828",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "d2f728329010b94a",
+  "lastOpenFiles": [
+    "GEN_NOTES/Commands.md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "DOCUMENTATIONS/Git Workflow & Commands.md",
+    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
+    "DOCUMENTATIONS/DOCKER_Setup.md",
+    "DOCUMENTATIONS/DOCKER SETUP  2 (ChatGPT version).md",
+    "GEN_NOTES/Whatis.md",
+    "GEN_NOTES/User Management.md",
+    "GEN_NOTES/Linux File System (Major Only).md",
+    "DOCUMENTATIONS/WINDOWS MACHINE.md",
+    "GEN_NOTES/Feynman-Technique.md",
+    "SECURITY/RANDOM NOTES FOR.md",
+    "DOCUMENTATIONS/Documentations.md",
+    "GEN_NOTES/Intro.md",
+    "GEN_NOTES/Logging & Monitoring.md",
+    "GEN_NOTES/AllNotes.md",
+    "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
+    "Networking",
+    "SECURITY",
+    "GEN_NOTES",
+    "Logging & Monitoring.md",
+    "DOCUMENTATIONS",
+    "User Management.md",
+    "Feynman-Technique.md",
+    "AllNotes.md",
+    "sudo.md",
+    "Whatis.md",
+    "Commands.md",
+    "Intro.md",
+    "HOW TO.md"
+  ]
+}

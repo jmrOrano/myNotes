@@ -1,4 +1,11 @@
+*Overview: This note taking began on March 28, 2026 with the intention of documenting problems and fixes also potential recreating a small setups and workflow *
 
+
+>[!Contents]-
+>[[#Things to do after fresh install ng linux]]
+>[[#Get Fullscreen in Vbox linux]]
+>[[#Fixing sluggish and slow response trackpad (NOT RESOLVE)]]
+>
 
 ##### Things to do after fresh install ng linux
 *03/28/2026*
@@ -7,17 +14,38 @@
 
 1. Update everything (non-negotiable)
 	`sudo apt update && sudo apt upgrade -y`
-
 	Optional: `sudo apt autoremove`
-2. Enable Firewall
+	
+2. Enable Firewall    
+	
 3. Check Hardware 
 	`run : inxi -Fxxx`
 4. Setup swap/Zram  (Performance boost)
-	`check muna : free -h`
-	`if low ram then : sudo apt install zram-tools`
-
-5. Disable unecessary startup apps
-
+	check muna : `free -h`
+	if low ram then : `sudo apt install zram-tools`
+>[!Info] Configuring ZRAM size
+>1. Check if its on: `swapon --show`
+>2. Change config by: `sudo nano /etc/default/zramswap`
+>3. set the size to: `SIZE=1024` 
+>
+ >[!Info] Future use. Configure Swappines
+ >
+ >*Overview: It controls how aggressively Linux moves data from RAM to the SWAP space*
+ >*Value Range 0 to 100 : `0` (avoids as much as possible) -> `100` (swap vey aggresively)*
+ >- At `60`, the kernel is fairly balanced: it will start swapping out less‑used memory pages even if RAM is still available.
+ >- This helps keep more RAM free for disk cache, but can cause noticeable slowdowns if swap is on a slow disk.
+ >  - At `10`, the kernel prefers to keep processes in RAM and will only swap when memory pressure is high.
+ >- This is good if you have plenty of RAM and want apps to stay responsive.
+ >  - Downsides: less RAM is available for caching files, so disk reads might be slower in some workloads.
+ >
+ >>[!Info] How to: CHANGE SWAPPINESS
+ >>`echo "vm.swappiness-10" | sudo tee -a /etc/sysctl.conf` 
+ >>Reload it by : `sudo systctl -p`
+ >    
+    
+    
+5. Disable unecessary startup app
+    
 6. Power Management(Laptop users)
 	`sudo apt install tlp`
 	`sudo systemctl enable tlp`
@@ -127,3 +155,5 @@ My changes are:
 `GRUB DEFAULT=0`
 `GRUB_TIMEOUT_STYLE=menu`
 `GRUB_TIMEOUT=5`
+
+
