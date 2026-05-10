@@ -2,22 +2,37 @@
 *Machine: Linux Mint 22.3 Zena, Kernel 6.17-19, Ubuntu 24.04 Noble arch x86_64 64bit*
 *Date: Apr/03/2026*
 *Purpose : avoid scattered-installtion of dependencies, containing it all inside docker.*
-Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]] 
+Refer to [[DOCKER SETUP  2|Docker Installation]] 
 
-1. **PREPARATION**
+>[!Contents]
+>- [[#**PREPARATION**]]
+>- [[#**INSTALL NECESSARY COMPONENTS**]]
+>- [[#**CONFIGURING**]]
+>- [[#**TEST**]]
+>- [[#**SERVING IT PUBLICLY**]]
+>- [[#**ADDING A VOICE COMS**]]
+>- [[#**ADDING SHADERS (Client side)**]]
+>- [[#**BACKING UP THE SERVER**]]
+>- 
+####  **PREPARATION**
    Check for Docker Installation
-	`docker --version`
-	`docker compose version`
-
+```Bash
+	docker --version
+	docker compose version
+```
    Check for system resource
-	`free -h`
-	`df -h`
+```Bash
+	free -h
+	df -h 
+```
 
    Create a dir for Minecraft server files
-	`mkdir -p ~/minecraft-server`
-	`cd ~/minecraft-server`
+   ```Bash
+	mkdir -p ~/minecraft-server
+	cd ~/minecraft-server
+   ```
 
-2. **INSTALL NECESSARY COMPONENTS**
+#### **INSTALL NECESSARY COMPONENTS**
    Choose a Minecraft server docker image
     Popular is the : itzg/minecraft-server
 
@@ -25,8 +40,7 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
     Inside the `~/minecraft-server`, create a `docker-compose.yml`
     `nano ~/minecraft-server/docker-compose.yml`
     
-    ```YAML
-    
+```YAML
     
     services:
 	    minecraft:
@@ -43,10 +57,10 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 			volumes:
 				- .data:/data
 			restart: unless-stopped
-    ```
+```
     
-
-3. **CONFIGURING**
+	 
+####  **CONFIGURING**
    Adjust environment variables inside the `.yml` file:
     `MEMORY` - Amount of RAM to allocate
 	`TYPE` - `SERVER`(VANILLA), `SPIGOT`, `PAPER`(for plugins)
@@ -58,11 +72,13 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 	If planning to serve publicly, make sure port 25565 is open in firewall.
 
 
-4. **TEST**
+####  **TEST**
    Start the server:
-   `docker compose up -d`
+```Bash
+docker compose up -d
+```
 
-	Check logs
+Check logs
 	`docker logs -f minecraft-server`
 
 >[!TIPS]
@@ -70,14 +86,16 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 > - **Auto backup**: mount a seperate folder or use `cron` to copy `.data/world` periodically
 > - **Performance tuning**: Allocate more RAM via `MEMORY`, enable `JAVA_OPTS` for advance options
 
-**SERVING IT PUBLICLY**
+#### **SERVING IT PUBLICLY**
 1. Find your public IP
 	   `curl ifconfig.me`
 
 2. Firewall/Router
-	   ```sudo ufw allow 25565/tcp
-	   sudo ufw status numbered
-	   ```
+```Bash
+sudo ufw allow 25565/tcp
+sudo ufw status numbered
+```
+
 	   Router:
 		   login to router dashboard and do port mapping configuration
 
@@ -121,7 +139,7 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 
 
 
-**ADDING A VOICE COMS**
+#### **ADDING A VOICE COMS**
 
 1. Install the ff 
 	   - Simple Voice chat - at modrinth , Version platform should be Fabric, and version is the current one.
@@ -139,7 +157,7 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 4. Install the fabric Api(not the installer again) at [#Fabrci api]([#Fabric Api](https://modrinth.com/mod/fabric-api)
 5. Move the api and the simple voice chat at mods folder of the game
 
-**ADDING SHADERS (Client side)**
+#### **ADDING SHADERS (Client side)**
 *For frabric server*
 >[!Requirements]
 >- Fabric installer and fabric APi  at [#Fabric](https://fabricmc.net/use/installer/)
@@ -151,25 +169,57 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 
 
 
-#### BACKING UP THE SERVER 
+#### **BACKING UP THE SERVER** 
 
 *Server: Linux mint , Docker compose container*
 *Local machine : Windows*
-*Tools:"  ssh, scp 
-
+*Tools:"  ssh, scp , rsync*
+##### **SCP METHOD**
 1. **Save and Stop world progress** 
-   `docker exec -u 1000 -it <docker-containername> rcon-cli "save-all flush" `
-   `docker exec -u 1000 -it minecraft-server rcon-cli "stop"`
+```Bash
+docker exec -u 1000 -it <docker-containername> rcon-cli "save-all flush"
+docker exec -u 1000 -it minecraft-server rcon-cli "stop"
+```
 2. **Stop the docker**
-   `docker stop <docker-containername>`
+```Bash
+docker stop <docker-containername>
+```
 3. **In client machine:**
-   `scp -P 2200 -r linuxuser@112.209.201.227:~/containers/minecraft-server/.data C:\Users\orano\mc-backups\minecraft-data`
+```Bash
+scp -P 2200 -r <machineUsername>@<serverIP>:~/containers/minecraft-server/.data C:\Users\destination
+```
 4. **Once done copying Start the container again**
-   `docker start minecraft-server`
+```Bash
+docker start minecraft-server
+```
 5. Enable the world auto saving again
-   `docker exec -u 1000 -it minecraft-sever rcon-cli "save-on"`
+```Bash
+docker exec -u 1000 -it minecraft-sever rcon-cli "save-on"
+```
 
 
+##### **RSYNC METHOD**
+*Requires WSL*
+
+>[!Note] Preparation
+>- If the host OS already has the private key, It can be copy to the WSL file system. 
+>- How? by default, the private key is stored at : C:/Users/orano/.ssh/id_ed25519
+
+1. **Copy the key to the WSL filesystem**
+   -run WSL first
+   ```Bash
+   cd C:/Users/username/.ssh/
+   cp id_ed25519 [destination of WSL which is at ~/.ssh/here]
+   ```
+
+2. **Perform the RYSYNC command**
+   ```Bash
+   rysync -avz --progress -e "ssh -p [portNum] -i ~/.ssh/id_ed25519" username@ipaddress:[source] [destinationToLocalMachine] 
+   ```
+
+>[!Note] Issue Encountered
+>- There is an where it cant establish the connection even though the private key is accepted. For that run with flag `-vvv` for verbose
+>- SSH directly using host machines terminal. Then use the WSL terminal session after. 
 
 >[!Info] OPTIMIATION (WHAT MATTERS MORE)
 > 
@@ -181,4 +231,5 @@ Refer to [[DOCKER SETUP  2 (ChatGPT version)|Docker Installation]]
 >   
 >   👉 zram + swappiness = supporting role lang
  
+
 

@@ -151,6 +151,31 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 **Test if your user acc can use sudo**
 `sudo test` if no message appears, then it can
 
+>[!Note] 
+>Scenario: *Opening a dir owned by root with no other permissions.*
+>```Bash
+>linuxuser@linuxuser:/var/lib$ ls -alh | grep -i docker 
+>#Output
+>drwx--x--- 12 root root 4.0K May 2 10:55 docker
+>```
+>
+>Opening via `sudo cd ` is not applicable because `cd` is a `builtin` and `sudo` runs external commands only
+>
+>**Option1** : Open a root shell
+>```Bash
+>sudo -i
+>```
+>
+>**Option 2: One shot command**
+>```Bash
+>sudo ls <path>
+>#not really entering inside but rather just reading whats inside
+>```
+>
+>**Option 3: Subshell**
+>```Bash
+>sudo bash
+>```
 
 ---
 
