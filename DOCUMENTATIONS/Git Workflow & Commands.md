@@ -86,9 +86,22 @@ git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
 3. Do not initialize or Do initialize *ReadMe*
 4. Then Done
 5. You will see instructions like:
-	1. `git remote add origin https://github.com/username/project.git`
-	2. `git branch -M main`
-	3. git push -u origin main
+```Bash
+ git remote add origin https://github.com/username/project.git
+	 #the `origin` is NOT special, its just like a shortcut name
+	 #its like stating to the local repo its new remote home for the 
+	 
+ git branch -M main  
+	 #it renames the current branch to `main` 
+	 #uncessary if you branch name is already main
+	 
+ git push -u origin main  
+	 # push the local branch named `main` to remote origin
+	 #the flag -u means it remembers the connection
+	 #with flag -u you can do just `git push` next time 
+	 #the `origin` is NOT special, its just like a shortcut name
+
+```
 
 
 ---
@@ -119,15 +132,18 @@ git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
 
 ##### **Undoing Commits**
 
-|                         Commands                          | desc                                                                                                                                                                                         |
-| :-------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                   `git restore <file>`                    | -*undo ang changes sa working dir(di pa commit)*<br>-ibabalik ang file from latest commit to your working dir.<br>-kung may na edit pero gusto tanggalin ito. Ito ang gamitin.               |
-|               `git restore --staged <file>`               | -*undo ang mga na git add na*<br>--tanggalin ang file sa staging area **hindi binabago ang working dir**<br>-useful kung na add by accidents                                                 |
-|                 `git checkout -- <file>`                  | -undo from staged to working dir<br>-mag rereflect sa working dir ang staged file.                                                                                                           |
-|            `git restore --source=HEAD <file>`             | -undo from latest commit to working dir<br>-mag rereflect sa working dir ang file from file na commited.                                                                                     |
-| `git restore --source=HEAD --staged --worktree -- <file>` | -*undo changes both working dir and sa staging area*<br>1. kukuha ng version mula sa HEAD commit.<br>2. ilalagay ang source ver sa staging area<br>3. Ilalagay ang source ver sa working dir |
-|                                                           |                                                                                                                                                                                              |
-|                                                           |                                                                                                                                                                                              |
+|                         Commands                          | desc                                                                                                                                                                                         |                                                        |
+| :-------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+|                   `git restore <file>`                    | -*undo ang changes sa working dir(di pa commit)*<br>-ibabalik ang file from latest commit to your working dir.<br>-kung may na edit pero gusto tanggalin ito. Ito ang gamitin.               |                                                        |
+|               `git restore --staged <file>`               | -*undo ang mga na git add na*<br>--tanggalin ang file sa staging area **hindi binabago ang working dir**<br>-useful kung na add by accidents                                                 |                                                        |
+|                 `git checkout -- <file>`                  | -undo from staged to working dir<br>-mag rereflect sa working dir ang staged file.                                                                                                           |                                                        |
+|            `git restore --source=HEAD <file>`             | -undo from latest commit to working dir<br>-mag rereflect sa working dir ang file from file na commited.                                                                                     |                                                        |
+| `git restore --source=HEAD --staged --worktree -- <file>` | -*undo changes both working dir and sa staging area*<br>1. kukuha ng version mula sa HEAD commit.<br>2. ilalagay ang source ver sa staging area<br>3. Ilalagay ang source ver sa working dir |                                                        |
+|                                                           |                                                                                                                                                                                              |                                                        |
+|                 **UNDO COMMITS LOCALLY**                  | **UNDO COMMITS LOCALLY**                                                                                                                                                                     |                                                        |
+|                        `git reset`                        | undo commits locally                                                                                                                                                                         | Use this when you want to fix something before pushing |
+|                 `git reset --soft HEAD~1`                 | --commit is removed<br>--changes stay staged<br>--You can immediately recommit                                                                                                               |                                                        |
+|                    `git reset HEAD~1`                     | --Commit removed<br>--Changes go back to directory (not staged)                                                                                                                              |                                                        |
 
 ### **GIT CHECKOUT**
 *Overview: * An old way of switching to view commits and perform branching.

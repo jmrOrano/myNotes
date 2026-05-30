@@ -221,7 +221,7 @@ docker exec -u 1000 -it minecraft-sever rcon-cli "save-on"
 >- There is an where it cant establish the connection even though the private key is accepted. For that run with flag `-vvv` for verbose
 >- SSH directly using host machines terminal. Then use the WSL terminal session after. 
 
->[!Info] OPTIMIATION (WHAT MATTERS MORE)
+>[!Info] OPTIMIZATION (WHAT MATTERS MORE)
 > 
 >Kung gusto mo real optimization:
 > 1. **CPU behavior (very important sa Minecraft)**
