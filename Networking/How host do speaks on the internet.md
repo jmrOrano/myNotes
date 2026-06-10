@@ -37,6 +37,7 @@ Layer 2(Hop to Hop) includes the ff:
 - Destination MAC [????]
 ```
 - This is where the **ARP ( Address Resolution Protocol)** is use to link Layer3 and Layer2 and perfom the hop to hop delivery .
+- 
 
 **How ARP works in this example?**
 - Host A will shoot out an **ARP Request**

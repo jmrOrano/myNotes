@@ -1,24 +1,25 @@
 
 #### Some useful command RANDOM
 
-|                                               Commands                                               | Desc                                                                                                                                                                                                                             |                                                                     |
-| :--------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-|                                         the **`inxi`** tool                                          | *to show complete info ng system in readable format*                                                                                                                                                                             |                                                                     |
-|                                            **`inxi -F`**                                             | Display Full system info                                                                                                                                                                                                         |                                                                     |
-|                                 **`inxi -Fxz`**<br>**`inxi -Fxxxz`**                                 | Full + extra details<br>`-F` - *full output*<br>`-x` - *extra details*<br>`-z` - *hide sensitive info (IP, MAC Address*                                                                                                          |                                                                     |
-|                                            **`inxi -G`**                                             | Display:<br>`-GPU Model`<br>`-Driver in use`<br>`-Res`<br>`-Refresh Rate`                                                                                                                                                        |                                                                     |
-|                                                `lshw`                                                | list hardware                                                                                                                                                                                                                    |                                                                     |
-|                                     `dpkg -l \| grep <appname>`                                      | check if app is installed                                                                                                                                                                                                        |                                                                     |
-|                             or  `apt list --installed \| grep <appname>`                             |                                                                                                                                                                                                                                  |                                                                     |
-|                                           **APT COMMANDS**                                           | **APT COMMANDS**                                                                                                                                                                                                                 |                                                                     |
-| `apt search <appname>`<br>`apt search ^appname$`<br>`apt-cache search appname`<br>`apt show appname` | - to search if an app is available in repo<br>-search for exact package name using [[Feynman-Technique#Regex-Regular Expression\|Regex]]<br>-faster but idk how it works compare to others.<br>-display info if the app is found | OUTPUT LABEL<br>`v` - virtual<br>`i` - installed<br>`p` - available |
-|                                          `which <appname>`                                           | check if the executable is in path. Mostly useful for checking path configuration.                                                                                                                                               |                                                                     |
-|                                          CLEANING UP SPACES                                          | CLEAN UP SPACES                                                                                                                                                                                                                  |                                                                     |
-|                                        `sudo apt autoremove`                                         | cleanups unused dependencie                                                                                                                                                                                                      |                                                                     |
-|                                     `sudo apt purge <pkg_name>`                                      | removes pkg and its config files.                                                                                                                                                                                                |                                                                     |
-|                                           `sudo apt clean`                                           | clean apt cache                                                                                                                                                                                                                  |                                                                     |
-|                                        `du -h --max-depth=1`                                         | find large/unecessary files.                                                                                                                                                                                                     |                                                                     |
-|                                          `rm -rf ~/.cache`                                           | cleans the cache at home dir for user                                                                                                                                                                                            | reminder :some apps will be slower as they will re-build cache      |
+|                                               Commands                                               | Desc                                                                                                                                                                                                                  |                                                                     |
+| :--------------------------------------------------------------------------------------------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+|                                         the **`inxi`** tool                                          | *to show complete info ng system in readable format*                                                                                                                                                                  |                                                                     |
+|                                            **`inxi -F`**                                             | Display Full system info                                                                                                                                                                                              |                                                                     |
+|                                 **`inxi -Fxz`**<br>**`inxi -Fxxxz`**                                 | Full + extra details<br>`-F` - *full output*<br>`-x` - *extra details*<br>`-z` - *hide sensitive info (IP, MAC Address*                                                                                               |                                                                     |
+|                                            **`inxi -G`**                                             | Display:<br>`-GPU Model`<br>`-Driver in use`<br>`-Res`<br>`-Refresh Rate`                                                                                                                                             |                                                                     |
+|                                                `lshw`                                                | list hardware                                                                                                                                                                                                         |                                                                     |
+|                                     `dpkg -l \| grep <appname>`                                      | check if app is installed                                                                                                                                                                                             |                                                                     |
+|                             or  `apt list --installed \| grep <appname>`                             |                                                                                                                                                                                                                       |                                                                     |
+|                                           **APT COMMANDS**                                           | **APT COMMANDS**                                                                                                                                                                                                      |                                                                     |
+| `apt search <appname>`<br>`apt search ^appname$`<br>`apt-cache search appname`<br>`apt show appname` | - to search if an app is available in repo<br>-search for exact package name using [[Whatis#Regex-Regular Expression\|Regex]]<br>-faster but idk how it works compare to others.<br>-display info if the app is found | OUTPUT LABEL<br>`v` - virtual<br>`i` - installed<br>`p` - available |
+|                                          `which <appname>`                                           | check if the executable is in path. Mostly useful for checking path configuration.                                                                                                                                    |                                                                     |
+|                                          CLEANING UP SPACES                                          | CLEAN UP SPACES                                                                                                                                                                                                       |                                                                     |
+|                                        `sudo apt autoremove`                                         | cleanups unused dependencie                                                                                                                                                                                           |                                                                     |
+|                                     `sudo apt purge <pkg_name>`                                      | removes pkg and its config files in the `/etc/`                                                                                                                                                                       | aggressive way, but daijoubu                                        |
+|                                   `sudo apt remove <package-name>`                                   | removes binaries, but keeps the config files                                                                                                                                                                          |                                                                     |
+|                                           `sudo apt clean`                                           | clean apt cache                                                                                                                                                                                                       |                                                                     |
+|                                        `du -h --max-depth=1`                                         | find large/unecessary files.                                                                                                                                                                                          |                                                                     |
+|                                          `rm -rf ~/.cache`                                           | cleans the cache at home dir for user                                                                                                                                                                                 | reminder :some apps will be slower as they will re-build cache      |
 
 |    **NETWORKING COMMANDS**     |                                                                                                                                    |
 | :----------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -121,29 +122,63 @@ will only output a single entry dahil ang **`echo $PATH`** is a single line lang
 
 --**Explanation**
 with `translate tr` command. It basically just replace the colon ***`:`*** with the new line ***`\n`***
-`[TR USAGE]` : **`tr [space] ["replaceThis"] [space] ["withThis"]
+TR USAGE : **`tr [space] ["replaceThis"] [space] ["withThis"]
+
+---
+
+#### The `tr` command
+**Basic structure :** 
+```Bash
+tr 'find this' [space] 'replace with this'
+```
+It replaces character by character — not word by word
+
+**Using `the range tax`**:
+Instead of typing of every letter manually, you can use ranges:
+```bash
+
+tr 'a-z' 'A-Z'    # Converts lower to UPPER
+tr 'A-Z' 'a-z'    # Converts UPPER to lower
+tr '0-9' 'a-j'    # replaces each number with letter
+
+tr 'a-Za-z'       # Combining two ranges in one parameter
+```
+
+**Useful flags**
+```Bash
+tr -d ':'    # DELETE the character instead of replacing
+tr -s ' '    # SQUEEZ multiple spaces into one
+```
+
+**Example problem at bandit overthewire dot org.**  
+*Level 11 -> 12*
+*The password for the next level is stored in the file **data.txt**, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions*
+
+```Bash
+#-------THIS IS WRONG ---------
+bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-Zn-zA-Ma-m'
+The CaFFJBEd iF 7K16WNeuvi5YkvhWFfsvDBBgAUTLj9Q4
+
+#------THIS IS THE CORRECT------
+bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
+
+```
+Rot13: It's just the alphabet **shifted by 13 positions.**
+
+**The rule i impose ?** Pattern recognition.
+```
+First parameter:   UPPER range first, LOWER range second
+Second parameter:  UPPER range first, LOWER range second
+```
+---
+### RELATED TO LEVEL 12 IN bandit overthewire
+*The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command “mktemp -d”. Then copy the datafile using cp, and rename it using mv (read the manpages!)*
+
 
 ---
 
 
----
-
-
-
-
----
-
-
-#### The ps command
--- useful for understanding Linux Processes
---though `htop` , `top` , `btop` is real time monitoring, this is static snapshop
---output shows a few key details: 
-
-**PID** : The unique Process ID
-**TTY** : The controlling terminal for the process
-**STAT** : The current status of the process
-**TIME** : The total CPU time the process has used
-**CMD** : The command that started the process
 
 |                      Flags                       | desc                                                                                                                                      |
 | :----------------------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -156,13 +191,7 @@ with `translate tr` command. It basically just replace the colon ***`:`*** with 
 |               `pstree -linuxuser`                |                                                                                                                                           |
 
 
-
-
-
-
-
-
-### LINUX
+## LINUX
 
 >[!Note]- User Management
 >[[User Management]]
@@ -187,23 +216,35 @@ with `translate tr` command. It basically just replace the colon ***`:`*** with 
 > - [[User Management#**SGID**|sgid]]
 > - [[User Management#**STICKY BIT**|sticky bit]]
 
-
->[!Note] Linux File System Exploration
+>[!Note]- Linux File System Exploration
 >
 >**For navigation**
->[[Linux File System (Major Only)#*ls command*|ls]]
->[[Linux File System (Major Only)#`tree`|tree]]
+> [[Linux_File_System__Major_Only_#ls|ls command]]
+> [[Linux_File_System__Major_Only_#tree|tree command]]
 >
 >**For reading files**
->[[Linux File System (Major Only)#cat command|cat]]
->[[Linux File System (Major Only)#less commandless]]
->[[Linux File System (Major Only)#head command|head]]
->[[Linux File System (Major Only)#tail command|tail]]
+> [[Linux_File_System__Major_Only_#cat|cat command]]
+> [[Linux_File_System__Major_Only_#less|less command]]
+> [[Linux_File_System__Major_Only_#head|head command]]
+> [[Linux_File_System__Major_Only_#tail|tail command]]
 >
 >**For Searching**
->[[Linux File System (Major Only)#`grep` Command|grep]]
+> [[Linux_File_System__Major_Only_#grep|grep command]]
+> [[Linux_File_System__Major_Only_#find|find command]]
 >
+>**For System awareness**
+> [[Linux_File_System__Major_Only_#df|df command]]
+>[[Linux_File_System__Major_Only_#du|du command]]
+>[[Linux_File_System__Major_Only_#ps|ps command]]
+>[[Linux_File_System__Major_Only_#top|top command]]
 >
 >
 >
 
+
+
+[[DOCKER SETUP  2#**DOCKER COMMON COMMANDS**|Docker Common Commands]]
+
+>[!Note]- Security
+>[[Whatis#**What is hexdump?**|hexdump]]
+>

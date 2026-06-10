@@ -7,7 +7,7 @@
 >[[#Fixing sluggish and slow response trackpad (NOT RESOLVE)]]
 >
 
-##### Things to do after fresh install ng linux
+##### **Things to do after fresh install ng linux**
 *03/28/2026*
 *Linux mint cinnamon 22.3  Zena*
 *Purpose : for easy future set up*
@@ -80,7 +80,7 @@
 	- No firewall
 ---
 
-##### Get Fullscreen in Vbox linux
+##### **Get Fullscreen in Vbox linux**
 *03/28/2026*
 *Mainly for Ubuntu*
 *Purpose : avoid repetition at googling*
@@ -102,7 +102,7 @@ Just click `view` then `Fullscreen Mode`
 
 ---
 
-##### Fixing sluggish and slow response trackpad (NOT RESOLVE)
+##### **Fixing sluggish and slow response trackpad (NOT RESOLVE)**
 *03/28/2026*
 *Machine : Thinkpad L490 ***
 *Kernel : 6.8.0-106 -generic*
@@ -139,7 +139,7 @@ Didnt work : reloading psmouse module
 
 ---
 
-##### CHANGES IN GRUB FILE
+##### **CHANGES IN GRUB FILE**
 *03/29/2026*
 Purpose : *To see the grub menu and doesnt need to press shift or esc button every time system boots. Mainly for changing kernel version*
 
@@ -156,4 +156,95 @@ My changes are:
 `GRUB_TIMEOUT_STYLE=menu`
 `GRUB_TIMEOUT=5`
 
+---
 
+#### **WARPINATOR CANT CONNECT**
+*06/06/2026*
+*Overview*: the warpinator app in linux is not connecting to other devices. 
+
+*Linux Mint*
+*In VM oracle virtual box*
+*Connected to same subnet.*
+*The machines can see each other but cant established a connection*
+
+Trying manual connection didnt fix it.
+
+After a bit of searching. It turns out the `ufw` from linux is preventing the connection. 
+
+Disabling it ables to connect.
+```
+sudo ufw disable
+```
+
+Now for perma fix, adding the port that the warpinator uses in ufw. 
+```
+sudo ufw allow 42000/tcp
+sudo ufw allow 42000/udp
+sudo ufw reload
+```
+
+
+---
+### Cant established a connection to server from different network across internet.
+---
+*Overview: I Setup an [[SSH_Setup|SSH Server]]  and a [[SETUP MINECRAFT SERVER IN DOCKER|Minecraft Server]]. Both are port forwarded.*
+- Machine : Lenovo thinkpad L480,
+- OS: Linux Mint Zena Ubuntu base
+- Network architecture overview: 1ISP router, 1 third party router (this is where the machine is cable connected)
+	- The 2nd router is not in different subnet. 
+	- host isolation is disabled
+	- Firewall is properly configured
+	- Using IPV4 
+	- Not lock behind in CGNAT
+
+#### The anomaly: 
+---
+- **When accessing the server from different network across the internet, its not reaching the destination**
+```
+Pinging 11x.2x.x.xxx with 32 bytes of data:
+Reply from 11x.x.x.x: Destination host unreachable.
+Reply from 11x.x.x.x: Destination host unreachable.
+Reply from 11x.x.x.x: Destination host unreachable.
+Reply from 11x.x.x.x: Destination host unreachable.
+```
+
+Performing tracert:
+```
+C:\Users\orano>tracert 112.2xx.xxx.xxx
+
+Tracing route to 112.2xx.xxx.xxx.pldt.net [112.209.208.207]
+over a maximum of 30 hops:
+
+  1     1 ms     1 ms     1 ms  192.168.1.1
+  2  11x.xxx.xxx.xxx.pldt.net [112.2xx.xxx.xxx]  reports: Destination host unreachable.
+```
+
+- **But, its reaching the destination when using a VPN or specifically the cloudflare warp app.**
+Ping request with cloudflare enabled: 
+```
+C:\Users\orano>ping 11x.2xx.xxx.xxx
+
+Pinging 11x.2xx.xxx.xxx with 32 bytes of data:
+Reply from 11x.xxx.xxx.xxx: bytes=32 time=72ms TTL=55
+Reply from 11x.xxx.xxx.xxx: bytes=32 time=72ms TTL=55
+Reply from 11x.xxx.xxx.xxx: bytes=32 time=67ms TTL=55
+Reply from 1xx.xxx.xxx.xxx: bytes=32 time=69ms TTL=55
+
+Ping statistics for 1xx.xxx.xxx.xxx:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 67ms, Maximum = 72ms, Average = 70ms
+
+C:\Users\orano>
+```
+
+- After weeks of trying to figure out. I found out that other clients (friends) are able to established a connection to the server.
+- The anomaly is different network to network. Some able to connect other network cant. 
+
+
+#### THE CONCLUSION (most likely)
+---
+**Most likely the internal routing issue with my ISP**
+- With the use of cloudflare warp, the request gets redirected to the routing of the cloudflare. 
+- After eliminating other potential problem, it narrows it down to ISP backbone routing.
+- With inconsistent results from testing to different network, others can connect other cannot. The routing broken to other networks.

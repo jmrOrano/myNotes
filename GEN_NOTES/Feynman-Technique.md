@@ -1,9 +1,7 @@
 use h3 for date and h4 for topics
 
-## FEB 2026
-
-### |Feb 21
 #### Ano ang difference ng Terminal vs Shell? 
+*Feb 21, 2026*
 	Isipin mo na ang Terminal ay isang application na similar sa mga GUI apps. Pero, sa halip na Graphical User Interface, ang Terminal ay Text Base Interface.
 	
 		Halimbawa. : Sa pag hanap ng IP Address
@@ -21,8 +19,8 @@ use h3 for date and h4 for topics
 
 ___
 
-### |Feb 22
 #### TTY Teletype Writer
+*Feb 22, 2026*
 ----Isang Terminal base interface nag nagbibigay ng way para magamit mo ang comptuter ng hindi na dumadaan sa GUI ng Desktop
 
 **Pano Gamitin?**
@@ -40,8 +38,11 @@ ___
 
 ----
 
-### FEB 25
+
+---
+
 #### ANO ANG SYMBOLIC LINKS? 
+*Feb 25, 2026*
 `Shortcut(.Ink file)`
 ***Symbolic link*** ay isang shortcut file pero mas low level 
 
@@ -67,10 +68,11 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 ---
 
 
-## MARCH 2026
 
-### MARCH 07
+---
+
 #### WHAT DOES GIT COLLABORATION WITHOUT GITHUB BACK THEN?
+*March 07, 2026*
 **Patches via email**
 1. Ang mga contributor ay gumagawa ng changes sa kanilang local repo.
 2. Gumagawea ng *patch file* gamit : 
@@ -83,31 +85,17 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 **Shared repository servers**
 - May *central git repo* hosted sa server
 - Ang maintainers at trusted contributor may push/pull directly sa repo via SSH
-	`git clone user@server:/path/to/repo.git`
-	`git push`
-	`git pull`
+```bash
+git clone user@server:/path/to/repo.git
+git push
+git pull
+```
+
 
 ---
 
-### March 08
-#### Regex-Regular Expression
---Use para sa precise na paghahanap ng text. 
---Commonly use with [[Commands#THE `grep` Command|grep]]
-
-
-| expression | sample use                  | desc                                            |                                            |
-| :--------: | --------------------------- | ----------------------------------------------- | ------------------------------------------ |
-|    `^`     | `grep "^root" </etc/passwd` | means search for a line that starts with "root" |                                            |
-|    `$`     | `grep "shore$" file.txt`    | search for a line that ends with "shore"        | useful pag nag hahanap ng specific ending. |
-|    `.`     | `grep "b.t" file.txt`       | search any char between sa `b` and `t`          | usefull pag may uknown character sa gitna  |
-|    `[]`    | `grep "s[ae]lls file.txt`   | searches for `a or e` between sa `s and ll`     | usefull pag may ilang possible characters. |
-|   `[^]`    | `grep "sh[^e]ll`            | excludes the `e`                                | usefull for exclusion some certain         |
-|  `[a-c]`   | `grep "d[a-c]g file.txt`    | paghahanap ng range `a-c`                       |                                            |
-|            |                             |                                                 |                                            |
-
-### March 14
-
 #### The ZRAM technology
+*March 14, 2026*
 --Isang kernel feature sa linux
 -- Can be installed like `apt install zram-tools`
 
@@ -134,6 +122,7 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 
 ---
 #### Using sudo vs logging in as root
+*March 14, 2026*
 --both gives `admin privilages` pero magkaiba ang principles.
 
 **Logging in as root** 

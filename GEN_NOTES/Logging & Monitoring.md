@@ -6,6 +6,9 @@
 *TEMPLATE NUMBER 1 FOR NOW*
 **CORE COMMANDS**
 	`journalctl`
+		`--since`
+		`--until`
+		`--verify` `#good for security check if logs are tampered`
 	`dmseg`'
 	`tail -f`
 	`less`
@@ -21,7 +24,7 @@
 	`etc...`
 
 **PERSONAL NOTES /PATTERNS**
-
+- concept of `logrotate` - for prevention of logs eating the disk space
 
 *TEMPLATE NUMBER 2 FOR NOW*
 

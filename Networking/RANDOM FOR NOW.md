@@ -161,7 +161,7 @@ Behind an HTTPs an SSL cert plays a role. By definition an SSL Cert is a webserv
 
 Step1: Client browser requests secure pages from a server(`https example.com`)
 
-Step2: The example.com server sends its public with its SSL Certificate. Which is digitally signed by a CA
+Step2: The example.com server sends its public key with its SSL Certificate. Which is digitally signed by a CA
 
 Step3: Once the client's browser gets the certificate, it will check the issuers digital signature to make the cert is valid(the digital signature is made by CA's private key). *Note: browsers are installed with many majors CA's public key.*
 
@@ -178,3 +178,8 @@ From now on. the traffic between them will be encrypted and decrypted with the s
 
 OTHER CONCEPTS:
 INTERNAL HTTPS VS EXTERNAL HTTPS
+
+
+---
+
+

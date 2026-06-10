@@ -503,6 +503,8 @@ Changes the permissions (r, w, x) of a file or directory.*
 >
 > - "*Explicit is better than implicit*" : By default,  script files `.sh` is doesnt have execute permission thats why it only treated as regular file once created. So it better to *"explicitly"* give it a execute permission `chmod +x file.sh`
 
+^a2516e
+
 
 #### **chown**
 *Overview: Changes the **owner (user)** and/or **group** of a file or directory.*
@@ -545,7 +547,7 @@ Changes the permissions (r, w, x) of a file or directory.*
 >`ls -l /usr/bin/passwd`
 >Output : `-rwsr-xr-x`. Notice the `s` instead of `x` 
 >
->- `/bin/passwd` lets normal users change their password, but it runs with **root privileges** because of SetUID.
+>- `/bin/passwd` it lets normal users change their password, but it runs with **root privileges** because of SetUID.
 
 >[!How to set]
 >`chmod u+s <file>`
@@ -571,7 +573,7 @@ Changes the permissions (r, w, x) of a file or directory.*
 Overview: 
 - **Applies to directories only**
 - Ensure that only the file's owner (or root) can delete or rename files inside, even if others have write access.
-- Commonly used in `/tmp` to prevent users from deleting each other's file.
+- Commonly used in  [[Linux_File_System__Major_Only_#/tmp|/tmp]] to prevent users from deleting each other's file.
 
 >[!Example] Example and how to Identify
 >`ls -ld /tmp` 
@@ -591,14 +593,14 @@ Overview:
 Overview : 
 *-- change the permission sa mga susunod na created file or dir*
 -- base sa session ng terminal, meaning once run sa terminal its now active.
--- *change the [[Whatis#The ~/.profile / ~/.xprofile|`.profile`]] to make it persist*
+-- *change the [[Linux_File_System__Major_Only_#The ~/.profile / ~/.xprofile|~/.profile]] to make it persist*
 
 >[!Syntax]
 >`umask <value>`
 >
 >**Check current umask**
 >- `umask`
->-
+>
 
 >[!Info]
 >**How it works**
@@ -644,8 +646,10 @@ Overview :
 
 ___
 
-### The User User Management Files
-For commands : [command ]
+### The User Management Files
+For commands : [[Commands#LINUX| GO HERE]]
+
+
 
 1.  The `sudoers` file
 	- located at /etc/sudoers
