@@ -1,25 +1,33 @@
-use h3 for date and h4 for topics
 
-#### Ano ang difference ng Terminal vs Shell? 
+
+## Ano ang difference ng Terminal vs Shell? 
 *Feb 21, 2026*
-	Isipin mo na ang Terminal ay isang application na similar sa mga GUI apps. Pero, sa halip na Graphical User Interface, ang Terminal ay Text Base Interface.
-	
-		Halimbawa. : Sa pag hanap ng IP Address
-		GUI      -> Setting -> Wifi Setting -> WifiNameInformation
-		Terminal -> ipconfig or ifconfig
 
-	Ang SHELL naman ang command interpreter. Ito ang gumagawa ng mga iutos mo bilang user.
-	Ito ang middle man para makausap mo ang core OS/kernel.
-	Summary/Note : Ang Shell ay mag rurun parin kahit GUI ang gamit mo dahil nagawa parin ito ng mga commands. 
-		TERMINAL: is a tool
-			Ex: GNOME Terminal, Konsole
-		SHELL :  the middle to OS/Kernel
-			Ex: Bash, Zsh
-**Note: Ang Terminal command as we know tulad ng GNOME Terminal, Konsole ay mga ***Terminal Emulator lang din*** na nag eemulate ng **[[Feynman-Technique#TTY: Teletype Writer|Teletype Writer]]
+>Isipin mo na ang **Terminal** ay isang application na similar sa mga GUI apps. Pero, sa halip na Graphical User Interface, ang Terminal ay Text Base Interface.
+>Halimbawa. : Sa pag hanap ng IP Address
+```
+GUI      -> Setting -> Wifi Setting -> WifiNameInformation
+Terminal -> ipconfig or ifconfig
+```
+	
+>Ang SHELL naman ang command interpreter. Ito ang gumagawa ng mga iutos mo bilang user.
+
+Ito ang middle man para makausap mo ang core OS/kernel.
+Summary/Note : Ang Shell ay mag rurun parin kahit GUI ang gamit mo dahil nagawa parin ito ng mga commands. 
+
+>[!Important]
+>**TERMINAL: is a tool**
+>`Ex: GNOME Terminal, Konsole`
+>
+>**SHELL :  the middle to OS/Kernel**
+>`Ex: Bash, Zsh`
+			
+>[!Note] 
+**Note: Ang Terminal command as we know tulad ng GNOME Terminal, Console ay mga ***Terminal Emulator lang din*** na nag eemulate ng **[[Feynman-Technique#TTY: Teletype Writer|Teletype Writer]]
 
 ___
 
-#### TTY Teletype Writer
+## **TTY Teletype Writer**
 *Feb 22, 2026*
 ----Isang Terminal base interface nag nagbibigay ng way para magamit mo ang comptuter ng hindi na dumadaan sa GUI ng Desktop
 
@@ -41,28 +49,6 @@ ___
 
 ---
 
-#### ANO ANG SYMBOLIC LINKS? 
-*Feb 25, 2026*
-`Shortcut(.Ink file)`
-***Symbolic link*** ay isang shortcut file pero mas low level 
-
-Madalas gamitin sa folders or files.
-##### Core Idea
-Kapag gumawa ka ng symbolic link:
-- Hindi nito kinokopya ang file
-- Hindi ito duplicate
-- Isa lang itong “pointer” papunta sa original file
-###### Example
-Original File:
-***`/home/userName/Documents/report.txt`***
-
-Creating symbolic link:
-***`ln -s /home/orano/Documents/report.txt ~/Desktop/report-link.txt`***
-
-###### Visual Example
-`ls -l` Outputs:
-**`report-link.txt -> /home/orano/Documents/report.txt`**
-Makikita sa arrow (*`->`*) kung nasan yung shortcut 
 
 ---
 ---
@@ -71,7 +57,7 @@ Makikita sa arrow (*`->`*) kung nasan yung shortcut
 
 ---
 
-#### WHAT DOES GIT COLLABORATION WITHOUT GITHUB BACK THEN?
+## **WHAT DOES GIT COLLABORATION WITHOUT GITHUB BACK THEN?**
 *March 07, 2026*
 **Patches via email**
 1. Ang mga contributor ay gumagawa ng changes sa kanilang local repo.
@@ -94,13 +80,13 @@ git pull
 
 ---
 
-#### The ZRAM technology
+## **The ZRAM technology**
 *March 14, 2026*
 --Isang kernel feature sa linux
 -- Can be installed like `apt install zram-tools`
 
 **it compresses the inactive process from RAM and store it again sa RAM.**
-* gumagawa ito ng **zram devices** *check it via `lblk`*
+* gumagawa ito ng **zram devices** *check it via [[Linux_File_System__Major_Only_#The *`lsblk`* command|lsblk]]*
 
 **Typical flow**
 1.  Program uses RAM
@@ -120,8 +106,18 @@ git pull
 -- Sa zram swap     : *`RAM -> Compressed RAM`*
 -- sa hybrid              : *`RAM -> ZRAM swap -> disk swap(last resort)*`
 
+>[!Question] Why zram has no entry at `/etc/fstab` for persistence?
+>If you read about the [[Linux_File_System__Major_Only_#Swap]]. It has an entry as the `etc` for persistence.
+>
+>The reason zram doesnt have one is becuase, zram is not mounted like a disk. 
+>It is:
+>- created by boot by systemd
+>- managed by kernel modules or services
+>- configured via system settings (not fstab)
+> 
+
 ---
-#### Using sudo vs logging in as root
+## Using sudo vs logging in as root
 *March 14, 2026*
 --both gives `admin privilages` pero magkaiba ang principles.
 

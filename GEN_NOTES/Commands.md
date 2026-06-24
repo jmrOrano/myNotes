@@ -40,32 +40,6 @@
 
 	
 use H4 for titles 
-#### The *`lsblk`*  command
-Sample output: 
-`*sdc      8:32   1   3.8G  0 disk `*
-*`└─sdc1   8:33   1   3.7G  0 part /media/linuxuser/F4FD-93EE`*
-
-|                             | Desc                           |
-| :-------------------------: | ------------------------------ |
-|   sdc 8:32 1 3.8G 0 disk    | - Ito yung mismong USB Drive   |
-| \|-sdc1 8:833 1 3.7G 0 part | - ito yung partition           |
-|      /media/linuxuser/      | -Dito naka mount ang partition |
-|          F4FD-93EE          | -Ito yung name ng USB          |
-
-**PANO SAFELY EJECT AND USB DRIVE? **
-
-*unmount muna ang partition*
-**`sudo umount /dev/sdc1`**
-
-*then power off the device*
-**`sudo udisksctl power-off -b /dev/sdc`**
-
-|                                            Flags / Options                                             | Desc                                         |
-| :----------------------------------------------------------------------------------------------------: | -------------------------------------------- |
-|                                                   -b                                                   | -- block-device : ang ibibigay mong argument |
-| sa linux, lahat ng hardware devices ay ***nirerepresent bilang files*** sa loob ng directory na : /dev |                                              |
-|                                                                                                        |                                              |
-
 
 ----
 
@@ -141,7 +115,7 @@ tr 'a-z' 'A-Z'    # Converts lower to UPPER
 tr 'A-Z' 'a-z'    # Converts UPPER to lower
 tr '0-9' 'a-j'    # replaces each number with letter
 
-tr 'a-Za-z'       # Combining two ranges in one parameter
+tr 'A-Za-z'       # Combining two ranges in one parameter
 ```
 
 **Useful flags**
@@ -159,18 +133,47 @@ tr -s ' '    # SQUEEZ multiple spaces into one
 bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-Zn-zA-Ma-m'
 The CaFFJBEd iF 7K16WNeuvi5YkvhWFfsvDBBgAUTLj9Q4
 
+#-----THIS IS WRONG AS WELL----
+bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-Zn-z'
+Tzz zzzzzzzz zz 7z16WNzuvz5YzvzWzzsvzzzzzUTzz9Q4
+
 #------THIS IS THE CORRECT------
 bandit11@bandit:~$ cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
 
 ```
-Rot13: It's just the alphabet **shifted by 13 positions.**
+>**Rot13: It's just the alphabet shifted by 13 positions.**
+
+^23b272
 
 **The rule i impose ?** Pattern recognition.
 ```
 First parameter:   UPPER range first, LOWER range second
 Second parameter:  UPPER range first, LOWER range second
 ```
+
+>[!Note] Set 1 and Set2 should be 1 to 1 
+>In set 1 `A-Za-z` is already 26 characters each range, a total of 52. 
+>
+>If you only did `N-Zn-z` — that is only 13 characters each, a total of 26 character, so it wont match and it will repeat.
+>```
+>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+>N O P Q R S T U V W X Y Z N O P Q R S T U V W X Y Z 
+>                           ^
+>                     it repeats here
+>```
+>
+>If you did `N-ZA-Mn-za-m` — now its a total of 52 characters 
+>```
+>Breakdown
+>N-Z = 13 | A-M= 13 | n-z= 13 | a-m= 13
+>
+>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+>N O P Q R S T U V W X Y Z A B C D E F G H I J K L M 
+>                          ^
+>                          It doesnt repeat
+>```
+
 ---
 ### RELATED TO LEVEL 12 IN bandit overthewire
 *The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command “mktemp -d”. Then copy the datafile using cp, and rename it using mv (read the manpages!)*
@@ -234,14 +237,27 @@ Second parameter:  UPPER range first, LOWER range second
 >
 >**For System awareness**
 > [[Linux_File_System__Major_Only_#df|df command]]
->[[Linux_File_System__Major_Only_#du|du command]]
+>[[Linux_File_System__Major_Only_#du|du command]] 
 >[[Linux_File_System__Major_Only_#ps|ps command]]
->[[Linux_File_System__Major_Only_#top|top command]]
+>[[Linux_File_System__Major_Only_#top|top command]] 
 >
->
+>**Miscellaneuous**
+>[[Linux_File_System__Major_Only_#which|which command]]
+>[[Linux_File_System__Major_Only_#ldd|ldd command]]
+>[[Linux_File_System__Major_Only_#whereis|whereis command]]
+>[[Linux_File_System__Major_Only_#mktemp|mktemp command]]
+>[[Linux_File_System__Major_Only_#The *`lsblk`* command|lsblk command]]
+>[[Linux_File_System__Major_Only_#strings command|string command]]
 >
 
+^4ccc34
 
+>[!Note]- Tools
+>
+>For disk utilities
+>[[Tools#parted|parted]]
+>[[Tools#mkpart|mkpart]]
+>
 
 [[DOCKER SETUP  2#**DOCKER COMMON COMMANDS**|Docker Common Commands]]
 

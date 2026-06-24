@@ -1,11 +1,6 @@
-	***use H5*** 
-
 
 ---
-
-
----
-##### **What is a kernel?**
+## **What is a kernel?**
 *Compilation of codes — mostly written in C with small parts of assembly.*
 *It sits between the apps and the hardware, like a middleman*
 
@@ -14,7 +9,7 @@
 - Memory Management — assigns RAM so apps dont overwrite each others brain
 - Device Control — talks to hardware (keyboard, ssd, GPU) through drivers.
 - System calls bridge — apps cant touch hardware directly, so tehy ask kernel via `syscalls`
-##### The `env` (environment variables)
+## **The `env` (environment variables)**
 A `environment variables` ay *configuration values na available sa shell at sa mga programs habang nag rurun sila*
 
 **Paano ito nagana technically?**
@@ -31,7 +26,7 @@ A `environment variables` ay *configuration values na available sa shell at sa m
 `export PATH=$PATH:/home/orano/mytools` : this one is automatic every shell session. 
 
 ---
-##### GNU 
+## GNU 
 --isang **project at set ng tools** na nagbibigay ng **core utilities at software components** para sa isang free/open-source operating system.
 
 **GNU ≈ Windows Command Prompt tools + system utilities**  
@@ -57,7 +52,7 @@ Lahat ito ay bahagi ng **GNU Project**.
 
 ---
 
-##### Deamons
+## Deamons
 -- background process na laging tumatakbo para magbigay ng service
 --Note : can be control by `systemctl`
 - Hindi mo siya directly ini-interact (usually)
@@ -124,10 +119,10 @@ Shortcut way para malaman:
 
 ---
 
-#### Regex-Regular Expression
+## **Regex-Regular Expression**
 *March 08, 2026*
 --Use para sa precise na paghahanap ng text. 
---Commonly use with [[Commands#THE `grep` Command|grep]]
+--Commonly use with [[Linux_File_System__Major_Only_#**grep**|Grep command]]
 
 | expression | sample use                  | desc                                            |                                            |
 | :--------: | --------------------------- | ----------------------------------------------- | ------------------------------------------ |
@@ -240,9 +235,9 @@ Many uses the `exec` instead.....SEARCH THIS
 >find -> outputs filenames as text -> grep reads those as stdin
 >```
 
----
 
-##### **What is Base64?**
+---
+## **What is Base64?**
 Think of it like a ***translation system***.
 
 >Computers sometimes need to send binary data (images, files, encrypted stuff) through systems that **only understand text** — like email or the web.
@@ -284,16 +279,16 @@ cGFzc3dvcmQxMjM=
 base64 [targetFile] > [encode_location.txt]
 ```
 
-|  Flags   | Desc                                         |                                     |
-| :------: | -------------------------------------------- | ----------------------------------- |
-|          |                                              |                                     |
-| ENCODING | ENCODING                                     | ENCODING                            |
-|  `-W 0`  | No line wrapping (default wraps at 76 chars) | use when it needs to be continuous  |
-|  `-w N`  | Wraps output at N characters                 | `base64 -w 120 file.txt`            |
-|          |                                              |                                     |
-| DECODING | DECODING                                     | DECODING                            |
-|   `-d`   | decopde mode                                 |                                     |
-|   `-i`   | ignore non-alphabets characters              | useful for dirty input              |
+|  Flags   | Desc                                         |                                    |
+| :------: | -------------------------------------------- | ---------------------------------- |
+|          |                                              |                                    |
+| ENCODING | ENCODING                                     | ENCODING                           |
+|  `-W 0`  | No line wrapping (default wraps at 76 chars) | use when it needs to be continuous |
+|  `-w N`  | Wraps output at N characters                 | `base64 -w 120 file.txt`           |
+|          |                                              |                                    |
+| DECODING | DECODING                                     | DECODING                           |
+|   `-d`   | decode mode                                  |                                    |
+|   `-i`   | ignore non-alphabets characters              | useful for dirty input             |
 
 
 *It is related to Layer 7 of OSI Model. Read more — [[OSI_Model#Layer 7-6 Spotlight — Encoding & Base64]]*
@@ -342,7 +337,7 @@ base64 [targetFile] > [encode_location.txt]
 
 ---
 
-#### **What is hexdump?**
+## **What is hexdump?**
 *May 05, 2026*
 *Overview: showing bytes of a file but in [[#**What is hexadecimal?**|hexadecimal]] format instead of long 1's and zero's*
 
@@ -416,7 +411,7 @@ That covers 90% of real-world use.
 
 ---
 
-#### **What is hexadecimal?**
+## **What is hexadecimal?**
 *May 05, 2026*
 
 Reference: https://learn.sparkfun.com/tutorials/hexadecimal/all
@@ -460,15 +455,96 @@ C0 A8 01 01
 
 ---
 
-#### **What is the binary (base2)?**
+## **What is the binary (base2)?**
 *May 05, 2026*
 **Definition:** a numbering system that uses only two digits: 0's and 1's. 
 
 **Key idea:** All data in a computer is ultimately stored as binary, but at the physical level, it is not “numbers” — it is electrical states (voltage ON/OFF).  
 - Binary is a human interpretation of those physical states.
 - This is important to understand first in order to understand what is the use of [[#**What is hexadecimal?**]]
+---
+
+## STDOUT, STDIN, STDERR 
+---
+*June10-2026*
+
+## Hard links
+*June 20, 2026*
+*A direct pointer to the [[Linux_File_System__Major_Only_#Inodes|Inodes]]*
+
+>**KEY CHARACTERISTICS**
+- `Same Inode`  — All hard links share the exact same inode.
+- `No extra space` — It do not duplicate the file data. Only consumes directory space
+- `Contained inside File system` — You cannot create a hard link accross different physical drives
+- `Files Only` — Cant create hard links for directories
+
+> **HARD LINK VS SYMBOLIC LINK**
+
+| Featues                       | Hard Link                                               | Symbolic Link                        |
+| :---------------------------- | ------------------------------------------------------- | ------------------------------------ |
+| `What is points to`           | To the [[Linux_File_System__Major_Only_#Inodes\|Inode]] | To the directory entry of the file.  |
+| `If original file is deleted` | Data remains                                            | The link becomes dangling and broken |
+| `Can cross the file system`   | No                                                      | Yes                                  |
+| `Can link dir`                | No                                                      | Yes                                  |
+### What is it used for ?
+
+>**1. SAFE MULTIPLE REFERENCES TO IMPORTANT DATA**
+*If a file is critical and used in multiple places, hard links ensure it doesn’t disappear accidentally.*
+
+Example idea:
+```
+config.dat used by:
+- app A
+- app B
+- admin tools
+```
+Instead of duplicating it, you can hard link:
+```
+appA/config.dat → inode 123
+appB/config.dat → inode 123
+```
+
+>**2. BACKUP SYSTEMS**
+
+Tools like this uses hard links heavily:
+- `rsync`
+- `cp -al`
+- snapshot systems (like ZFS-style behavior in simpler forms)
+
+>**3. EFFICIENT DUPLICATION**
+
+Instead of `copy file --> uses disk space`
+You can do `Hard link --> no new data block used`
+
+>4. **FILE IDENTITY STABILITY**
+```
+Because inode stays the same even if filenames change:
+original.txt → inode 100
+renamed.txt  → inode 100
+```
 
 
 ---
+## **Symbolic Link**
+*Feb 25, 2026*
+`Shortcut(.Ink file)`
+***Symbolic link*** ay isang shortcut file pero mas low level 
 
+Madalas gamitin sa folders or files.
+##### Core Idea
+Kapag gumawa ka ng symbolic link:
+- Hindi nito kinokopya ang file
+- Hindi ito duplicate
+- Isa lang itong “pointer” papunta sa original file
+###### Example
+Original File:
+***`/home/userName/Documents/report.txt`***
 
+Creating symbolic link:
+```Bash
+ln -s /home/orano/Documents/report.txt ~/Desktop/report-link.txt
+```
+###### Visual Example
+`ls -l` Outputs:
+**`report-link.txt -> /home/orano/Documents/report.txt`**
+Makikita sa arrow (*`->`*) kung nasan yung shortcut 

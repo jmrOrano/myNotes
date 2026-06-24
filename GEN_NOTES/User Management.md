@@ -25,7 +25,8 @@
 > - [[User Management#**STICKY BIT**|sticky bit]]
 > 
 > **OTHERS**
-> - [[#The User User Management Files]]
+> - [[#The User Management Files]]
+> - 
 
 
 *This section covers the essential concepts and commands for managing users in Linux. It includes creating and deleting user accounts, modifying user information, managing groups, and setting permissions.*
@@ -646,10 +647,11 @@ Overview :
 
 ___
 
+
+# **MISC** 
+
 ### The User Management Files
 For commands : [[Commands#LINUX| GO HERE]]
-
-
 
 1.  The `sudoers` file
 	- located at /etc/sudoers
@@ -676,3 +678,8 @@ For commands : [[Commands#LINUX| GO HERE]]
 	- for managing permissions for multiple users
 		- `root:x:0:`
 		- each group is seperated by colon
+
+
+# **/ QUESTIONS /** 
+### How do pros search for potential vulnerability in permissions
+More specifically, How do they find files with unusual permissions? 

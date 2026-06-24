@@ -15,7 +15,7 @@
 >		- [[#/var/cache]]
 >		- [[#/var/spool]]
 >		- [[#/var/lib]]
->		- [[#/var/run]]
+>		- [[#/var/run → /run]]
 >	- [[#/usr]]
 >		- [[#/usr/bin]]
 >		- [[#/usr/sbin]]
@@ -25,12 +25,20 @@
 >		- [[#/usr/src]]
 >	- [[#/tmp]]
 >- [[#LESS TOUCHED]]
+>  - [[#Common File System Types]]
+>- [[#The Anatomy of Disk]]
+>	- [[#Filesystem Structure]]
 >- [[#COMMANDS]]
 >	- [[#Navigation]]
 >	- [[#Reading Files]]
 >	- [[#Searching]]
 >	- [[#System Awareness]]
 >	- [[#Misc]]
+>- [[#Other information]]
+>	- [[#A file named `-`]]
+>	- [[#Swap]]
+>	- [[#Block]]
+>	- 
 
 ---
 
@@ -146,7 +154,7 @@ sudo cat /etc/hosts
 *System Configuration*
 - `/etc/hostname` — machine name
 - `/etc/hosts` — manual DNS overrides
-- `/etc/fstab` — disk mounting rules on boot
+- `/etc/fstab` — disk mounting rules on boot ^27d1c1
 
 *Services*
 - `/etc/systemd/` — systemd service configs
@@ -235,7 +243,7 @@ Examples:
 
 #### /var/run → /run
 **What it is:** Runtime information — only relevant while the system is running.
-**Note:** Modern Linux moved this. `/var/run` is now just a symlink pointing to `/run`.
+**Note:** Modern Linux moved this. `/var/run` is now just a [[Whatis#**Symbolic Link?**|symlink]] pointing to `/run`.
 
 Contains: PID files, sockets, temporary service state.
 *When a service starts, it writes its PID here so other programs can find it.*
@@ -268,7 +276,7 @@ type ls       # → ls is /usr/bin/ls
 ```
 
 >[!Note]- About `/bin` at the root directory
->`/bin` is just a [[Feynman-Technique#ANO ANG SYMBOLIC LINKS?|Symbolic Link]] pointing to `/usr/bin` — they are the same thing.
+>`/bin` is just a [[Whatis#**Symbolic Link**|symlink]] pointing to `/usr/bin` — they are the same thing.
 >Kept for backward compatibility — old scripts still hardcode paths like `/bin/bash`.
 
 ---
@@ -288,7 +296,7 @@ type ls       # → ls is /usr/bin/ls
 ```
 
 >[!Note]- About `/sbin` at the root directory
->Same story as `/bin` — symlink to `/usr/sbin`, kept for backward compatibility.
+>Same story as `/bin` — [[Whatis#**Symbolic Link?**|symlink]] to `/usr/sbin`, kept for backward compatibility.
 
 ---
 
@@ -414,28 +422,284 @@ Uses a [[User Management#STICKY BIT|Sticky Bit]] — everyone can write, but **y
 ## LESS TOUCHED
 *Good to know they exist, but you won't be living in these daily.*
 
-| Directory | What it is                                                                 |
-| --------- | -------------------------------------------------------------------------- |
-| `/boot`   | Kernel and bootloader files. Don't touch.                                  |
-| `/dev`    | Device files — your disk, keyboard, etc. appear as files here              |
-| `/proc`   | Virtual filesystem — live kernel and process info. Not real files on disk. |
-| `/sys`    | Virtual filesystem — hardware info exposed by the kernel                   |
-| `/mnt`    | Temporary manual mount point                                               |
-| `/media`  | Auto-mounted removable drives (USB, etc.)                                  |
-| `/opt`    | Optional third-party software (some apps self-install here)                |
-| `/root`   | Home directory for the root user (not `/home/root`)                        |
-| `/run`    | Runtime data — replaces old `/var/run`                                     |
-| `/bin`    | Symlink → `/usr/bin`                                                       |
-| `/sbin`   | Symlink → `/usr/sbin`                                                      |
-| `/lib`    | Symlink → `/usr/lib`                                                       |
+|                         | Directory | What it is                                                                                                                                                  |
+| ----------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|                         | `/boot`   | Kernel and bootloader files. Don't touch.<br>Stores the files required for the system's boot process, including the Linux kernel and the boot loader files. |
+|                         | `/sys`    | Virtual filesystem — hardware info exposed by the kernel                                                                                                    |
+| System Information      |           |                                                                                                                                                             |
+|                         | `/proc`   | A virtual filesystem that provides real-time information about currently running processes and kernel parameters.                                           |
+|                         | `/srv`    | Intended for site-specific data served by the system, such as files for a web server.                                                                       |
+| Device and Mount Points |           |                                                                                                                                                             |
+|                         | `/dev`    | Contains special device files that represent hardware components like hard drives, terminals, and input devices.                                            |
+|                         | `/mnt`    | A generic mount point for temporarily mounting filesystems.                                                                                                 |
+|                         | `/media`  | A standard mount point for removable media like USB drives, SD cards, and CD-ROMs.                                                                          |
+|                         | `/opt`    | Reserved for optional or third-party application software packages.                                                                                         |
+|                         | `/root`   | Home directory for the root user (not `/home/root`)                                                                                                         |
+|                         | `/run`    | Contains information about the running system since the last boot, such as process IDs (PIDs) and other runtime data.                                       |
+|                         | `/bin`    | Symlink → `/usr/bin`                                                                                                                                        |
+|                         | `/sbin`   | Symlink → `/usr/sbin`                                                                                                                                       |
+|                         | `/lib`    | Symlink → `/usr/lib`                                                                                                                                        |
 
 ---
 
-## COMMANDS
+# Common File System Types
+---
+>**ext4**
+
+^ee9fa8
+
+```
+— The default for many distros
+— Reliable and standard choice for most use case
+– Backward-compatible with its predecessors (ext2/ext3)
+— Support very large disk volumes (up to 1Tb), and up to (16Tb File sizes)
+```
+
+>**Btrs** 
+
+^a5ed07
+
+```
+— "B-tree FS" - modern filesystems with advance features like:
+	- Built-in snapshots
+	- Incremental backups
+	- Improved performance
+— While it is now considered stable and is the default in some distributions, it is still under active development.
+```
+
+>**XFS**
+
+^8d214b
+
+```
+— High performance journaling filesystem
+— Excels at handling large files and parallel I/O operations.
+— Excellent choice for systems that manage large amount of data such as : Media Servers.
+```
+
+>**NFTS and FAT**
+```
+— Standard on Windows Filesystems. 
+— Provides full support for reading and writing to them.
+— Which is useful for dual-boot systems.
+```
+
+>**HFS+**
+```
+— The standard on macOS filesystems.
+— Linux has only read-only support for it by default
+— Additional tools is used for write suppport.
+```
+
+# The Anatomy of Disk
+---
+*June12 2026*
+
+```
+Remember this hierarchy:
+Disk
+ └─ Partition
+     └─ Filesystem
+         ├─ Inodes
+         └─ Data Blocks
+
+```
+
+>A physical disk (e.g. `/dev/sda`) can be divided into multiple **partitions**.
+
+
+Example:
+```
+/dev/sda = entire disk (The first storage detected byu the system)
+/dev/sda1 = first partition 
+/dev/sda2 = second partition
+
+/dev/sdb = The second storage drive detected by the system
+```
+
+>Partitions allow different parts of a disk to serve different purposes:
+```
+- Operating System
+- User Data
+- Swap Space
+- Separate Filesystems
+```
+>A partition usually contains a filesystem ([[#^ee9fa8|ext4]], [[#^8d214b|xfs]], [[#^a5ed07|btrfs]], etc.), but it can also be used for swap or other special purposes.
+
+## Partition Table
+---
+>A **partition table** stores information about how a disk is divided.
+
+It tells the OS:
+```
+- Where partitions start and end
+- Which partitions exist
+- Which partition is bootable
+- How disk space is allocated
+```
+
+>Two common partition table types:
+### MBR (Master Boot Record)
+---
+*Legacy partitioning scheme.*
+
+**Characteristics:**
+```
+- Maximum of 4 primary partitions
+- Supports:
+    - Primary partitions
+    - Extended partitions
+    - Logical partitions
+- Supports disks up to 2 TB
+```
+
+**To create more than 4 partitions:**
+- Create an Extended Partition
+- Create Logical Partitions inside it
+- 
+>Example
+```
+├─ Primary Partition 
+├─ Primary Partition 
+├─ Primary Partition 
+└─ Extended Partition
+ ├─ Logical Partition
+ ├─ Logical Partition
+ └─ Logical Partition
+```
+
+---
+### GPT (GUID Partition Table)
+---
+*Modern partitioning standard.*
+
+>Characteristics:
+```
+- Supports many partitions
+- No primary/extended/logical distinction
+- Uses unique GUID identifiers
+- Works with modern UEFI systems
+- Supports very large disks (>2 TB)
+```
+>GPT is the preferred partition table on modern Linux systems.
+
+---
+## Filesystem Structure
+*filesystem is an organized collection of files and directories. At its core, it consists of a database to manage files and the files themselves. Let's explore its structure in more detail.*
+
+>**Boot block**
+```Quote
+— Contains Boot Related Information.
+
+Located in the first few sectors of a filesystem, this block is not used by the filesystem itself. Instead, it contains information used to boot the operating system. Only one boot block is needed per OS. While other partitions may have boot blocks, they often go unused.
+```
+
+>**Superblock**
+
+^becce8
+
+```Quote
+— Stores filesystems metadata:
+	- Filesystem size
+	- Block size
+	- Inode Information
+	- Filesystem Status
+
+This is a single block following the boot block that contains metadata about the filesystem, such as the size of the inode table, the size of logical blocks, and the total size of the filesystem.
+```
+
+>**Inode table**
+```Quote
+— Database of filesystem objects.
+— Every file and directory has an Indode
+— Stores metadata such as:
+	- Ownership
+	- Permissions
+	- Timestamps
+	- File size
+	- Data block locations
+— The inode stores information ABOUT a file, not the file contents.
+
+This is the database that manages files and directories. Each file or directory has a unique entry in the inode table, which stores various attributes about it. We will cover inodes in a dedicated lesson.
+```
+*Read here to know about Inodes: [[#Inodes]]*
+
+>**Data Blocks**
+```Quote
+This is where the actual content of your files and directories is stored.
+
+	- Text inside documents
+	- Images
+	- Videos
+	- Program data
+```
+
+---
+## Disk Naming
+*/dev/sda vs UUID*
+
+In Linux, names like `/dev/sda` and `/dev/sdb` are **temporary device labels** assigned to storage drives (HDDs, SSDs, USB drives) when the system detects them during boot.
+
+>These names are not permanent and should not be relied on for stable configuration.
+
+### Naming Convention
+
+>**Device prefix**
+- **sd** — *Serial Disk* or SCSI disk (modern shorthand for SATA, SCSI, and USB storage devices)
+
+>**Drive order**
+- `/dev/sda` — first detected disk
+- `/dev/sdb` — second detected disk
+- `/dev/sdc` — third detected disk, and so on
+
+>**Paritions** — *Numbers represent partitions on a disk*
+- `/dev/sda1` — first partition
+- `/dev/sda2` — second partition
+- `/dev/sdb1` — first partition on second disk
+
+>[!Important] Important Behavior
+>Device names like `sda`, `sdb`, etc. are **not fixed**.
+>
+>They can change depending on:
+>
+>- Boot order changes in BIOS/UEFI
+>- Adding or removing drives
+>- Reordering SATA/USB connections
+>- System detection timing during boot
+>
+>This means:
+> A disk that was `/dev/sdb` today may become `/dev/sda` after reboot.
+>
+
+### Why UUID is Preferred
+To avoid unreliable device naming, Linux uses **UUIDs (Universally Unique Identifiers)**.
+
+>A UUID:
+```
+- Is stored inside the filesystem
+- Does not change across reboots
+- Remains stable even if device names change
+```
+Because of this, UUIDs are the recommended method for:
+```
+- Mounting disks
+- Configuring `/etc/fstab`
+- Ensuring persistent storage mapping
+```
+
+**To View UUIDs**
+```Bash
+lsblk -f
+or
+blkid
+```
+
+---
+# COMMANDS
 
 ---
 
-### Navigation
+## Navigation
 
 #### cd / pwd
 ```bash
@@ -449,19 +713,24 @@ pwd                # where am I right now?
 ---
 
 #### ls
-**List directory contents.**
-Usage: `ls [flags] [path]`
+***List directory contents.***
 
-| Flag | Description | Note |
-|:---:|---|---|
+>**Usage**
+```Bash
+ls [flags] [path]
+```
+
+| Flag | Description                                  | Note                  |
+| :--: | -------------------------------------------- | --------------------- |
 | `-l` | Long format — permissions, owner, size, date | Full ID card per file |
-| `-a` | Show all including hidden files (dotfiles) | |
-| `-h` | Human readable sizes (KB, MB, GB) | Use with `-l` |
-| `-t` | Sort by time modified — newest first | |
-| `-r` | Reverse sort order | |
-| `-S` | Sort by file size — largest first | |
-| `-R` | Recursive — list all subfolders | Gets messy fast |
-| `-1` | One file per line | Cleaner for scripts |
+| `-a` | Show all including hidden files (dotfiles)   |                       |
+| `-h` | Human readable sizes (KB, MB, GB)            | Use with `-l`         |
+| `-t` | Sort by time modified — newest first         |                       |
+| `-r` | Reverse sort order                           |                       |
+| `-S` | Sort by file size — largest first            |                       |
+| `-R` | Recursive — list all subfolders              | Gets messy fast       |
+| `-1` | One file per line                            | Cleaner for scripts   |
+| `-i` | shows the [[#Inodes]] number                 |                       |
 
 ```bash
 ls -lah           # the go-to: long + all + human readable
@@ -473,7 +742,11 @@ ls -lt            # see what changed recently
 
 #### tree
 **Show directory structure visually.**
-Usage: `tree [flags] [path]`
+
+>**Usage**
+```Bash 
+tree [flags] [path]
+```
 *Not installed by default — `sudo apt install tree`*
 
 | Flag | Description | Note |
@@ -492,11 +765,15 @@ tree /etc -L 1 -d     # top-level dirs in /etc only
 
 ---
 
-### Reading Files
+## Reading Files
 
 #### **cat**
-**Print file contents to screen.**
-Usage: `cat [flags] filename`
+***Print file contents to screen.***
+
+>**Usage**
+```Bash
+cat [flags] filename
+```
 *Best for small files. Use `less` for large ones.*
 
 |       Flag        | Description                                 | Note                                |
@@ -508,8 +785,12 @@ Usage: `cat [flags] filename`
 ---
 
 #### less
-**View large files without flooding the screen.**
-Usage: `less [flags] file`
+***View large files without flooding the screen.***
+
+>**Usage**
+```Bash
+less [flags] file
+```
 
 | Flag / Key | Description |
 |:---:|---|
@@ -529,8 +810,12 @@ ls /usr/bin | less
 ---
 
 #### head
-**Show the first lines of a file.**
-Usage: `head [flags] file`
+***Show the first lines of a file.***
+
+>**Usage**
+```Bash
+head [flags] file
+```
 *Default: first 10 lines.*
 
 | Flag | Description | Note |
@@ -541,8 +826,12 @@ Usage: `head [flags] file`
 ---
 
 #### tail
-**Show the last lines of a file.**
-Usage: `tail [flags] file`
+***Show the last lines of a file.***
+
+>**Usage**
+```Bash
+tail [flags] file
+```
 *Default: last 10 lines. Most powerful use: watching live logs.*
 
 | Flag | Description | Note |
@@ -558,11 +847,15 @@ tail -f -n 50 /var/log/auth.log
 
 ---
 
-### Searching
+## Searching
 
-#### grep
-**Search for patterns inside files.**
-Usage: `grep [flags] "pattern" filename`
+#### **grep**
+***Search for patterns inside files.***
+
+>**Usage:**
+```Bash
+grep [flags] "pattern" filename
+```
 *Reads one line at a time, makes a decision, moves to the next.*
 
 | Flag | Description | Example |
@@ -591,41 +884,49 @@ grep -iE "error|warning" file.txt
 ---
 
 #### find
-**Search for files and directories by name, type, size, time, and more.**
-Usage: `find [where] [flags] [action]`
+***Search for files and directories by name, type, size, time, and more.***
+
+>**Usage":**
+```Bash
+find [where] [flags] [action]
+```
 *Searches recursively by default. Companion of `grep` — combine with [[Whatis#The `xargs`|xargs]] for powerful results.*
+Use for precise filtering. 
+Slower compared to [[#locate]] because *find* command scans the live filesystem.
 
-
-
-|       Flag        | Description                                                   |                              |
-| :---------------: | ------------------------------------------------------------- | ---------------------------- |
-|                   |                                                               |                              |
-|    **BY NAME**    | **BY NAME**                                                   | **BY NAME**                  |
-|  `-name "*.txt"`  | Match pattern — case sensitive                                |                              |
-| `-iname "*.log"`  | Case-insensitive match                                        |                              |
-| `-name "config*"` | Anything starting with `config`                               |                              |
-| `-name "*config"` | Anything ending with `config`                                 |                              |
-|                   |                                                               |                              |
-|    **BY TYPE**    | **BY TYPE**                                                   | **By Type:**                 |
-|     `-type f`     | Files only                                                    |                              |
-|     `-type d`     | Directories only                                              |                              |
-|     `-type l`     | [[Feynman-Technique#ANO ANG SYMBOLIC LINKS?\|Symbolic Links]] | For symlink only             |
-|                   |                                                               |                              |
-|    **BY SIZE**    | *(units: `c`=bytes `k`=KB `M`=MB `G`=GB)*                     |                              |
-|   `-size +100M`   | Larger than 100MB                                             |                              |
-|   `-size -100M`   | Smaller than 100MB                                            |                              |
-|     `-empty`      | Empty files or folders                                        |                              |
-|                   |                                                               |                              |
-|    **BY TIME**    | **BY TIME**                                                   | **BY TIME**                  |
-|    `-mtime -7`    | Modified within last 7 days                                   | `-` = less than N days ago   |
-|   `-mtime +30`    | Modified more than 30 days ago                                | `+` = older than N days      |
-| `-newer file.txt` | Modified more recently than `file.txt`                        |                              |
-|                   |                                                               |                              |
-| DEPTH AND ACTIONS | DEPTH AND ACTIONS                                             | DEPTH AND ACTIONS            |
-|   `-maxdepth 2`   | Don't go deeper than 2 levels                                 | Avoid searching forever      |
-|   `-mindepth 1`   | Skip the starting folder itself                               |                              |
-|     `-delete`     | Delete every file found                                       | **Use with extreme caution** |
-| `-exec cmd {} \;` | Run a command on each result                                  |                              |
+|                Flag                | Description                                              |                                                                                  |                  |
+| :--------------------------------: | -------------------------------------------------------- | -------------------------------------------------------------------------------- | ---------------- |
+|                                    |                                                          |                                                                                  |                  |
+|            **BY NAME**             | **BY NAME**                                              | **BY NAME**                                                                      |                  |
+|          `-name "*.txt"`           | Match pattern — case sensitive                           |                                                                                  |                  |
+|          `-iname "*.log"`          | Case-insensitive match                                   |                                                                                  |                  |
+|         `-name "config*"`          | Anything starting with `config`                          |                                                                                  |                  |
+|         `-name "*config"`          | Anything ending with `config`                            |                                                                                  |                  |
+|                                    |                                                          |                                                                                  |                  |
+|            **BY TYPE**             | **BY TYPE**                                              | **By Type:**                                                                     |                  |
+|             `-type f`              | Files only                                               |                                                                                  |                  |
+|             `-type d`              | Directories only                                         |                                                                                  |                  |
+|             `-type l`              | [[Whatis#**Symbolic Link?**                              | symlink]]                                                                        | For symlink only |
+|                                    |                                                          |                                                                                  |                  |
+|            **BY SIZE**             | *(units: `c`=bytes `k`=KB `M`=MB `G`=GB)*                |                                                                                  |                  |
+|           `-size +100M`            | Larger than 100MB                                        |                                                                                  |                  |
+|           `-size -100M`            | Smaller than 100MB                                       |                                                                                  |                  |
+|              `-empty`              | Empty files or folders                                   |                                                                                  |                  |
+|                                    |                                                          |                                                                                  |                  |
+|            **BY TIME**             | **BY TIME**                                              | **BY TIME**                                                                      |                  |
+|            `-mtime -7`             | Modified within last 7 days                              | `-` = less than N days ago                                                       |                  |
+|            `-mtime +30`            | Modified more than 30 days ago                           | `+` = older than N days                                                          |                  |
+|         `-newer file.txt`          | Modified more recently than `file.txt`                   |                                                                                  |                  |
+|                                    |                                                          |                                                                                  |                  |
+|         DEPTH AND ACTIONS          | DEPTH AND ACTIONS                                        | DEPTH AND ACTIONS                                                                |                  |
+|           `-maxdepth 2`            | Don't go deeper than 2 levels                            | Avoid searching forever                                                          |                  |
+|           `-mindepth 1`            | Skip the starting folder itself                          |                                                                                  |                  |
+|             `-delete`              | Delete every file found                                  | **Use with extreme caution**                                                     |                  |
+|         `-exec cmd {} \;`          | Run a command on each result                             |                                                                                  |                  |
+|                                    |                                                          |                                                                                  |                  |
+|    BY [[#Inodes\|INODE]] NUMBER    |                                                          |                                                                                  |                  |
+|   `-inum [inodeNum]` 2>/dev/null   | Use when single inode is link to multiple filename entry | Recommended to use  [[#ls\|ls command]] first to find the inode number of a file |                  |
+| `-samefile [filename] 2>/dev/null` | Same as above — but no need to use the inode number      |                                                                                  |                  |
 
 ```bash
 find /var/log -name "*.log" -mtime -7
@@ -634,18 +935,54 @@ find /etc -name "*.conf" | xargs grep "port"
 find . -empty -type f -delete
 ```
 
+#### locate
+*June 11, 2026*
+***the fast file finder — the same family as [[#find]], but work very differently.***
+Faster than  [[#find]] because the `locate` command searches an indexed database that contains a list of files.
+Use for a quick find where a file is. 
+
+>**Usage**
+```Bash
+locate [flags] [filename]
+#OR
+locate [flags] [wherePath] [filename]
+```
+
+>**Flags**
+
+| flags         | desc                          |                                                                |
+| :------------ | ----------------------------- | -------------------------------------------------------------- |
+| `-i`          | Case insensitive              |                                                                |
+| `-c`          | count how many matches exists | doesnt print paths                                             |
+| `-l 10`       | limit the output to 10        | useful for lots outputs<br>at this point filter your searches. |
+| `-r "\.log$"` | Uses a regex pattern          | this example, it search files ending in `.log` exactly         |
+| `"*.conf`     | A wildcard                    |                                                                |
+ 
+
+>A service periodically builds a database(for index). 
+>**And to manually update it:** 
+```Bash
+updatedb
+```
+
+>[!Tip] Good thing to do
+>The database located at /var/lib is update once daily by systemd timer or [[Tools#**CRON**]].  Its good thing to practice doing that as an exercise.
+
+
+
 ---
 
-### System Awareness
+## System Awareness
 
 #### df
 **How full are my drives?**
 
-| Command | Description | Note |
-|:---:|---|---|
-| `df -h` | Human readable sizes | Use this always |
-| `df -h /` | Check root filesystem only | |
-| `df -hT` | Also shows filesystem type | ext4, tmpfs, etc. |
+|  Command  | Description                | Note              |
+| :-------: | -------------------------- | ----------------- |
+|  `df -h`  | Human readable sizes       | Use this always   |
+| `df -h /` | Check root filesystem only |                   |
+| `df -hT`  | Also shows filesystem type | ext4, tmpfs, etc. |
+|  `df i`   | Display [[#Inodes]]        |                   |
 
 ---
 
@@ -661,6 +998,8 @@ find . -empty -type f -delete
 
 ```bash
 du -h --max-depth=1 / | sort -rh | head -20    # top 20 largest dirs
+
+du -h fileName #Just the size of specific file
 ```
 
 ---
@@ -704,8 +1043,8 @@ top -u username         # only show a specific user's processes
 
 ---
 
-### Misc
-
+# Misc
+---
 #### which
 **Find where a command lives.**
 ```bash
@@ -719,12 +1058,21 @@ ldd /usr/bin/curl
 which ls | xargs ldd
 ```
 
+#### whereis
+*Use to show the path related to the command like — binary, config, libraries, manual*
+
+```Bash
+whereis ssh
+whereis grep
+whereis 
+```
+
 ---
 #### mktemp
-**for creating temporary files or folders.**
+***for creating temporary files or folders.***
 - Guaranteed to have a unique name — so you never accidentally overwrite something that already exist.
 
-**BASIC USAGE** 
+>**BASIC USAGE** 
 ```bash
 mktemp
 #Creates a new empty file in /tmp with a random unique name and prints the path to it. Every run gives a different name.
@@ -733,7 +1081,7 @@ mktemp
 /tmp/tmp.aB3xK9
 ```
 
-**USEFUL FLAGS**
+>**USEFUL FLAGS**
 
 |           flags            | desc                                            |                                                                                                                            |                                                |
 | :------------------------: | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
@@ -764,14 +1112,211 @@ rm $temporary_variable
 > Files in [[#/tmp]] survive until reboot but not forever. 
 > In scripts, delete your temp files when done with rm `$TMPFILE` or `rm -rf $TMPDIR`. Good habit to build early.
 
+#### The *`lsblk`*  command
+
+|                                            Flags / Options                                             | Desc                                                        |                                                      |
+| :----------------------------------------------------------------------------------------------------: | ----------------------------------------------------------- | ---------------------------------------------------- |
+|                                                  `-b`                                                  | -- block-device : ang ibibigay mong argument                |                                                      |
+| sa linux, lahat ng hardware devices ay ***nirerepresent bilang files*** sa loob ng directory na : /dev |                                                             |                                                      |
+|                                                  `-l`                                                  | Produce a flat list rather than nested tree structure       |                                                      |
+|                                                  `-p`                                                  | Print the absolute full path                                |                                                      |
+|                                                  `-d`                                                  | Display the physical disk only — hides the child partitions |                                                      |
+|                                                  `-f`                                                  | Display info about filesystem.                              | Use for identifying [[#Why UUID is Preferred\|UUID]] |
 
 ---
-### Other information
+#### strings command
+*June 11, 2026*
+***extracts and prints sequence of human readable characters from a file***
+
+>**Usage**
+```Bash
+strings [flags] filename
+```
+
 ---
-#### A file named `-`
+# Other information
+---
+### A file named `-`
 `cat` won't work on a file literally named `-` — it interprets the dash as stdin, not a filename.
 
 ```bash
 cat ./-    # ./ tells the shell: this is a file, not a flag
 cat -- -   # -- tells the command: everything after this is a filename
 ```
+
+### Swap
+*June 15,2026*
+
+>[!Quote] 
+If you are low on memory, the system uses this partition to "swap" pieces of memory of idle processes to the disk, so you're not bogged down for memory.
+
+>**3 Main Types**
+
+**Swap Partition (Classic)**
+*A dedicated disk partition:*
+- Created with [[Tools#mkswap]]
+	- `mkswap`
+	- enabled via `swapon`
+	- Persistent via adding a config at /etc/fstab
+
+**Swap File (modern common default)**
+*Just a file acting like swap*
+
+- Persistent at `/etc/fstab` . See the line `/swapfile`
+
+**zram swap**
+*A unique one.*
+Read here for more: [[Feynman-Technique#**The ZRAM technology**]]
+
+***How to see the all the swap devices***
+```bash
+swapon --show
+```
+
+---
+### Block
+A **fixed-size chunk of storage** — the smallest unit the filesystem reads or writes at a time.
+
+- A disk is divided into millions of equal-sized blocks
+- Each block is labeled as `free` or `used`
+- Files claim blocks via inode mapping
+- Default block size on ext4: **4 KB (4096 bytes)**
+- The moment you make a  [[Documentations#Step2 Format partition (make filesystem)|filesystem]]. It predivides the entire partition into blocks upfront. All of them exist immediately — there are just labeled `free` by block bitmap.
+
+```bash
+# Check your filesystem's block size
+stat -f /
+sudo dumpe2fs /dev/sda1 | grep "Block size"
+```
+#### How a file is stored in blocks
+
+A 10 KB file on ext4 gets sliced into 4 KB pieces:
+```
+myfile.txt (10 KB)  
+│  
+├── Block A [████████] 4 KB (full)  
+├── Block B [████████] 4 KB (full)  
+└── Block C [████ ] 2 KB used / 2 KB WASTED ← slack space
+
+```
+
+The unused space in the last block is called **slack space**.
+It cannot be shared with another file — the whole block is reserved.
+```
+
+Blocks needed = ceil(file size ÷ block size)  
+= ceil(10 ÷ 4)  
+= 3 blocks
+
+Space reserved = 3 × 4 KB = 12 KB  
+Slack space = 12 - 10 = 2 KB wasted
+
+```
+
+#### Files do not have to be stored in consecutive blocks
+
+On a fresh disk, a file likely lands neatly:
+```d
+file.txt → Block 100 → Block 101 → Block 102
+```
+
+But after time — other files written, some deleted — free blocks
+become scattered, and a new file might land like this:
+```d
+
+Block 100 [file.txt - part 1]  
+Block 101 [file.txt - part 2]  
+Block 102 [other file] ← taken  
+Block 103 [other file] ← taken  
+Block 104 [file.txt - part 3] ← skipped ahead  
+Block 105 [file.txt - part 4]
+
+```
+
+This is called **fragmentation** — the file is still one logical file,
+but its physical pieces are scattered across the disk.
+
+> The filesystem handles this transparently. You open `file.txt`
+> and get the full file — the scattered blocks are stitched back
+> together by the inode, which tracks every block that belongs
+> to this file in order.
+
+---
+
+> This is where [[#Inodes]] come in — the inode for each file stores
+> the ordered list of every block that belongs to it, allowing the
+> filesystem to reassemble scattered pieces into one coherent file.
+
+
+---
+
+### Inodes
+*June 19, 2026*
+*Index Node*
+
+>**The core idea**
+>*A filename is just a **human-friendly label**. The inode is the **actual identity of the file** — it holds everything real about it. The filename is just a sticky note on the outside. The inode is the file's birth certificate.*
+
+>In short
+>*An inode (Index Node) is a filesystem metadata structure that describes a file.* 
+
+>**THE CHAIN**
+>*When you open a file— the OS goes through three steps every time.*
+```
+DIRECTORY ENTRY  |     | INODE #2847         |      | DATA BLOCKS
+notes.txt        | ->  | permissions, size   | ->   | actual content
+->inode #2847    |     | -> block 4,91,205   |      |the real data
+
+```
+*The filename (notes.txt) lives in a directory entry — its just a pointer to an inode number. The inode holds the real metadata and points to actual data blocks.*
+
+>**What an Inode actually stores**
+
+| Store            | Desc                                                                           |
+| :--------------- | ------------------------------------------------------------------------------ |
+| `File type`      | regular file, directory, [[Whatis#**Symbolic Link?**|symlink]], etc. |
+| `Permissions`    | rwxr-xr-x — who can read, write, execute                                       |
+| `Owner (UID)`    | user ID of the owner                                                           |
+| `Group (GID)`    | group ID                                                                       |
+| `File size`      | in bytes                                                                       |
+| `Link count`     | how many filenames point to this inode                                         |
+| `Timestamps`     | atime (last accessed), mtime (last modified), ctime (inode last changed)       |
+| `Block pointers` | addresses of the data blocks that hold this file's content                     |
+
+>**COMMANDS**
+```
+stat [file]   : Shows full inodes info — size 
+
+ls -i         : Shows the inode number
+
+df -i         : Shows inode usage vs total inodes available
+
+```
+
+>**DEMONSTRATION**
+```Bash
+touch original.txt
+ln original.txt copy.txt
+ls -li
+
+#OUTPUT
+3074151 -rw-r--r-- 2 
+3074151 -rw-r--r-- 2
+```
+*Notice both files will have same node number. Because linux allows multiple names to point to a same node. Because a file name is just an entry to inode.* 
+
+>The `ln original.txt copy.txt` is hard link. An opposite of [[Whatis#**Symbolic Link**|Symlink]]
+
+>**THE CONSEQUENCE OF THIS DESIGN**
+- ***Renaming is Instant*** — only the directory entry(the label) changes. The inode and all data blocks stays exactly where they are. No data moves.
+
+- ***Hard linking*** — Having 2 different filename but links to one node. Deleting one doesnt delete the file — other names still points to the same node. [[Whatis#**Symbolic Link**|Read about symlink]]
+
+- ***Deleting doesnt erase data immediately*** — only removes the directory entry and decrements the link count. Only when link count hits 0 are the blocks marked free. The actual data sits untouched until overwritten.
+
+- ***Inode limit*** — The inode table is fixed at file system creation. A disk with millions of tiny files can exhaust all inodes even if there's plenty of block space left.
+
+>IN SEARCHING OF SAME INODE
+
+Unlike with [[Whatis#**Symbolic Link**]] which displays the path name with use `ls -la` — a hard link does not.
+But you can refer to [[#find]] for the flags that is used in searching for filename that uses the same inode.

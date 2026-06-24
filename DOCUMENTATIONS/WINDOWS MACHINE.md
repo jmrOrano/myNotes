@@ -79,3 +79,92 @@ Settings:
 	- Avg Clock speed: 3670Mhz lower than the baseline. 
 	- Avg Package Power: 43.5W
 	- Time: Above 95C at 0% of the time. Never hitting 95C now
+
+
+---
+
+### Fixing boot error in Windows
+*June 21,2026*
+*Machine: Windows 11*.
+```
+Case: A machine that is force shutdown multiple times by holding the power button.
+	- When powering on—Its not booting properly and stuck on Choose a Keyboard Layout
+	- It keeps launching the WinRE( Windows Recovery Environment)
+	- Choosing the Startup Repair didnt fix it
+	- The chkdsk C: /f /r didt fix it
+```
+
+>**PROCEDURAL FIX DONE**
+
+>**Verify disk state**
+```
+diskpart
+list disk
+select disk 0
+details disk
+```
+If it shows :
+```
+Read-only: Yes
+Offline: Yes
+```
+Do:
+```
+attributes disk clear readonly
+```
+
+>**Check the actual partition**
+```
+list volumes
+```
+The EFI partition should be visible
+
+>Assign a letter to the EFI. Then verify where the Windows installation is
+```
+select volume <number of EFI volume>
+assign letter =S
+dir C:\Windows
+``` 
+
+>Suppose the Windows Installation in on C:
+```
+bcdboot C:\Windows /s /S: /f UEFI
+```
+*Code Explanation*:
+```
+bcdboot = rebuilds the boot environment
+C:\Windows = the bcdboot uses this path a a source of boot files to generate a new boot configuration files.
+/S: /f UEFI = this is the destination path of the broken boot config. ANd this is where it will rebuild a new bootconfig file.
+```
+
+>**CONCLUSION**
+
+```
+Doing the bcdboot fixes it.
+
+What makes it broken is due to force shutdown:
+	- **Files currently being written**
+	- **Filesystem metadata** (NTFS journals, directory entries, allocation tables)
+	- **Registry hives**
+	- **Boot-related files and configuration**
+	- **Windows Update operations in progress**
+```
+****
+
+****
+
+
+
+### Bypass the Win 11 sign in/ sign up
+
+During the setup, Hit `Shift+F10` then type
+```
+ncpa.cpl
+```
+A control panel windows will appear. 
+>Disable the wifi adapter
+
+Back to cmd and type:
+```
+oobe\bypassnro
+```

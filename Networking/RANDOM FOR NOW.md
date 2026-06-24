@@ -165,7 +165,7 @@ Step2: The example.com server sends its public key with its SSL Certificate. Whi
 
 Step3: Once the client's browser gets the certificate, it will check the issuers digital signature to make the cert is valid(the digital signature is made by CA's private key). *Note: browsers are installed with many majors CA's public key.*
 
-Step4: Once the verification is done, its time to exchange a secret. The client's browser creates a one [[#**What is Symmetric Key?**|symmetric key or shared secret]] . It keeps one and gives a copy to the web server. It uses the web server's public key to encrypt the secret and sends it to the web server. 
+Step4: Once the verification is done, its time to exchange a secret. The client's browser creates a one [[#**What is Symmetric Key algorithm?**|Symmetric key]] . It keeps one and gives a copy to the web server. It uses the web server's public key to encrypt the secret and sends it to the web server. 
 
 Step5: When the web server gets the encrypted symmetric key, it uses its private key to decrypt it. Now the web server gets the browser's shared key.
 

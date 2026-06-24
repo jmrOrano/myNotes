@@ -32,14 +32,14 @@
 **Practical Example of How it works | But no Git, full manual**
 - Imagine mo may project ka na nasa thousands ang bilang ng files na nasa multiple directories. Then as you progress, marami ka nang nabago then biglang may mga error/mistake ka na nagawa and hindi mo na alam ayusin. 
 - Buti na nalang may na-create ka ng copy ng buong folder ng project mo so you can restore it. *But this can be stressful and impractical kung ang laki ng size ng project mo*
-- **Buti na lang may [[Feynman-Technique#Version Control System But with Git| Version Control System]] ka.
+- **Buti na lang may [[#Version Control System But with Git|Git version Control]]ka.
 
 ##### Version Control System :  But with Git
 *Sa pag gamit ng tamang tools for Version Control System like **Git**. Mas efficient dahil :* 
 - Hindi mo na need mag create ng multiple copies ng project. 
 - With git, nag lo-log lang ito ng mga pag babago and differences sa files
 - Not only this allows to have multiple versions throughout the progress ng project mo. Ma aallow pa nito ang collaborations.
-- At also may dagdag feature na [[Feynman-Technique#Branch and Merging in Git| Branch and Merging]]
+- At also may dagdag feature na [[#Branch and Merging in Git]]
 
 ##### Branch and Merging in Git
 - Pwede ka gumawa ng mga experimento/possible outcome ng project or bagong features, tapos isasam/*merge* sa main branch ng project pag okay na. 
@@ -50,16 +50,16 @@
 ### SETUPS
 #### Initial workflow
 
-|                                                                                               | Desc                                                                                                      |
-| :-------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| First is install git. Can look it up online.                                                  |                                                                                                           |
-| `git config --global user.name "YourName`<br>`git config --global user.email "yourEmail"`<br> | The initial setup<br>- for it to know kung sino gumagawa ng changes                                       |
-| `navigate to your working dir` <br>then do: <br>`git init`                                    | - initialize a git repo sa iyong working dir                                                              |
-| `git status`                                                                                  | - this is self explanatory                                                                                |
-| add a `.gitignore` file                                                                       | - learn more here [[Feynman-Technique#Bakit isinasama ang .gitignore sa git add. ?\| about `.gitignore`]] |
-| `git add . `<br>`git add file1 file2 etc`                                                     | - ang dot `.` = lahat ng files<br>-pwede i specify each ang mga files na may changes lang                 |
-| `git commit -m "Your message here" `                                                          | `-m` = ang message or notes mo<br>                                                                        |
-| `git push`                                                                                    | to share it sa internet.                                                                                  |
+|                                                                                               | Desc                                                                                      |
+| :-------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| First is install git. Can look it up online.                                                  |                                                                                           |
+| `git config --global user.name "YourName`<br>`git config --global user.email "yourEmail"`<br> | The initial setup<br>- for it to know kung sino gumagawa ng changes                       |
+| `navigate to your working dir` <br>then do: <br>`git init`                                    | - initialize a git repo sa iyong working dir                                              |
+| `git status`                                                                                  | - this is self explanatory                                                                |
+| add a `.gitignore` file                                                                       | - learn more here [[#Bakit isinasama ang .gitignore sa git add. ?\|.gitignore]]           |
+| `git add . `<br>`git add file1 file2 etc`                                                     | - ang dot `.` = lahat ng files<br>-pwede i specify each ang mga files na may changes lang |
+| `git commit -m "Your message here" `                                                          | `-m` = ang message or notes mo<br>                                                        |
+| `git push`                                                                                    | to share it sa internet.                                                                  |
 
 ---
 #### **Git Command-Marking a dir as safe**

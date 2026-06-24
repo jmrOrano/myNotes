@@ -34,12 +34,13 @@ CTF-style
 
 ---
 
-### **How professionals use hexdump**
+## **How professionals use hexdump**
+---
 *For reference about what is hexdump read here: [[Whatis#**What is hexdump?**|What is hexdump]]*
 
 Pros reading hex dumps are essentially doing **pattern recognition**. \
 
-#### **1. Magic bytes** — the first thing they check
+### **1. Magic bytes** — the first thing they check
 *Every file format has a "signature" at the very start. Pros have these memorized:
 
 | What you see at offset 0 | What is means                      |
@@ -53,7 +54,8 @@ Pros reading hex dumps are essentially doing **pattern recognition**. \
 |          4D 5A           | Windows .exe                       |
 > *If a file claims to be a JPEG but the first bytes aren't `FF D8 FF`, something is wrong — corrupted, renamed, or tampered with.*
 
-#### **2. Structural expectation** — knowing what "normal" looks like
+### **2. Structural expectation** — knowing what "normal" looks like
+---
 *Different data has a characteristic "texture" in hex:*
 
 - **Plain text** — (like a password): you'll see bytes mostly in the `20`–`7E` range, which is the ASCII printable range. The right-hand ASCII column in `xxd` will show readable characters.
@@ -145,7 +147,7 @@ A mismatch here almost always means corruption or tampering. `gzip` actually has
 
 ---
 
-##### **The practical workflow**
+### **The practical workflow**
 When a pro suspects something is wrong, they typically go:
 ```
 xxd suspicious_file | head -4     # check magic bytes
@@ -169,7 +171,7 @@ ASCII Ranges:
 
 
 
-### CHECK IF LOGS IS TAMPERED(INCOMPLETE)
+## CHECK IF LOGS IS TAMPERED(INCOMPLETE)
 
 #### Journal Integrity checks (Systemd logs)
 #### File integrity monitoring (the real answer)

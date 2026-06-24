@@ -7,7 +7,9 @@
 >[[#Fixing sluggish and slow response trackpad (NOT RESOLVE)]]
 >
 
-##### **Things to do after fresh install ng linux**
+
+# **HOW TO/HOW I**
+## Things to do after fresh install ng linux
 *03/28/2026*
 *Linux mint cinnamon 22.3  Zena*
 *Purpose : for easy future set up*
@@ -80,7 +82,7 @@
 	- No firewall
 ---
 
-##### **Get Fullscreen in Vbox linux**
+## Get Fullscreen in Vbox linux
 *03/28/2026*
 *Mainly for Ubuntu*
 *Purpose : avoid repetition at googling*
@@ -102,44 +104,8 @@ Just click `view` then `Fullscreen Mode`
 
 ---
 
-##### **Fixing sluggish and slow response trackpad (NOT RESOLVE)**
-*03/28/2026*
-*Machine : Thinkpad L490 ***
-*Kernel : 6.8.0-106 -generic*
-*Distro : Mint 22.3 Zena Ubuntu base 24.04*
 
-Didnt work : Disabling touchpad power saving
-Reverted it to deafult.
-	`sudo nano /etc/tlp.`
-	`USB_AUTOSUSPEND=0`
-	`sudo tlp start`
-
-Didnt work : disabling i2c HID power management quirks
-	:`sudo nano /etc/default/grub`
-	`GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i2c_hid.mousepoll=0"`
-	`sudo update-grub`
-	`reboot`
-
-Didnt work (worst attemp): Disabling libinput by creating config
-	`sudo mkdir -p /etc/libinput`
-	`sudo nano /etc/libinput/local-overrides.quirks`
-	Adding this inside : 
-	`[Elan Touchpad Override]`
-	`MatchName=Elan Touchpad`
-	`AttrPressureRange=10:8``
-	AttrPalmPressureThreshold=90`
-	`AttrThumbPressureThreshold=85`
-	
-	= this causes weird messages during boot up. DO NOT RECREATE
-
-Didnt work : reloading psmouse module
-	`sudo modprobe -r psmouse && sudo modprobe psmouse`
-
-
-
----
-
-##### **CHANGES IN GRUB FILE**
+## CHANGES IN GRUB FILE
 *03/29/2026*
 Purpose : *To see the grub menu and doesnt need to press shift or esc button every time system boots. Mainly for changing kernel version*
 
@@ -156,36 +122,223 @@ My changes are:
 `GRUB_TIMEOUT_STYLE=menu`
 `GRUB_TIMEOUT=5`
 
+## Know battery health via terminal
+*June11-2026*
+##### **Via Upower**
+Find battery's device path by running
+```Bash
+upower -e | grep battery
+```
+Copy the full path and run:
+```Bash
+grep -i / [pastehere]
+```
+Or you can use the [[Whatis#**The `xargs`**|xargs]] for seamlessnes:
+```Bash
+upower -e | grep -i | xargs upower -i
+```
+
+## Eject a flashdrive
+
+>Use the [[Linux_File_System__Major_Only_#The *`lsblk`* command|lsblk]] command
+```Bash
+lsblk
+
+#OUTPUT
+sdc       8:32   1   3.8G  0 disk 
+└─sdc1    8:33   1   3.7G  0 part /media/linuxuser/F4FD-93EE
+```
+
+|                               | Desc                           |
+| :---------------------------: | ------------------------------ |
+|   `sdc` 8:32 1 3.8G 0 disk`   | - Ito yung mismong USB Drive   |
+| \|-`sdc1` 8:833 1 3.7G 0 part | - ito yung partition           |
+|      `/media/linuxuser/`      | -Dito naka mount ang partition |
+|          `F4FD-93EE`          | -Ito yung name ng USB          |
+
+>**unmount muna ang partition**
+```bash
+sudo umount /dev/sdc1
+```
+
+>**then power off the device**
+```Bash
+sudo udisksctl power-off -b /dev/sdc
+```
+
+
 ---
 
-#### **WARPINATOR CANT CONNECT**
-*06/06/2026*
-*Overview*: the warpinator app in linux is not connecting to other devices. 
-
-*Linux Mint*
-*In VM oracle virtual box*
-*Connected to same subnet.*
-*The machines can see each other but cant established a connection*
-
-Trying manual connection didnt fix it.
-
-After a bit of searching. It turns out the `ufw` from linux is preventing the connection. 
-
-Disabling it ables to connect.
+## Partition a second disk
+*June13, 2026*
 ```
-sudo ufw disable
-```
+Machine: Virtual Machine | Linux Mint Zena Ubuntu base
 
-Now for perma fix, adding the port that the warpinator uses in ufw. 
+Exercise Flow: Partition -> Format -> Mount -> Persist
 ```
-sudo ufw allow 42000/tcp
-sudo ufw allow 42000/udp
-sudo ufw reload
+>[!Note] Recommended read
+>- Read about the Linux Filesystem first before proceeding: [[Linux_File_System__Major_Only_#The Anatomy of Disk|The anatomy of Disk]]
+>- About the Disk naming as well: [[Linux_File_System__Major_Only_#Disk Naming|Disk Naming]]
+>- And if curious about the commands use, it can be search here under the **`Linux File System Exploration`** : [[Commands#^4ccc34]]
+>- For tools used : [[Tools#FOR DISK-RELATED TOOLs]]
+
+### First: Identify disk
+```Bash
+lsblk
+```
+Look for something like :
+```
+sdb  -> extra disk   
+sda  -> the main OS disk 
 ```
 
+### Step1: Create a Partition Table
+
+>Use the [[Tools#parted|parted]] command
+```Bash
+sudo parted /dev/sdb
+```
+
+>Inside the parted, use `mkpart` to create partition
+```Bash
+#LABEL THE PARATITION TABLE AS GPT
+mklabel gpt  
+
+# CREATE A PARTITION STARTING AT 1MB ends at 100%. USING PERCENT
+mkpart primary ext4 1MiB 100% 
+
+# OR YOU CAN USE THE EXACT SIZE
+mkpart primary ext4 1MiB 1GiB
+
+print #PRINT THE PARATITION
+quit
+```
+
+### Step2: Format partition (make filesystem)
+
+>Using the `mkfs` command
+```Bash
+#TURNING A RAW SPACE INTO USEABLE FILESYSTEM
+sudo mkfs.ext4 /dev/sdb1
+```
+
+>The sequence is: [[Linux_File_System__Major_Only_#Block|block]] , [[Linux_File_System__Major_Only_#^becce8|superblock]], [[Linux_File_System__Major_Only_#Inodes|Inode table]]
+```
+mkfs.ext4 /dev/sdb1 
+	│ 
+	├── Divides entire partition into equal 4KB blocks 
+	├── Builds the superblock (metadata about the filesystem) 
+	├── Builds the inode table (empty — no files yet) 
+		└── Marks ALL blocks as FREE ↓ Filesystem is now "empty" but fully structured
+```
+
+### Step3: Create a mount point & Mount It
+
+>Mount point = is an empty folder at `/mnt/` where disk will be attach.
+```Bash
+sudo mkdir -p /mnt/disk2
+```
+
+>Mount it
+```Bash
+#CHECK FIRST the absolute path of the partition
+lsblk -p   
+
+#MOUNTING IT
+sudo mount /dev/sdb1 /mnt/disk2
+
+# CHECK IT AGAIN
+df -h
+lsblk -p
+```
+
+### Step4: Test Write
+
+```Bash
+echo "Hello Disk" | sudo tee /mnt/disk2/Hello.txt
+```
+
+### Step5 : Make it persist
+
+>Get the partition [[Linux_File_System__Major_Only_#Why UUID is Preferred|UUID]] 
+```Bash 
+lsblk -f
+# OR
+sudo blkid /dev/sdb1
+```
+
+>Edit the config for static mount at [[Linux_File_System__Major_Only_#/etc|/etc]] for specific at [[Linux_File_System__Major_Only_#^27d1c1|/etc/]]
+```Bash
+sudo nano /etc/fstab
+
+#ADD THE LINE
+UUID=YOUR-UUID-GOES-HERE /mnt/disk2 ext4 defaults  0 2
+```
+- `UUID`               - the Device Identifier — use `lsblk -f` or `blkid` to see ID
+- `/mnt/disk2`    - The mount point directory — the `disk2` is custom made dir.
+- `ext4`               - The type of filesystem —  view it here : [[Linux_File_System__Major_Only_#Common File System Types|filesystem types]]
+- `defaults`        - Mount options  — includes `relatime`, `errors=remount-ro`. Refer to `man mount`.
+- `0`                     - Dump field — 1 means dump, 0 means dont.
+- `2`                     - File system check — 0 means check, 1 means check first(reserved for root `/`), 2 means check after root.
+
+# Making a swap partition
+*June 16,2026*
+
+## METHOD FOR USING THE ENTIRE DISK
+---
+### Step1: Make swap command
+```Bash
+sudo mkswap /dev/sdb
+```
+### Step2: Enable it via swapon command
+```Bash
+swapon mkswap /dev/sdb
+```
+
+### Step3: Persistence 
+Add an entry at `/etc/fstab` 
+```Nano
+UUID=your-ID-goes-here none swap sw 0 0
+```
+
+## METHOD FOR USING PARTITION OF A DISK
+---
+### Step1: Make a partition for the swap in parted
+```Bash
+#THIS ASSUMES THAT THE FIRST 50% IS ALREADY OCCUPIED
+mkpart primary linux-swap 50% 100% 
+```
+
+### Step2: Initialize swap & Enable It
+Outside of parted, do:
+```Bash
+sudo mkswap /dev/sdb2
+
+#Enable
+swapon /dev/sdb2
+```
+
+### Step3: Persistence 
+Add an entry at `/etc/fstab` 
+```Nano
+UUID=your-ID-goes-here none swap sw 0 0
+```
+
+
+>[!Note] Making swap partition doesnt involve mounting point.
+>Because swap is **not a filesystem**.
+>The kernel uses it directly. And treats it as pages of memory storage
+>
+>There are:
+>- No files
+>- No directories
+>- No permissions
+>- no pathname hierarchy
 
 ---
-### Cant established a connection to server from different network across internet.
+# PROBLEMS ENCOUNTERED
+
+## Cant established a connection to server from different network across internet.
 ---
 *Overview: I Setup an [[SSH_Setup|SSH Server]]  and a [[SETUP MINECRAFT SERVER IN DOCKER|Minecraft Server]]. Both are port forwarded.*
 - Machine : Lenovo thinkpad L480,
@@ -197,7 +350,7 @@ sudo ufw reload
 	- Using IPV4 
 	- Not lock behind in CGNAT
 
-#### The anomaly: 
+### The anomaly: 
 ---
 - **When accessing the server from different network across the internet, its not reaching the destination**
 ```
@@ -242,9 +395,73 @@ C:\Users\orano>
 - The anomaly is different network to network. Some able to connect other network cant. 
 
 
-#### THE CONCLUSION (most likely)
+### THE CONCLUSION (most likely)
 ---
 **Most likely the internal routing issue with my ISP**
 - With the use of cloudflare warp, the request gets redirected to the routing of the cloudflare. 
 - After eliminating other potential problem, it narrows it down to ISP backbone routing.
 - With inconsistent results from testing to different network, others can connect other cannot. The routing broken to other networks.
+
+---
+
+## WARPINATOR CANT CONNECT
+*06/06/2026*
+*Overview*: the warpinator app in linux is not connecting to other devices. 
+
+*Linux Mint*
+*In VM oracle virtual box*
+*Connected to same subnet.*
+*The machines can see each other but cant established a connection*
+
+Trying manual connection didnt fix it.
+
+After a bit of searching. It turns out the `ufw` from linux is preventing the connection. 
+
+Disabling it ables to connect.
+```
+sudo ufw disable
+```
+
+Now for perma fix, adding the port that the warpinator uses in ufw. 
+```
+sudo ufw allow 42000/tcp
+sudo ufw allow 42000/udp
+sudo ufw reload
+```
+
+---
+
+## Fixing sluggish and slow response trackpad (NOT RESOLVE)
+*03/28/2026*
+*Machine : Thinkpad L490 ***
+*Kernel : 6.8.0-106 -generic*
+*Distro : Mint 22.3 Zena Ubuntu base 24.04*
+
+Didnt work : Disabling touchpad power saving
+Reverted it to deafult.
+	`sudo nano /etc/tlp.`
+	`USB_AUTOSUSPEND=0`
+	`sudo tlp start`
+
+Didnt work : disabling i2c HID power management quirks
+	:`sudo nano /etc/default/grub`
+	`GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i2c_hid.mousepoll=0"`
+	`sudo update-grub`
+	`reboot`
+
+Didnt work (worst attemp): Disabling libinput by creating config
+	`sudo mkdir -p /etc/libinput`
+	`sudo nano /etc/libinput/local-overrides.quirks`
+	Adding this inside : 
+	`[Elan Touchpad Override]`
+	`MatchName=Elan Touchpad`
+	`AttrPressureRange=10:8``
+	AttrPalmPressureThreshold=90`
+	`AttrThumbPressureThreshold=85`
+	
+	= this causes weird messages during boot up. DO NOT RECREATE
+
+Didnt work : reloading psmouse module
+	`sudo modprobe -r psmouse && sudo modprobe psmouse`
+
+---

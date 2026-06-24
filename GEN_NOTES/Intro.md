@@ -95,9 +95,48 @@
 **TODO : LEARN CONCEPS : FEB 26**
 - [ ] What is the `syslog` file in *`/var/log/syslog`*
 
+
 ---
 #### MARCH
 
 **WALLPAPERS**
 [Repo](https://github.com/dharmx/walls)]
+
+---
+#### Website I go to.
+*June 20, 2026*
+**FOR PURE LINUX FUNDAMENTALS**
+`Labex.io` — for linux fundamentals
+`overthewire.org/wargames/bandit` — Linux survival skills 
+
+**FOR WEB APPLICATION HACKING**
+`PortSwigger Web Acaademy` — The gold standard for web exploitation like `SQLi`, `XSS` `CSRF`, `Authentication flaws`, `IDOR`, `SSRF`. GOOD FOR WEB SECURITY
+`HackingHub` — Similar to Potswigger but smaller 
+
+**FOR BROAD CYBERSEC + ETHICAL HACKING**
+`TryHackMe` — The most balanced platform. Covers `Networking`, `Linux`, `Web`, `Basic Exploitation`, `Blue team`.  BEST STARTING POINT BEFORE HACK THE BOX.
+
+`HackTheBox` — Real pentesting mindset. More authentic. Rewarding but frustrating if fundamentals arent solid yet.
+
+```THE_PLAN
+Finish Bandit → 
+Start TryHackMe → 
+PortSwigger when web clicks → 
+HTB when you're comfortable.
+
+ Don't open too many at once — same trap as your notes.
+```
+
+
+---
+Excel formula for making a lookup table to practice [[Commands#^23b272|rot13]]
+```
+=sequence(26,,65) 
+
+Then change it
+=char)sequence(26,,65)
+
+# 65 IS THE ASCII VALUE OF A 
+# 97 IS FOR THE LOWER CASE
+```
 

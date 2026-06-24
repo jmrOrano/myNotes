@@ -28,7 +28,7 @@ Overview 2: The tradeoff with this method.
 >[[#**GET THE COMPOSE FILE FROM THE GITHUB REPO**]]
 >[[#**MAKE A DIRECTORY AND EXECUTE THE FILE**]]
 >[[#**CHECK LOGS AND CHECK THINGS**]]
->[[#**ASSIGN A DNS FOR IP**]]
+>[[#**ASSIGN A DNS FOR IP (duckdns.org)**]]
 >
 >OTHER SETUP OPTIONS:
 >[[#**USING A BOUGHT DOMAIN and DOMAIN HOSTING PLATFORM (CLOUDFLARE)**| Using cloudflare with own bough domain]]
@@ -429,8 +429,10 @@ Cloudflare only has 100mb file upload
 
 
 
-#### **Problems Encountered.** 
 
+
+## **Problems Encountered.** 
+---
 ##### G**rant Access Loop with the dedicated app.** 
 *Overview: Uploading via web browser is slower, so i decided to install the desktop app itself as i read that it is faster.*
 Procedure to recreate or for documentation. 

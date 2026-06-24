@@ -1,6 +1,7 @@
 
 
-### Setting up ssh server with openssh.
+# Setting up ssh server with openssh.
+---
 *03/29/2026*
 *mint cinnamon 22.03 Zena, Kernel 6.8.0, Ubuntu base 24.04 noble*
 Purpose: *To keep track of how i configured it and set it up*
@@ -17,9 +18,9 @@ Purpose: *To keep track of how i configured it and set it up*
 >
 >**OTHER INFORMATION**
 
-
-
+---
 ####  **Check if SSH server is installed**
+---
 ```Bash
 dpkg -l | grep openssh
 ```
@@ -35,8 +36,9 @@ You can also check if its running:
 If none a message should appear:
 *`Unit ssh.service could not be found`* or *`inactive`*
 
-
+---
 #### **Install SSH Server (Openssh)**
+---
 ```Bash
 sudo apt update
 sudo apt install openssh-server
@@ -110,7 +112,7 @@ sudo ufw delete [number]
 
 ---
 
-### **SETTING IT UP WITH KEYPAIRS**
+# **SETTING IT UP WITH KEYPAIRS**
 
 **1.Generate an SSH key pair (do this to the client side)**
 ```Bash
@@ -158,14 +160,14 @@ ssh linuxuser@ipaddress
 
 ---
 
-### SECURITY
+# SECURITY
 
-1. Install fail2ban 
+1. **Install fail2ban** 
 ```Bash
 sudo apt update && sudo apt install fail2ban
 ```
 
-2. Configure fail2ban, make a 'local' copy of the `jail.conf` file in `etc/fail2ban/`
+2. **Configure fail2ban, make a 'local' copy of the `jail.conf` file in `etc/fail2ban/`**
    ```
    cd /etc/fail2ban
    sudo cp jail.confi jail.local
@@ -175,7 +177,7 @@ sudo apt update && sudo apt install fail2ban
 sudo nano jail.local
 ```
 	
-3. CONFIGURATION
+3. **CONFIGURATION**
 ```text
 
    [sshd]
@@ -250,12 +252,7 @@ sudo cat /var/log/fail2ban.log.1
 >Removing and regenerating host keys will change the server's identity. Client that previously connected will see a "host key changed" warning and may refure to connect until they update their `known_host`
 
 
-## COMMON USAGE AND COMMANDS
-
-### USING RSYNC 
-```Bash
-rysync -avz --progress -e "ssh -p [portNum]" username@ipaddress:[source] [destinationToLocalMachine] 
-```
+# COMMON USAGE AND COMMANDS
 
 ### ACCESSING LOCAL NETWORK OF SERVER
 *Overview: **it’s possible**, but it’s not automatic. You’d need to configure tunneling or use the server as a gateway, and the network must allow it.*
@@ -305,7 +302,3 @@ depends on how the server and its network are configured:
 >```Bash
 >curl http.//127.0.0.1:5000
 >```
-
-
-
-

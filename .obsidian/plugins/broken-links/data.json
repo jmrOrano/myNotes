@@ -1,0 +1,26 @@
+{
+  "version": "1.2.2",
+  "previousVersion": "1.0.0",
+  "groupBy": 0,
+  "expandedFolderItems": [
+    "GEN_NOTES/Feynman-Technique.md",
+    "DOCUMENTATIONS",
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
+    "GEN_NOTES",
+    "GEN_NOTES/Linux_File_System__Major_Only_.md",
+    "GEN_NOTES/Tools.md",
+    "GEN_NOTES/Whatis.md",
+    "Networking"
+  ],
+  "expandedFileItems": [],
+  "expandedLinkItems": [],
+  "folderSort": 0,
+  "fileSort": 3,
+  "linkSort": 3,
+  "linkFilter": {
+    "filterString": "",
+    "matchCase": false
+  },
+  "ignoredFolders": [],
+  "consolidateLinks": false
+}

@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "ef4e247fe7526d97",
+        "id": "1a48c7f35cd47b81",
         "type": "tabs",
         "children": [
           {
-            "id": "a2f64dbdf75768be",
+            "id": "bd29558489abb9c5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Bashing And Scripting.md",
+                "file": "GEN_NOTES/Linux_File_System__Major_Only_.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,16 +28,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Bashing And Scripting"
+              "title": "Linux_File_System__Major_Only_"
             }
           },
           {
-            "id": "1b101c5ae42d958b",
+            "id": "c5e9ba24f73c9734",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DOCUMENTATIONS/Documentations.md",
+                "file": "GEN_NOTES/Whatis.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,11 +52,11 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Documentations"
+              "title": "Whatis"
             }
           },
           {
-            "id": "83794cfc9a0bd2e5",
+            "id": "4e0469392f0beb13",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -78,9 +78,57 @@
               "icon": "lucide-file",
               "title": "Git Workflow & Commands"
             }
+          },
+          {
+            "id": "f08bc960a6ff280e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Networking/RANDOM FOR NOW.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "RANDOM FOR NOW"
+            }
+          },
+          {
+            "id": "fd41d834dc224a1e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Networking/RANDOM FOR NOW.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "RANDOM FOR NOW"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -112,7 +160,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": ".sh",
+                "query": "symmetr",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -133,11 +181,12 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 201.5
+    "width": 378.5124969482422
   },
   "right": {
     "id": "6b367cb62b5d1f38",
@@ -220,13 +269,23 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "901acccec852bbc2",
+            "type": "leaf",
+            "state": {
+              "type": "broken-links-view",
+              "state": {},
+              "icon": "unlink",
+              "title": "Broken links"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -236,46 +295,47 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "broken-links:View broken links": false
     }
   },
-  "active": "83794cfc9a0bd2e5",
+  "active": "f08bc960a6ff280e",
   "lastOpenFiles": [
-    "GEN_NOTES/Commands.md",
     "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "GEN_NOTES/Whatis.md",
-    "DOCUMENTATIONS/Documentations.md",
-    "GEN_NOTES/User Management.md",
-    "GEN_NOTES/Bashing And Scripting.md",
-    "SECURITY/RANDOM NOTES FOR NOW.md",
-    "SECURITY/OBFUSCATION_GUIDE.md",
-    "Networking/How host do speaks on the internet.md",
-    "Networking/How_host_do_speaks_on_the_internet.md",
-    "Networking/OSI_Model.md",
     "Networking/RANDOM FOR NOW.md",
-    "GEN_NOTES/Intro.md",
+    "GEN_NOTES/Whatis.md",
+    "GEN_NOTES/Tools.md",
     "GEN_NOTES/Feynman-Technique.md",
     "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
     "DOCUMENTATIONS/Git Workflow & Commands.md",
-    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
-    "GEN_NOTES/Linux File System (Major Only).md",
+    "SECURITY/OBFUSCATION_GUIDE.md",
+    "SECURITY/RANDOM NOTES FOR NOW.md",
+    "GEN_NOTES/Commands.md",
+    "GEN_NOTES/Intro.md",
+    "GEN_NOTES/Bashing And Scripting.md",
     "GEN_NOTES/Logging & Monitoring.md",
-    "DOCUMENTATIONS/DOCKER SETUP  2.md",
-    "GEN_NOTES/Tools.md",
-    "GEN_NOTES/AllNotes.md",
-    "DOCUMENTATIONS/DOCKER_Setup.md",
+    "GEN_NOTES/PROCESS.md",
+    "ETHICAL_HACKING/Exploitation.md",
+    "DOCUMENTATIONS/WINDOWS MACHINE.md",
+    "DOCUMENTATIONS/Documentations.md",
+    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
+    "Untitled.md",
+    "Networking/OSI_Model.md",
+    "GEN_NOTES/User Management.md",
+    "GEN_NOTES/Questions.md",
+    "ETHICAL_HACKING/Privilage Escalation.md",
+    "ETHICAL_HACKING/Untitled.md",
+    "ETHICAL_HACKING/Recon.md",
+    "ETHICAL_HACKING/RandomForNow.md",
+    "ETHICAL_HACKING",
     "Untitled 1.base",
     "Untitled.base",
     "AI_NOTES/practical_obfuscation.py",
     "AI_NOTES/beginner_obfuscation.py",
     "AI_NOTES",
-    "DOCUMENTATIONS/WINDOWS MACHINE.md",
-    "DOCUMENTATIONS/SSH_Setup.md",
-    "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
     "engine/install",
     "engine",
     "Networking",
-    "SECURITY",
-    "GEN_NOTES"
+    "SECURITY"
   ]
 }
