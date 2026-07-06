@@ -18,6 +18,32 @@ Purpose: *To keep track of how i configured it and set it up*
 >
 >**OTHER INFORMATION**
 
+
+#### **Uncomplicated Architecture**
+```
+Your PC
+   │
+   ▼
+sshd receives connection
+   │
+   ▼
+Authentication
+(password/public key)
+   │
+   ▼
+User login succeeds
+   │
+   ▼
+A session is created
+   │
+   ▼
+A shell is started
+(bash, zsh, sh...)
+   │
+   ▼
+.profile/.bash_profile/.bashrc may run
+```
+
 ---
 ####  **Check if SSH server is installed**
 ---
@@ -55,6 +81,8 @@ Output should be : *`active(running)`*
 
 #### **Configuration File**
 
+^613b03
+
 ```Bash
 sudo nano /etc/ssh/sshd_config
 ```
@@ -74,7 +102,7 @@ sudo systemctl restart ssh
 ####  **Test locally**
 From the same machine(server). Run:
 ```Bash
-sudo` `systemctl your_usename@localhost
+ssh your_username@localhost
 ```
 
 A message will dispay :
@@ -155,8 +183,8 @@ ssh linuxuser@ipaddress
 	`chmod 700 ~/.ssh`
 	`chmod 600 ~/.ssh/authorized_keys`
 
-4.**{OPTIONAL}Disable password login**
-	Refer to number of 4 of [[#Setting up ssh server with openssh.]]
+4.**Recommended: Disable password login**
+	Refer to number the config at [[#^613b03| OpenSSH config ]]
 
 ---
 
@@ -170,7 +198,7 @@ sudo apt update && sudo apt install fail2ban
 2. **Configure fail2ban, make a 'local' copy of the `jail.conf` file in `etc/fail2ban/`**
    ```
    cd /etc/fail2ban
-   sudo cp jail.confi jail.local
+   sudo cp jail.conf jail.local
    ```
    Now edit the file:
 ```Bash
@@ -193,13 +221,16 @@ sudo nano jail.local
    ignoreip = 127.0.0.1/8 ::1
    
    [DEFAULT]
-   destamil = myemail@email.com
+   destemail = myemail@email.com
    action = %(action_mw)s
-   
+```
+
+**Restart the service**
+```
    systemctl restart fail2ban
    sudo fail2ban-client status sshd
-   
 ```
+
 4. Checking status
 ```Bash
 sudo fail2ban-client status sshd
@@ -211,35 +242,54 @@ sudo cat /var/log/fail2ban.log.1
 
 
 >[!Question]- **POTENTIAL QUESTIONS**
->1. Not everyone can just copy their keys to the server. So how to login to this ssh server as a fresh user?
->>If other method is allowed first to authenticate like `PasswordAuthentication` which can be enable in `etc/ssh/ssh_conf` then that defeats the purpose of avoiding brute forcing.
+>Not everyone can just copy their keys to the server. So how to login to this ssh server as a fresh user?
+>If other method is allowed first to authenticate like `PasswordAuthentication` which can be enable in `etc/ssh/ssh_conf` then that defeats the purpose of avoiding brute forcing.
 
->[!INFO]-  **STOPING SSH SERVICE**
+>[!INFO]-  **STOPING SSH SERVICE**>
 >
+>Halt the SSH deamon(sshd)
+> ```
+> sudo systemctl stop ssh
+> ```
 >
->2. Halt the SSH deamon(sshd)
->   `sudo systemctl stop ssh`
->   
->3. Disable from starting boot
->   `sudo system disable ssh`
->  
-> 4. Stop and disable ssh.socket for security
->    `sudo systemctl stop ssh.socket`
->    `sudo systemctl disable ssh.socket`
+>Disable from starting boot
+>```
+>sudo system disable ssh
+>```
+>Stop and disable ssh.socket for security
+>```
+>sudo systemctl stop ssh.socket
+>sudo systemctl disable ssh.socket
+>```
+
 
 >[!Info]- **REMOVING SSH INCLUDING CONFIGS ( FOR FRESH START)**
->
->
->5. Delete port in ufw `sudo ufw status numbered` then `sudo ufw delete <number>`
->6. Remove package 
->   `sudo apt purge openssh-server`
+>Delete port in ufw
+>```
+> sudo ufw status numbered 
+>```
+>Then
+>```
+>sudo ufw delete <number>
+>```
+> 
+>Remove package 
+>```
+>sudo apt purge openssh-server
+>```
 >   
-> 7. Clean residual files
->    `sudo apt autoclean`
->    `sudo apt clean`
+>Clean residual files
+>```
+>sudo apt autoclean
+>sudo apt clean
+>```
 >    
->  8. Check for leftover config files `ls /etc/ssh/`
->  9. If still see files like `sshd_config` , delete it manually `sudo rm -rf /etc/ssh`
+> Check for leftover config files `ls /etc/ssh/`
+> If still see files like `sshd_config` , delete it manually 
+> ```
+> sudo rm -rf /etc/ssh
+> ```
+> 
 > 
 
 > [!WARNING]-
@@ -259,13 +309,13 @@ sudo cat /var/log/fail2ban.log.1
 
 depends on how the server and its network are configured:
 
-- 🔑 **Basic SSH session**: By default, you only have access to the server itself. You can run commands, transfer files, and interact with that machine, but not automatically with other devices on its local LAN.
+- **Basic SSH session**: By default, you only have access to the server itself. You can run commands, transfer files, and interact with that machine, but not automatically with other devices on its local LAN.
     
-- 🌐 **Network visibility**: If the server has routing or firewall rules that allow it, you can use the server as a “jump host” to reach other machines on the same local network. For example, you might SSH from the server into another device on that LAN.
+-  **Network visibility**: If the server has routing or firewall rules that allow it, you can use the server as a “jump host” to reach other machines on the same local network. For example, you might SSH from the server into another device on that LAN.
     
-- 🛠️ **SSH tunneling / port forwarding**: SSH supports features like local port forwarding, remote port forwarding, and dynamic SOCKS proxying. These can let you route your traffic through the SSH server, effectively giving you access to services on its local network (if permitted).
-    
-- 🔒 **Restrictions**: Access depends on permissions, firewall rules, and security policies. Some networks deliberately block this kind of lateral access for safety reasons.
+- **SSH tunneling / port forwarding**: SSH supports features like local port forwarding, remote port forwarding, and dynamic SOCKS proxying. These can let you route your traffic through the SSH server, effectively giving you access to services on its local network (if permitted).
+	
+-  **Restrictions**: Access depends on permissions, firewall rules, and security policies. Some networks deliberately block this kind of lateral access for safety reasons.
 
 >[!Example] 
 >*Suppose there's a web service running *
@@ -300,5 +350,36 @@ depends on how the server and its network are configured:
 >
 >Verify locally via curl or accessing the browser directly
 >```Bash
->curl http.//127.0.0.1:5000
+>curl http://127.0.0.1:5000
 >```
+
+
+### `-D` flag
+*June 27, 2026*
+*Dynamic Port forwarding*  — turns your SSH client into a **local [[PROXY#SOCKS PROXY (SOCK4 & SOCKS5)|SOCKS Proxy]] server**.
+
+So instead of SSH just being a remote shell, it also becomes:
+> A local gateway that forwards arbitrary TCP connections through an encrypted SSH tunnel.
+
+>Command
+```bash
+ssh -D 1080 <user>@<hostName>
+```
+This creates:
+```
+Local machine (127.0.0.1:1080)
+        ↓
+SOCKS proxy (inside SSH client)
+        ↓ encrypted tunnel
+SSH server (remote machine)
+        ↓
+Destination internet/server
+```
+
+#### Why it is called “dynamic” forwarding?
+Unlike:
+- `-L` (local port forwarding → fixed destination)
+- `-R` (remote port forwarding → fixed destination)
+  
+>`-D` is dynamic because:
+The destination is NOT fixed in advance.

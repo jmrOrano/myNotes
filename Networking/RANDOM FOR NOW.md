@@ -179,6 +179,44 @@ From now on. the traffic between them will be encrypted and decrypted with the s
 OTHER CONCEPTS:
 INTERNAL HTTPS VS EXTERNAL HTTPS
 
+### SOCKETS
+*June 27,2026*
+*An OS-level endpoint for network communication.*
+
+>It is how programs send/receive data.
+```
+Process A  ⇄  SOCKET  ⇄  TCP/IP stack  ⇄  network  ⇄  SOCKET  ⇄  Process B
+```
+
+>In simple term
+- Os provides system call to manage communication like:
+```
+sockets() | bind () | 
+listen()  | accept() | 
+connect() | send() / recv()
+```
+These are the actual building blocks. They look like function in python perspective. Because they are function(but not in python.). Under the hood, they transition into the kernel via system call(syscall) interface
+
+>Behind the scene when you call `connect()`
+```
+Your program (user space)
+   ↓
+libc wrapper (optional)
+   ↓
+syscall instruction
+   ↓
+Linux kernel (network stack)
+   ↓
+TCP/IP processing
+   ↓
+Network interface
+```
+So your program is basically saying: *"Kernel, please handle this network operation for me.”*
+
+If confused you can refer to practical TCP/IP Stack
+- [[How_host_do_speaks_on_the_internet#Layer Placement for Real world]]
+
+### 
 
 ---
 

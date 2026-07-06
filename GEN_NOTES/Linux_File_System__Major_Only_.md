@@ -858,18 +858,18 @@ grep [flags] "pattern" filename
 ```
 *Reads one line at a time, makes a decision, moves to the next.*
 
-| Flag | Description | Example |
-|:---:|---|---|
-| `-i` | Case-insensitive | `grep -i "error" log.txt` |
-| `-r` | Recursive — search all files in a folder | `grep -r "TODO" ./src` |
-| `-n` | Show line numbers next to matches | `grep -n "error" app.log` |
-| `-l` | List only filenames that contain a match | `grep -rl "password"` |
-| `-c` | Count matched lines | `grep -c "error" log.txt` |
-| `-v` | Invert — show lines that do NOT match | `grep -v "debug" log.txt` |
-| `-w` | Whole word only | |
-| `-A 3` | Show 3 lines after each match | `grep -A 3 "error" log.txt` |
-| `-B 3` | Show 3 lines before each match | |
-| `-C 3` | Show 3 lines around match | |
+|  Flag  | Description                              | Example                     |
+| :----: | ---------------------------------------- | --------------------------- |
+|  `-i`  | Case-insensitive                         | `grep -i "error" log.txt`   |
+|  `-r`  | Recursive — search all files in a folder | `grep -r "TODO" ./src`      |
+|  `-n`  | Show line numbers next to matches        | `grep -n "error" app.log`   |
+|  `-l`  | List only filenames that contain a match | `grep -rl "password"`       |
+|  `-c`  | Count matched lines                      | `grep -c "error" log.txt`   |
+|  `-v`  | Invert — show lines that do NOT match    | `grep -v "debug" log.txt`   |
+|  `-w`  | Whole word only                          |                             |
+| `-A 3` | Show 3 lines after each match            | `grep -A 3 "error" log.txt` |
+| `-B 3` | Show 3 lines before each match           |                             |
+| `-C 3` | Show 3 lines around match                |                             |
 
 ```bash
 # AND logic — must match both
@@ -907,6 +907,8 @@ Slower compared to [[#locate]] because *find* command scans the live filesystem.
 |             `-type f`              | Files only                                               |                                                                                  |                  |
 |             `-type d`              | Directories only                                         |                                                                                  |                  |
 |             `-type l`              | [[Whatis#**Symbolic Link?**                              | symlink]]                                                                        | For symlink only |
+|            `-readable`             | Human readable                                           |                                                                                  |                  |
+|          `! -executable`           | Find not executable files                                | combines with `-type f`                                                          |                  |
 |                                    |                                                          |                                                                                  |                  |
 |            **BY SIZE**             | *(units: `c`=bytes `k`=KB `M`=MB `G`=GB)*                |                                                                                  |                  |
 |           `-size +100M`            | Larger than 100MB                                        |                                                                                  |                  |
@@ -917,6 +919,9 @@ Slower compared to [[#locate]] because *find* command scans the live filesystem.
 |            `-mtime -7`             | Modified within last 7 days                              | `-` = less than N days ago                                                       |                  |
 |            `-mtime +30`            | Modified more than 30 days ago                           | `+` = older than N days                                                          |                  |
 |         `-newer file.txt`          | Modified more recently than `file.txt`                   |                                                                                  |                  |
+|                                    |                                                          |                                                                                  |                  |
+|            **BY OWNER**            |                                                          |                                                                                  |                  |
+|       `-user [UID or uname]`       |                                                          |                                                                                  |                  |
 |                                    |                                                          |                                                                                  |                  |
 |         DEPTH AND ACTIONS          | DEPTH AND ACTIONS                                        | DEPTH AND ACTIONS                                                                |                  |
 |           `-maxdepth 2`            | Don't go deeper than 2 levels                            | Avoid searching forever                                                          |                  |
@@ -1083,11 +1088,11 @@ mktemp
 
 >**USEFUL FLAGS**
 
-|           flags            | desc                                            |                                                                                                                            |                                                |
-| :------------------------: | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-|            `-d`            | temp folder instead of file                     |                                                                                                                            |                                                |
-|            `-p`            | specify the directory on where it will generate | - use when the file needs to survive on reboot.<br>                                                                        |                                                |
-| `mktemp /tmp/myapp-xxxxxx` | using custom name and prefixes                  | -the `x` are placeholders<br><br>-mktemp replaces the placeholder with random characters.<br><br>-atleast 3`x`'s is must = | *Example:*<br><br>`mktemp -d /tmp/tempDir-xxx` |
+|          flags           | desc                                            |                                                                                                                            |                                                |
+| :----------------------: | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+|           `-d`           | temp folder instead of file                     |                                                                                                                            |                                                |
+|           `-p`           | specify the directory on where it will generate | - use when the file needs to survive on reboot.<br>                                                                        |                                                |
+| `mktemp /tmp/myapp-XXXX` | using custom name and prefixes                  | -the `x` are placeholders<br><br>-mktemp replaces the placeholder with random characters.<br><br>-atleast 3`x`'s is must = | *Example:*<br><br>`mktemp -d /tmp/tempDir-xxx` |
 
 >[!Important]
 `mktemp` **is mostly used inside scripts, not interactively.** When you're just exploring the terminal, you rarely need it. But once you start writing bash scripts that need to store intermediate data, it becomes essential.
@@ -1132,6 +1137,26 @@ rm $temporary_variable
 ```Bash
 strings [flags] filename
 ```
+
+
+#### file command
+*June 26, 2026*
+Inspects a files actual content to determine its format (jpef image, PDF, ELF executable)
+**Best use case** : *When a file lacks an extension or you suspect a file extension is falsified*
+
+>Usage:
+```bash
+file [file]
+
+#For multiple files 
+file ./*
+```
+
+#### stat command
+*June 26, 2026*
+A utility that targets the file status. It reads the filesystem metadata to show details like (size, creation time, permissions, and ownership without looking inside the file). It retrieves data directly from the filesystem's structural records ([[#Inodes]]) without loading the file's data blocks.
+
+**Best use case:** *For system automation, permission auditing, debugging storage block allocation, or security forensics*
 
 ---
 # Other information

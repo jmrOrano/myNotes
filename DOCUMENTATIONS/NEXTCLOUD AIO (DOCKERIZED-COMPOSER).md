@@ -275,7 +275,7 @@ Add an `A Record` for how will the subdomain will be:
 >`sudo docker run -it --rm --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config:rw alpine sh -c "apk add --no-cache nano && nano /mnt/docker-aio-config/data/configuration.json"`
 >```
 >- Full reset (Recommended). By removing all the containers and volume. Though it will remove users file and data as well
->	[[DOCKER SETUP  2#**DOCKER COMMON COMMANDS**| See the docker prune command]]
+>	[[Docker-Reference#Images]]
 
 >[!Important] Reminder in using clouflare as domain hosting platform.
 > - Disable the proxy in `proxy status` during the adding `A record`. And also disable the `Custom SSL/TLS` under the `yourdomainname` -> `SSL/TLS` ->`Overview` or else there will be an error message during the enering domain step in AIO interface. Like: 
@@ -289,8 +289,7 @@ Add an `A Record` for how will the subdomain will be:
 
 
 #### **USING CLOUDFLARE + NGINX PROXY MANAGER**
-*Recommended to do a full reset first. see the [[DOCKER SETUP  2#**DOCKER COMMON COMMANDS**|docker prune command]]*
-
+*Recommended to do a full reset first. see the [[Docker-Reference#Images]]
 **Change the port in compose file of the  mastercontainer**
 From:
 ```Bash

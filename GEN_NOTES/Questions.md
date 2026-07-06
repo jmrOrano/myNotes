@@ -143,3 +143,99 @@
 - How do you find recently modified files in sensitive directories?
   (find /etc -mtime -1)
 ```
+
+
+## NETWORKING
+
+### About the 3 way handshake
+*June 27, 2026*  
+Reference : [[3-WAY_HANDSHAKE]]
+
+>**What Protocol is being used?** 
+>>*TCP mechanism, operating at Transport layer (L4) *
+
+>**What type of data is sent during the handshake?**
+>>*No application data is sent. Things are pure TCP control segments — just pure headers and flags (`SYN ACK, ISN(Initial Seq Number`)*
+
+>**Does the 3-way handshake comes first ? or both machines needs to knows each other information first in accordance to tcp stack ?**
+>> *It comes before any TCP application data. Buuuut — lower layers have to be ready before the TCP handshake can even begin. To physically send that SYN packet, the machine needs to know where to send it at every layer below.*
+>>
+>>Read it here for more : [[3-WAY_HANDSHAKE#Full Sequence Before Any Data Flows]]
+
+
+### About SOCK
+*June 27, 2026*
+Reference: [[PROXY#SOCKS PROXY (SOCK4 & SOCKS5)]]
+
+>**Does SOCKS always use loopback(127.0.0.1)?**
+>>No. It is common but not required. Other uses are:
+>>- Local SOCKS proxy 
+>>	Example: SSH dynamic forwarding 
+>>	```
+>>	ssh -D 1080 <user>@<remoteHost>
+>>	```
+>>- Remote SOCKS Proxy — server can be anywhere
+>>- Bound to All interface
+>>	```
+>>	0.0.0.0:1080
+>>	```
+>>	- Accessible from other machines
+>>	- used in shared proxy servers
+>>
+>
+>**Why loopback is commonly used?**
+>>A. Security — only the local machine can access it
+>>B. Control Boundary — creates a clean separation 
+>>C. No Routing Overhead — Never leaves the host network stack
+
+
+---
+
+## USER MANAGEMENT
+
+
+>**Whats the importance of having knowledge in User management when it comes to cybersecurity POV or attacker's POV ?**
+>>
+>>**Attacker' POV** — Why users matter
+```
+Every system breach eventually comes down to ONE thing:
+"What can THIS user do?"
+```
+>>Privilege Escalation — Attackers rarely got root immediately. They usually
+```
+1. Compromise a low-privilege user (web app exploit, phishing, etc.)
+2. Look for ways to become a HIGHER privilege user
+3. Eventually reach root/admin
+```
+>>Things attackers look for regarding users.
+```
+- Weak/reused passwords
+- Users with unnecessary sudo access
+- SUID binaries (programs that run as a different user)
+- Misconfigured permissions
+- Default/leftover accounts nobody removed
+- Users with same password across multiple machines
+```
+>>
+>>**In Defender's POV — Why it matters**
+>>*Follows the Principle of Least Privilege:*
+```
+Give each user ONLY the access they need — nothing more.
+
+Think of it like hotel keycards — a guest's key only opens THEIR room, not the entire hotel. If a guest's key gets stolen, the damage is contained to one room.
+
+If every user had master keys (root access), one compromised account = **entire system compromised.**
+```
+>>User management is also defense:
+```
+- enforce least privilege
+- restrict sudo rules
+- disable unused accounts
+- rotate credentials
+- separate service accounts
+- monitor login behavior
+```
+
+## About Process
+>How a Zombie process is used and created for potential attack?
+>How does PID 1 (systemd) clean zombies automatically?

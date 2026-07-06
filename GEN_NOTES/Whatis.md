@@ -5,10 +5,17 @@
 *It sits between the apps and the hardware, like a middleman*
 
 **What does it do?**
-- CPU Scheduling — decides which process runs and when.
-- Memory Management — assigns RAM so apps dont overwrite each others brain
-- Device Control — talks to hardware (keyboard, ssd, GPU) through drivers.
-- System calls bridge — apps cant touch hardware directly, so tehy ask kernel via `syscalls`
+- CPU Scheduling            — decides which process runs and when.
+- Memory Management  — assigns RAM so apps dont overwrite each others brain
+- Device Control              — talks to hardware (keyboard, ssd, GPU) through drivers.
+- System calls bridge       — apps cant touch hardware directly, so tehy ask kernel via `syscalls`
+
+## systemd
+*June 30, 2026*
+The PID1(Process ID) that the kernel starts at boot. The ultimate ancestor of every other process on the system.
+- Used to be called `init` but most distros replaced it with systemd
+
+
 ## **The `env` (environment variables)**
 A `environment variables` ay *configuration values na available sa shell at sa mga programs habang nag rurun sila*
 
@@ -154,61 +161,7 @@ Shortcut way para malaman:
 - Not part of the default distro
 - Comes from third pary-repo
 
-##### **RYSNC**
-*Synchornization tool, not just copying*
-
->[!Note] Usage
->```Bash
->rsync [options] sources destination
->
->#example
->rsync -av file.txt user@server:/source/  /destination/
->```
-
->[!Question] **QUESTIONS**
->**What does it do?**
->- Compare sources vs destination
->- Transfer only differences
->	- meaning first sync is full transfer, the next time sync is only the changes.
->- Can resume interrupted transfers
->- Can preserve permissions, timestamps, ownership, etc.
->
->**Can it detects changes in slight modification in file and syncs it?**
->*Yes, it checks metadata, like modification time. It skips the size same, mtime same*
->
->**Can it be use for compressed files or dir?**
->*It does not sync whats inside the compressed file. It treats the compressed file as a single file. Technically, the answer is **yesnt** *
-
-**The difference of sync to Copy**
-
-| Tool  | Behavior           |
-| :---- | ------------------ |
-| `cp`  | Blindly copies     |
-| scp   | secure remote copy |
-| rsync | intelligent sync   |
-
-**Commands**
-
-| Commands                             | Desc                                                                   |                                                                                                                                                                                                                               |
-| :----------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rsync -av sources/ dest/`           | `a` - archive mode <br>`v` - verbose mode, it displays whats happening | commonly use                                                                                                                                                                                                                  |
-| `-c`                                 | -checksum                                                              |                                                                                                                                                                                                                               |
-| `--delete`                           | delets files in destination that doesnt exist in source                |                                                                                                                                                                                                                               |
-|                                      |                                                                        |                                                                                                                                                                                                                               |
-| ***RSYNC OVER SSH***                 | ***RSYNC OVER SSH***                                                   | ***RSYNC OVER SSH***                                                                                                                                                                                                          |
-| `rsync -av source/ user@ip:/path/`   | copy `source/` to remote machine via ssh                               | The source is client                                                                                                                                                                                                          |
-| `rsync -av user@ip:/path/ localDest` | the source destination is from server. Copy to client machine          | The source is server                                                                                                                                                                                                          |
-|                                      |                                                                        |                                                                                                                                                                                                                               |
-| ***COMMON FLAGS***                   | ***COMMON FLAGS***                                                     | ***COMMON FLAGS***                                                                                                                                                                                                            |
-| `-a`                                 | archive mode.                                                          | the baseline. Its like a bundle of flags<br><br>`-r` recursive<br>`-l` preserve symlinks<br>`-p` preserve permissions<br>`-t` preserve timestamp<br>`-g` preserve group<br>`-o` preserver owner<br>`-D` preserve device files |
-| `-v`                                 | verbose. Shows whats happenig                                          | useful for bebugging<br>useless in automation                                                                                                                                                                                 |
-| `--progress`                         | shows per-file transfer progress                                       | useful for large file<br>slows output slightly                                                                                                                                                                                |
-| `-z`                                 | compression. Compress data during transfer.                            | FOR NETWORK/SSH ONLY<br>useful for slow internet<br>useless for local copy.<br><br>TRADEOFF??<br>save bandwith<br>uses CPU                                                                                                    |
-| `--delete`                           | makes destination mirror the source exactly                            | if file is removed in source. It also removed in dest.                                                                                                                                                                        |
-| `-c`                                 | checksum mode. Compares actual file content(not just metadata)         | very accurate, but super slow.<br>use only when timestamp is unreliable and high integrity is must                                                                                                                            |
-|                                      |                                                                        |                                                                                                                                                                                                                               |
-
-
+---
 
 ##### **The `xargs`** 
 Short term for `arguments`. 
@@ -465,6 +418,140 @@ C0 A8 01 01
 ---
 
 ## STDOUT, STDIN, STDERR 
+*June 30, 2026*
+
+There are three default data streams every program has:
+```
+stdin    =   input INTO the program
+stdout   =   normal output FROM the progarm
+stderr   =   error output FROM the program  
+```
+
+| Stream | File descriptor | Purpose                        |
+| :----- | --------------- | ------------------------------ |
+| stdin  | 0               | input INTO the program         |
+| stdout | 1               | Normal output FROM the program |
+| stderr | 2               | Error output FROM the program  |
+
+ ```
+           Keyboard
+             │
+             ▼
+         stdin (0)
+             │
+             ▼
+        +------------+
+        |  Program   |  i,e (cat)
+        +------------+
+         │          │
+         ▼          ▼
+stdout (1)      stderr (2)
+    │               │
+    └──────┬────────┘
+           ▼
+        Terminal
+ ```
+
+### 1. stdin (Standard Input)
+*Example `[program]` — cat*
+
+`Cat` normally waits for input from the keyboard
+```
+hellow, hello, linux, linix bla bla bla
+```
+
+You can also redirect the stdin from a file:
+*So instead of waiting for input from the keyboard, it reads input from the readthis.txt*
+```bash
+cat < readthis.txt
+```
+
+### 2. stdout (Standard output)
+*Example `[program]` — echo*
+```bash
+echo "Hello"
+```
+
+Normally, stdout goes to terminal. But, you can redirect it. 
+*The terminal will not receive the 'Hello' — the output.txt receives it.*
+```bash
+echo "Hello" > output.txt
+```
+*Be careful*, as if the file already exists, this operator will completely overwrite its contents.*
+
+But you can append a content to a file by using the `>>` operator
+```bash
+echo "hello" >> output.txt
+```
+
+### 3. stderr(Standard Error)
+*Sends the error messages through a different stream*
+
+*Example:*
+```bash
+ls /fake/dir > output.txt
+```
+You might expect that it will redirect whatever the output is to the `output.txt`— but instead you will get a message from a terminal
+```bash
+ls: cannot access '/fake/dir': No such file or director
+```
+That message didnt come from stdout stream but, rather from a stderr stream which is different.
+
+*Example2*
+```bash
+find -name "*.conf" > output.txt
+
+
+Visual example:
+                 find
+                   │
+         ┌─────────┴─────────┐
+         │                   │
+     stdout (1)         stderr (2)
+         │                   │
+.conf files         Permission denied
+     |                        |
+ output.txt              Terminal                          
+```
+*This redirects all the valid file paths to the `output.txt`but, you will see in the terminal all the output that the stderr produces.*
+
+
+### Why split stderr and stdout seperately?
+So it can be redirected independently.
+The file descriptor 0 , 1 and 2  is used in redirection
+
+Examples:
+```
+FOR STDIN: 
+			command < readme.txt   =IS EQUVALENT TO=    command 0< readme.txt
+			
+FOR STDOUT:
+			command 1> output.txt  =IS EQUIVALENT T0=   command 1> output.txt
+	
+FOR STDERR: we EXPLICITLY USE the 2 file descriptor
+			command 2> error.txt
+```
+
+If we want to redirect both the stdout and stderr—so things wont show in terminal.
+*This have independent destination for the stderr and stdout* 
+This method is NOT recommended because, unsynchronized write,  race-like behavior, 
+```bash
+command >output.txt 2> error.txt
+```
+
+Use this better:
+```bash
+command 1> output.txt 2>&1  
+
+NOTE:  the '2>&1' is not read as 2 --to--> &1
+    instead it means: Make the File Description a reference point for whatever stderr wil show
+```
+
+Or
+```bash
+command &> outout.txt 
+```
+
 ---
 *June10-2026*
 
@@ -548,3 +635,5 @@ ln -s /home/orano/Documents/report.txt ~/Desktop/report-link.txt
 `ls -l` Outputs:
 **`report-link.txt -> /home/orano/Documents/report.txt`**
 Makikita sa arrow (*`->`*) kung nasan yung shortcut 
+
+

@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "bd29558489abb9c5",
+            "id": "18ce1424711a3f2d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Linux_File_System__Major_Only_.md",
+                "file": "Exercise.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,16 +28,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Linux_File_System__Major_Only_"
+              "title": "Exercise"
             }
           },
           {
-            "id": "c5e9ba24f73c9734",
+            "id": "6a4a113a3ebbc124",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Whatis.md",
+                "file": "JARGONS.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,16 +52,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Whatis"
+              "title": "JARGONS"
             }
           },
           {
-            "id": "4e0469392f0beb13",
+            "id": "5eff0fa4e3ee7b3d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DOCUMENTATIONS/Git Workflow & Commands.md",
+                "file": "GEN_NOTES/Questions.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -76,59 +76,10 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Git Workflow & Commands"
-            }
-          },
-          {
-            "id": "f08bc960a6ff280e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Networking/RANDOM FOR NOW.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "RANDOM FOR NOW"
-            }
-          },
-          {
-            "id": "fd41d834dc224a1e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Networking/RANDOM FOR NOW.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "RANDOM FOR NOW"
+              "title": "Questions"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -160,7 +111,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "symmetr",
+                "query": "column",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -181,12 +132,11 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 378.5124969482422
+    "width": 200
   },
   "right": {
     "id": "6b367cb62b5d1f38",
@@ -220,11 +170,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "GEN_NOTES/Tools.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from Tools"
             }
           },
           {
@@ -285,7 +236,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -295,38 +247,38 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false,
-      "broken-links:View broken links": false
+      "broken-links:View broken links": false,
+      "bases:Create new base": false
     }
   },
-  "active": "f08bc960a6ff280e",
+  "active": "18ce1424711a3f2d",
   "lastOpenFiles": [
-    "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "Networking/RANDOM FOR NOW.md",
-    "GEN_NOTES/Whatis.md",
-    "GEN_NOTES/Tools.md",
-    "GEN_NOTES/Feynman-Technique.md",
-    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
-    "DOCUMENTATIONS/Git Workflow & Commands.md",
-    "SECURITY/OBFUSCATION_GUIDE.md",
+    "JARGONS.md",
+    "GEN_NOTES/Questions.md",
     "SECURITY/RANDOM NOTES FOR NOW.md",
+    "Exercise.md",
+    "GEN_NOTES/PROCESS.md",
+    "SECURITY/OBFUSCATION_GUIDE.md",
     "GEN_NOTES/Commands.md",
-    "GEN_NOTES/Intro.md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "GEN_NOTES/Linux_File_System__Major_Only_.md",
+    "Networking/3-WAY_HANDSHAKE.md",
+    "GEN_NOTES/Docker-Reference.md",
+    "GEN_NOTES/Tools.md",
     "GEN_NOTES/Bashing And Scripting.md",
     "GEN_NOTES/Logging & Monitoring.md",
-    "GEN_NOTES/PROCESS.md",
-    "ETHICAL_HACKING/Exploitation.md",
-    "DOCUMENTATIONS/WINDOWS MACHINE.md",
+    "DOCUMENTATIONS/Bandit_Wargames.md",
+    "GEN_NOTES/Intro.md",
+    "GEN_NOTES/Whatis.md",
     "DOCUMENTATIONS/Documentations.md",
     "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
-    "Untitled.md",
-    "Networking/OSI_Model.md",
-    "GEN_NOTES/User Management.md",
-    "GEN_NOTES/Questions.md",
-    "ETHICAL_HACKING/Privilage Escalation.md",
-    "ETHICAL_HACKING/Untitled.md",
-    "ETHICAL_HACKING/Recon.md",
+    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
+    "Networking/PROXY.md",
     "ETHICAL_HACKING/RandomForNow.md",
+    "ETHICAL_HACKING/Recon.md",
+    "ETHICAL_HACKING/Privilage Escalation.md",
     "ETHICAL_HACKING",
     "Untitled 1.base",
     "Untitled.base",

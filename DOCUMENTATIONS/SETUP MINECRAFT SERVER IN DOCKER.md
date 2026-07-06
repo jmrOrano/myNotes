@@ -55,7 +55,7 @@ Refer to [[DOCKER SETUP  2|Docker Installation]]
 				TYPE: "FABRIC" #other options are : VANILLA, FORGE, BUKKIT, PAPER, FOLIA, PURPUR, FABRIC, SPIGOT, QUILT, SPONGEVANILLA........
 				CREATE_CONSOLE_IN_PIPE: "true" #for sending commands in game later
 			volumes:
-				- .data:/data
+				- ./data:/data
 			restart: unless-stopped
 ```
     
@@ -114,7 +114,7 @@ sudo ufw status numbered
 
 4. Configuration
 	- Make sure the compose file yml has the correct port.
-	  `ports: - "25565-25565"` - the left is host port, the right is container.
+	  `ports: - "25565:25565"` - the left is host port, the right is container.
 	- **Server propterties** -
 	  Inside the `./data/server.properties` (the data for the game)
 		  -`online-mode=true`
@@ -124,19 +124,21 @@ sudo ufw status numbered
 	   - **Assigning Server Operators**
 	   inside the `data/ops.json`
 
-		```
-		[
-			{"uuid":"<theUUID>","name":"Playername":"level":4,"bypassPlayerLimit":true},
-			
-		
-		]
-		```
+	```json
+	[
+	  {
+	    "uuid": "<player-uuid>",
+	    "name": "<player-name>",
+	    "level": 4,
+	    "bypassPlayerLimit": true
+	  }
+	]
+	```
 
 
 >[!Note]
 >In level : Options are 1 lowest to 4 the highest
 >bypassPlayerLimit - is the condition wherein if player can enter if server is full
-
 
 
 #### **ADDING A VOICE COMS**
@@ -160,20 +162,18 @@ sudo ufw status numbered
 #### **ADDING SHADERS (Client side)**
 *For frabric server*
 >[!Requirements]
->- Fabric installer and fabric APi  at [#Fabric](https://fabricmc.net/use/installer/)
->- Sodium at [#Sodium(https://modrinth.com/mod/sodium/versions?version=26.1.1&loader=fabric)]
->- iris shaders at [#Irish Shader](https://modrinth.com/mod/iris?version=26.1.1&loader=fabric)
->- A shader in this guide, its going be to be complementary shader unbound at [#Modrinth](https://modrinth.com/shader/complementary-unbound/versions?version=26.1.1&loader=iris)
+>- Fabric installer and fabric APi  at [Fabric](https://fabricmc.net/use/installer/)
+>- Sodium at [Sodium](https://modrinth.com/mod/sodium/versions?version=26.1.1&loader=fabric)]
+>- iris shaders at [Irish Shader](https://modrinth.com/mod/iris?version=26.1.1&loader=fabric)
+>- A shader in this guide, its going be to be complementary shader unbound at [Modrinth](https://modrinth.com/shader/complementary-unbound/versions?version=26.1.1&loader=iris)
 >- Move the iris and sodium at mods folder
 >- Run the game and navigate to the video settings and do changes
-
-
 
 #### **BACKING UP THE SERVER** 
 
 *Server: Linux mint , Docker compose container*
 *Local machine : Windows*
-*Tools:"  ssh, scp , rsync*
+*Tools:"  ssh,  [[Tools#SCP|scp]] , [[Tools#**RYSNC**|rsync]]*
 ##### **SCP METHOD**
 1. **Save and Stop world progress** 
 ```Bash
@@ -194,7 +194,7 @@ docker start minecraft-server
 ```
 5. Enable the world auto saving again
 ```Bash
-docker exec -u 1000 -it minecraft-sever rcon-cli "save-on"
+docker exec -u 1000 -it minecraft-server rcon-cli "save-on"
 ```
 
 
@@ -210,6 +210,7 @@ docker exec -u 1000 -it minecraft-sever rcon-cli "save-on"
    ```Bash
    cd C:/Users/username/.ssh/
    cp id_ed25519 [destination of WSL which is at ~/.ssh/here]
+   chmod 600 ~/.ssh/id_ed25519
    ```
 
 2. **Perform the RYSYNC command**

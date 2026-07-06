@@ -142,7 +142,7 @@ git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
 |                                                           |                                                                                                                                                                                              |                                                        |
 |                 **UNDO COMMITS LOCALLY**                  | **UNDO COMMITS LOCALLY**                                                                                                                                                                     |                                                        |
 |                        `git reset`                        | undo commits locally                                                                                                                                                                         | Use this when you want to fix something before pushing |
-|                 `git reset --soft HEAD~1`                 | --commit is removed<br>--changes stay staged<br>--You can immediately recommit                                                                                                               |                                                        |
+|                 `git reset --soft HEAD~1`                 | --commit is removed<br>--changes stay in staged<br>--You can immediately recommit                                                                                                            |                                                        |
 |                    `git reset HEAD~1`                     | --Commit removed<br>--Changes go back to directory (not staged)                                                                                                                              |                                                        |
 
 ### **GIT CHECKOUT**
@@ -164,7 +164,7 @@ c1<-----c2<-----c3 (main)
 ```
 	
 >[!Question] *Can you do add and commit pag detached HEAD state?*
->Yes, pero not recommended dahil di naka point and branch pointer sa commit na iyon sa parent commit, unless mag perform ng git switch.
+>Yes, pero not recommended dahil di naka point ang branch pointer sa commit na iyon sa parent commit, unless mag perform ng git switch.
 
 >[!Warning] *Example of NOT RECOMMENDED workflow*
 >```Bash
@@ -173,7 +173,7 @@ c1<-----c2<-----c3 (main)
 >```
 >
 >```Bash
->git checkout c2 #DETAACH THE HEAD TO COMMIT 2
+>git checkout c2 #DETACH THE HEAD TO COMMIT 2
 >#then edit some files
 >git commit 
 >```
@@ -241,7 +241,7 @@ c1<-----c2<-----c3 (main)
 |             `git switch --detach c2`              | Equivalent of `git checkout c2`                                           | More explicit                                                                     |
 
 
-**`git restore`**
+### GIT RESTORE
 -gamit para i-undo o -revert ang changes sa `working dir or staging area`. 
 
 ***Basic Concept***	
@@ -251,17 +251,24 @@ c1<-----c2<-----c3 (main)
 
 **COMMON COMMANDS**
 
-|                                                                    Commands                                                                    | Description                                                                                              |                                       |
-| :--------------------------------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-|                                                             `git restore file.txt`                                                             | Restore the file sa pinaka huling commit na version                                                      |                                       |
-|                                                        `git restore --staged file.txt`                                                         | - Remove the file in staging area.<br>- But doesnt change the working directory                          | Useful when added a file by accident. |
-|                                                      `git restore --source=HEAD file.txt`                                                      | -Restore the file using the specified commit as reference point<br><br>- Directly applies to working dir |                                       |
-| `git restore --source=HEAD --staged --worktree file.txt`<br><br><br>*the target file can change to `.` to target all files in current folder.* | - Restore the file to exact state of last commit.<br>- Applies both sa stage and working dir.            |                                       |
-|                                                                   FLAGS USE                                                                    |                                                                                                          |                                       |
-|                                                               `--source=<tree>`                                                                | - For reference point of which commit you want to get.<br>- The `<tree>` can be comit ID                 |                                       |
-|                                                                  `--worktree`                                                                  | Use for applying the changes to the working directory                                                    |                                       |
-|                                                                   `--staged`                                                                   | Use for applying the changes to staging area only                                                        |                                       |
+|                                                                    Commands                                                                    | Description                                                                                              |                                                                                                                                                                                |                                                                                                                                              |
+| :--------------------------------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+|                                                             `git restore file.txt`                                                             | Restore the file sa pinaka huling commit na version                                                      | -*undo ang changes sa working dir(di pa commit)*<br>-ibabalik ang file from latest commit to your working dir.<br>-kung may na edit pero gusto tanggalin ito. Ito ang gamitin. |                                                                                                                                              |
+|                                                        `git restore --staged file.txt`                                                         | - Remove the file in staging area.<br>- But doesnt change the working directory                          | Useful when added a file by accident.                                                                                                                                          | -*undo ang mga na git add na*<br>--tanggalin ang file sa staging area **hindi binabago ang working dir**<br>-useful kung na add by accidents |
+|                                                      `git restore --source=HEAD file.txt`                                                      | -Restore the file using the specified commit as reference point<br><br>- Directly applies to working dir |                                                                                                                                                                                | -undo from latest commit to working dir<br>-mag rereflect sa working dir ang file from file na commited.                                     |
+| `git restore --source=HEAD --staged --worktree file.txt`<br><br><br>*the target file can change to `.` to target all files in current folder.* | - Restore the file to exact state of last commit.<br>- Applies both sa stage and working dir.            |                                                                                                                                                                                |                                                                                                                                              |
+|                                                                   FLAGS USE                                                                    |                                                                                                          |                                                                                                                                                                                |                                                                                                                                              |
+|                                                               `--source=<tree>`                                                                | - For reference point of which commit you want to get.<br>- The `<tree>` can be comit ID                 |                                                                                                                                                                                |                                                                                                                                              |
+|                                                                  `--worktree`                                                                  | Use for applying the changes to the working directory                                                    |                                                                                                                                                                                |                                                                                                                                              |
+|                                                                   `--staged`                                                                   | Use for applying the changes to staging area only                                                        |                                                                                                                                                                                |                                                                                                                                              |
 
+### GIT PULL
+*june 25, 2026*
+*Use if you already have an exisiting local copy of a certain repo and you want to get the latest changes from the remote.*
+
+### GIT CLONE
+*June 25, 2026*
+*Use for first-time download/copy of a certain repo to your local machine*
 
 ---
 

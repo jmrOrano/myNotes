@@ -12,10 +12,6 @@ Do search SIEM
 
 
 
-TYPOSQUATTING
-PHSING WITH VALID CERTS
-
-
 PRACTICAL TLS/ SSL DEEPDIVE
 https://www.youtube.com/watch?v=HMoFvRK4HUo&list=PLIFyRwBY_4bTwRX__Zn4-letrtpSj1mzY
 
@@ -188,3 +184,21 @@ Similar idea  but older but still used
 #### The uncomfortable truth
 
 #### Mental Model
+
+
+## A Cybersecurity Perspective about Process States
+Reference : [[PROCESS#Process States]]]
+
+Process states can reveal what a system is doing.
+Examples:
+- Many `D` processes may indicate disk or storage problems.
+- Unexpected `T` processes could suggest debugging or manual intervention.
+- Zombie (`Z`) processes may point to buggy software or poor process management.
+- High numbers of runnable (`R`) processes can indicate CPU contention.
+
+A security analyst doesn't just ask:
+> "What processes exist?"
+
+They also ask:
+> "What are those processes doing right now?"
+

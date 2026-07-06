@@ -465,3 +465,86 @@ Didnt work : reloading psmouse module
 	`sudo modprobe -r psmouse && sudo modprobe psmouse`
 
 ---
+
+## Fix if the colors in the bash shell is gone.
+*June 28,2026*
+*Overview: I did a practice using reverse shell using netcat, Used the named FIFO method and the VM served as an outbound endpoint for connection. But, somehow i dont what happened after i exited the session that the colors for the terminal is gone.
+
+
+
+>**I did**
+```
+echo $0
+echo $SHELL
+ps -p $$ -o pid,ppid,cmd
+```
+And confirmed that im using /bin/bash
+```
+linuxuser@linuxuser:~$ echo $0 
+bash 
+linuxuser@linuxuser:~$ ps -p $$ -o pid,ppid,cmd 
+  PID PPID CMD 
+  3883 3718 bash
+```
+I check the content of the `~/.bashrc`. Found out its empty—which should not be
+```
+nano ~/.bashrc
+```
+
+**THE FIX**
+
+>Reinstall the bash defaaults
+```
+sudo apt install --reinstall bash
+``` 
+>Restore colors 
+```
+export PS1="\[\e[1;32m\]\u@\h:\w\$ \[\e[0m\]"
+```
+
+## Using terminator
+*June 30, 2026*
+*Machine: Linux Mint, Cinnamon, Ubuntu Noble Base 24.0*
+*Purpose: For basic but useful functionality that the regular terminal doesnt have — mainly the side by side terminal in a single window.*
+
+```Note
+Other option can be is tmux, but i personally think its for advance customization — Ill opt to that if necessary.
+```
+
+Install:
+```bash
+sudo apt intall terminator
+```
+
+Setting a shortcut key for opening:
+```
+1. Open menu(press the super key or the windows key for windows keyboard)
+2. Search for 'keyboard' and open it.
+3. In the `Shortcuts` tab go to `Custom Shortcuts`
+4. Press `Add custom shortcuts` 
+   Name: `Launch Terminal` (or whatever you want)
+   Command: `terminator` (withtout the quotes)
+   Then click `Add`.
+5. Under the `Keybord Bindings`, double click an `unassigned`, then perform your desired shortcut. In regular terminal — its ctrl+alt+E, so for easier just do ctrl+alt+y
+   
+```
+
+Common shortcuts:  *For reference, visit : [Full Shortcuts](https://github.com/igniteflow/terminator-keyboard-shortcuts)*
+```
+ctrl + shift + E   =   Split vertically
+ctrl + shift + O   =   split horizontally
+ctrl + tab         =   Move to next terminal within the same window
+ctrl + shift + W   =   Close the current terminal
+```
+
+### Setting it for Autostart
+```
+cd ~/.config/autostart
+sudo nano terminator.desktop
+
+[Desktop Entry]
+Type=Application
+Name= Your terminator
+Exec=terminator
+X-GNOME-Autostart-enabled=true
+```

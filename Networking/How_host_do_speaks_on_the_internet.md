@@ -230,8 +230,8 @@ Host A                           Router                         Host C
   │                                 │                              │
   │═══ Data / L3 / L2[dst:rrrr] ══▶│                              │
   │                                 │                              │
-  │                                 │  5. Router strips L2         │
-  │                                 │     Reads L3 dst IP          │
+  │                                 │  5. Router strips L2,        │
+  │                                 │     Reads L3 dst IP ,        │
   │                                 │     ARP for Host C's MAC     │
   │                                 │                              │
   │                                 │══ Data / L3 / L2[dst:cccc] ▶│
@@ -263,3 +263,38 @@ Think of it like sending a package overseas: you don't hand it to your recipient
 | **Default Gateway** | Router's IP — your network's exit   | The post office / courier                 |
 | **L3 Header**       | Carries source/destination IP       | Shipping label (stays the whole trip)     |
 | **L2 Header**       | Carries source/destination MAC      | Handoff receipt (replaced each hop)       |
+
+##### Layer Placement for Real world
+```
+Application Layer
+  ├─ Netcat, Browser, SSH, etc.
+  ↓
+Socket API (user → kernel boundary)
+  ↓
+TCP/IP Stack (kernel networking subsystem)
+  ├─ TCP (3-way handshake, reliability)
+  ├─ IP (routing)
+  ├─ ICMP (errors, diagnostics)
+  ↓
+Link Layer
+  ├─ Ethernet / Wi-Fi
+  ↓
+Hardware
+```
+>**Everything eventually becomes bytes for transmission**
+
+>What about encryption you may ask?
+>Encryption is usually implemented above the socket layer.
+>For example, when your browser visits an HTTPS site:
+```
+Browser
+   ↓
+HTTP
+   ↓
+TLS encryption
+   ↓
+Socket API
+   ↓
+TCP/IP stack
+```
+

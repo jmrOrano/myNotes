@@ -3,14 +3,10 @@
   "previousVersion": "1.0.0",
   "groupBy": 0,
   "expandedFolderItems": [
-    "GEN_NOTES/Feynman-Technique.md",
+    "GEN_NOTES/Docker-Reference.md",
     "DOCUMENTATIONS",
-    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
-    "GEN_NOTES",
-    "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "GEN_NOTES/Tools.md",
-    "GEN_NOTES/Whatis.md",
-    "Networking"
+    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md"
   ],
   "expandedFileItems": [],
   "expandedLinkItems": [],

