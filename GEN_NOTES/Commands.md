@@ -32,6 +32,7 @@ use H4 for titles
 ---
 
 #### About the *`cp and mv`* command
+---
 
 >[!Reminder]
 >
@@ -64,8 +65,8 @@ Running the `--help` is good, but can be overwhelming. So, i'll list some common
 
 ---
 
-
 #### Tips in *`cut`* command
+---
 The **`cut`** command outputs in new line if the text has multiple lines.
 
 *What if you want to put each delimiter in new line. But the text is only a single-line?*
@@ -84,6 +85,7 @@ TR USAGE : **`tr [space] ["replaceThis"] [space] ["withThis"]
 ---
 
 #### The `tr` command
+---
 **Basic structure :** 
 ```Bash
 tr 'find this' [space] 'replace with this'
@@ -160,6 +162,7 @@ Second parameter:  UPPER range first, LOWER range second
 
 ---
 #### uniq command
+---
 *June 26, 2026*
 *Used to filter, report or remove adjacent duplicate lines from aa text file or standard input*
 
@@ -191,6 +194,7 @@ uniq [flags] [file]
 ---
 
 #### sort command
+---
 *June 26, 2026*
 *Used to reorder and rearrange lines of text in specified order*
 
@@ -208,16 +212,42 @@ sort [flags] [file/input]
 | `-u`  | Removes the duplicates from the output                               |                                      |
 | `-o`  | Saves the sorted output directly to a specified file                 | `sort -o [output_file] [input_file]` |
 | `-k`  | Sort by specified column or field instead of sorting the entire line | `ps aux \| sort -k 2`                |
-
-
----
-### RELATED TO LEVEL 12 IN bandit overthewire
-*The password for the next level is stored in the file **data.txt**, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command “mktemp -d”. Then copy the datafile using cp, and rename it using mv (read the manpages!)*
-
+|       |                                                                      |                                      |
 
 ---
 
+#### diff command
+*July 11, 2026*
+Comapre two files or dir line by line. 
 
+It solves the problem: 
+"In comparing two files. How to know which line belongs to which file?"
+
+```bash
+diff file1 file2 
+```
+Output:
+```
+2c2  
+< context
+> context
+```
+
+##### The breakdown
+---
+`2c2`  — is the output notation
+	`2` — means line 2 in file 1
+	`c` — means `CHANGE`(line is different).  There can be 3 action letters: 
+		`c` - `CHANGE` : "Same line number but different content"
+		`a` - `ADD`       :  "File 2 has a line that the file1 doesnt have"
+		`d` - `delete` :  "File 1 has a line that the file2 doesnt have"
+	`2` — means line 2 in file 2
+`<` —  The file 1
+`>` —  The file 2
+
+---
+
+---
 
 |                      Flags                       | desc                                                                                                                                      |
 | :----------------------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -230,7 +260,10 @@ sort [flags] [file/input]
 |               `pstree -linuxuser`                |                                                                                                                                           |
 
 
+
+---
 ## LINUX
+---
 
 >[!Note]- User Management
 >[[User Management]]
@@ -291,18 +324,18 @@ sort [flags] [file/input]
 
 >[!Note]- Tools
 >
->For disk utilities
->[[Tools#parted|parted]]
->[[Tools#mkpart|mkpart]]
+>[[Tools#FOR DISK-RELATED TOOLS]]
+>- [[Tools#parted|parted]]
+>- [[Tools#mkpart|mkpart]]
 >
->For File Transfer
->[[Tools#**RYSNC**]]
->[[Tools#SCP]]
+>[[Tools#File Transfer Tools]]
+>- [[Tools#**RYSNC**]]
+>- [[Tools#SCP]]
 >
->For Compression
->[[Tools#**Gunzip**]]
->[[Tools#**bunzip2/bzip2**]]
->[[Tools#**tar**]]
+>[[Tools#For unzipping|For File handling tools]]
+>- [[Tools#**Gunzip**]]
+>- [[Tools#**bunzip2/bzip2**]]
+>- [[Tools#**tar**]]
 
 
 >[!Notes]- Docker Commands
@@ -318,11 +351,23 @@ sort [flags] [file/input]
 >[!Note]- Security
 >[[Whatis#**What is hexdump?**|hexdump]]
 
-
-## NETWORKING
-
->[!Note] Tools
+>[!Note]- Networking
 >[[Tools#Netcat (nc)]]
+>[[Tools#SSH (Secure Shell)]]
+
+
+---
+## Git
+[[Git Workflow & Commands#**FOR VIEWING AND COMPARING**]]
+[[Git Workflow & Commands#LISTING BRANCHES]]
+[[Git Workflow & Commands#**Undoing Commits**]]
+[[Git Workflow & Commands#**GIT CHECKOUT**]]
+[[Git Workflow & Commands#GIT SWITCH]]
+[[Git Workflow & Commands#GIT RESTORE]]
+[[Git Workflow & Commands#GIT PULL]]
+[[Git Workflow & Commands#GIT CLONE]]
+
+
 
 |    **NETWORKING COMMANDS**     |                                                                                                                                    |
 | :----------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- |

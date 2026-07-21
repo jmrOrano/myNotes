@@ -32,7 +32,6 @@
 *This section covers the essential concepts and commands for managing users in Linux. It includes creating and deleting user accounts, modifying user information, managing groups, and setting permissions.*
 
 
-
 ### USER ACCOUNT 
 *Overview : Involves creating, modifying, and deleting user accounts*
 **User** : is not just a linux name. Its a :
@@ -680,6 +679,24 @@ For commands : [[Commands#LINUX| GO HERE]]
 		- each group is seperated by colon
 
 
-# **/ QUESTIONS /** 
-### How do pros search for potential vulnerability in permissions
-More specifically, How do they find files with unusual permissions? 
+# Practical Test
+
+#### How to find files with unusual permissions
+*Use the [[Linux_File_System__Major_Only_#find|find command]]*
+
+Common patterns.
+```Bash
+sudo find / -perm 0777    # for exactly 0777 permissions
+sudo find / -perm -4000   # for finding SUID Files
+sudo find / -perm -2000   # for finding SGID files
+sudo find / -perm -0002   # for finding world-writeable files
+```
+
+searching starting from `/` is noisy. So you can hide it with [[Whatis#3. stderr(Standard Error)|stderr stream redirection]]
+```bash
+sudo find / -perm -0002 2>/dev/null
+```
+Another thing.  there are virtual filesystem like [[Linux_File_System__Major_Only_#/proc|/proc]] , or `/sys` or `/run`. For cleaner output use :
+```Bash
+sudo find / -xdev -perm -0002 2>/dev/null   #-xdev means dont cros into other mounted fs
+```

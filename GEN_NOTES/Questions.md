@@ -3,7 +3,7 @@
 
 
 ---
-
+# FS,PERMISSIONS,PROCESSES AND LOGS
 >[!Danger] For attackers mindset
 >
 >**ABOUT FILESYSTEM & FILES**
@@ -145,7 +145,7 @@
 ```
 
 
-## NETWORKING
+# NETWORKING
 
 ### About the 3 way handshake
 *June 27, 2026*  
@@ -191,7 +191,7 @@ Reference: [[PROXY#SOCKS PROXY (SOCK4 & SOCKS5)]]
 
 ---
 
-## USER MANAGEMENT
+# USER MANAGEMENT
 
 
 >**Whats the importance of having knowledge in User management when it comes to cybersecurity POV or attacker's POV ?**
@@ -239,3 +239,7 @@ If every user had master keys (root access), one compromised account = **entire 
 ## About Process
 >How a Zombie process is used and created for potential attack?
 >How does PID 1 (systemd) clean zombies automatically?
+
+
+# DOCKER
+What's the difference of reading the log file directly inside the container vs using the `docker logs` command? 

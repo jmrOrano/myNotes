@@ -194,7 +194,6 @@ tar -xvfJ archivedFile.tar.xz
 
 ## systemctl
 
-
 # FOR DISK-RELATED TOOLS
 
 ### fdisk 
@@ -220,6 +219,7 @@ Useful when exploring about the [[Linux_File_System__Major_Only_#The Anatomy of 
 | `sudo parted /dev/sdb1 rm 1`              | Permanently deletes a paratition            |                                                               |
 | `print`                                   | print the partitions                        |                                                               |
 | `print free`                              | Print the free space                        | Use by admin before creating partitions to avoid manual math. |
+|                                           |                                             |                                                               |
 ### mkpart
 ---
 *CLI tool inside the [[#parted]] to create disk partitions*
@@ -402,6 +402,160 @@ scp [flags and options] <user>@<remoteIP>:[source_Path] [dest_path]
 
 # Networking 
 
+### SSH (Secure Shell)
+---
+Reference how to setup : [[SSH_Setup]]
+*a powerful tool and network protocol 
+- A `protocol` in a way that It determines how two computers communicate securely:
+	- Encryption: It uses rules for hashing and encryption (such as AES) to scramble data so it cant read in transit
+	- Authentication: It defines the secure exchange of cryptographic keys and passwords to verify identity.
+	- **Layering:** It divides tasks into sub-protocols: a transport layer, a user authentication layer, and a connection layer.
+- A `Tool` in a way as the Implementation of rules in protocol.
+
+- Used by developers and IT administrators to securely access, control, and transfer files between computers over an unsecured network. It acts like an encrypted tunnel, allowing you to execute commands on a remote server as if you were sitting right in front of it*
+
+#### Utilities
+---
+- Remote Admin - To run terminal commands on servers across the world
+- File Transfer - Use with tools like [[#SCP]] or SFTP 
+- Port Forwarding - Create a secure tunnel to safely route other network traffic or bypass restrictive firewalls.
+
+---
+
+#### How to File Transfer using SCP
+---
+Read more here : [[#SCP]]
+
+---
+#### How to use rsync over SSH
+---
+Read more here: [[#**RYSNC**]]
+
+---
+#### How to Local Port Forwarding
+---
+*Use this when you want to access a web UI of a certain service running only locally*
+
+Use the `-L` flag.
+```bash
+ssh -L [CLIENTportToUse]:[DESTINATION_HOST/IP]:[DESTINATION_PORT] user@host
+ssh -L 8080:192.168.1.x:81 user@host
+```
+
+Breakdown:
+```c
+
+-L means local port forwarding/ Listening port
+
+The first 8080        - is the port on your local machine.
+192.168.1.50:81       - is the target inside the SSH server’s LAN.
+user@your-ssh-server  - is your SSH login.
+```
+
+Then you can now access the Web UI via browser:
+```
+http/localhost:[Client_Port_Used]
+```
+
+Reminder:
+```
+The [CLIENTportToUse] doesnt have to match the target port dest.
+```
+
+
+Basic Flow:
+```
+You
+ |
+ | ssh -L ...
+ |
+ v
+SSH Client
+ |
+ | SSH Client NOW Listening on localhost:8080
+ |
+SSH Tunnel Established
+```
+Nothing has gone through the tunnel yet.
+But when you opened a browser:
+```
+Browser
+ |
+ | http://localhost:8080
+ |
+ v
+SSH Client
+ |
+ | "Ah! Someone connected to my local port."
+ |
+ | Encrypt
+ |
+ v
+SSH Server
+ |
+ | Connect to 192.168.1.20:81
+ |
+ v
+NPM
+```
+
+---
+#### How to Dynamic Port Forwarding
+---
+*If flag `-L` is use for local service one at a time. This one do it dynamic, not needing to re-logout then use another port for another service.*
+
+With the use of `-D` Flag:
+```bash
+ssh -D [Client_Port_to_Use] user@host/IP
+
+#Example
+ssh -D 1080 username@myserver.ssh
+```
+This creates a [[PROXY#SOCKS PROXY (SOCK4 & SOCKS5)|SOCKS]] proxy on the client machine. Let it be the one forward the request to the server.
+
+
+You can test it without browser first. Follow the syntax in another terminal tab.
+```bash
+curl --socks5 localhost:[Port_Used_byu_Client] http://host/ip:[port]
+```
+
+Reminder:
+```
+Remember: To setup a proxy in browser when testing it.
+There is no flag that explicitly states what SOCKS proxy to use to forward request to sshd.
+The -D flag is default to use the localhost. 
+```
+
+
+Basic flow:
+```
+Your PC
+ |
+ | SOCKS proxy
+ |
+SSH
+ |
+ +---- NPM:81
+ |
+ +---- Grafana:3000
+ |
+ +---- NAS:5000
+ |
+ +---- Anything reachable
+```
+
+#### How to use specific identity file
+---
+Syntax: Using the `-i` flag
+```Bash
+ssh -i [location/filename] user@host/ip
+```
+
+
+---
+
+
+---
 
 ### Netcat (nc)
 *June 27, 2026*
@@ -507,8 +661,27 @@ July 03, 2026
 |   `x509`   | Work with certificate                              | `openssl x509 -in certificate.crt -text -noout`                                                                                | Shows:<br><br>- issuer<br>- subject<br>- expiration<br>- public key |
 | `s_client` | Test SSL/TLS connection                            | `openssl s_client -connect example.com:443`                                                                                    |                                                                     |
 |            |                                                    |                                                                                                                                |                                                                     |
+|            |                                                    |                                                                                                                                |                                                                     |
+
+
+#### Interactive Mode
+---
+An *interactive mode* means :
+- You start the program once, and it stays running,
+- Waiting for commands or input from you.
+- Read [[Feynman-Technique#Interactive Mode Commands]]
+
+Some OpenSSL subcommands are interactive. For example:
+```bash
+openssl s_client -connect example.com:443
+```
+
+
+---
+
 
 ### nmap
+---
 July 03, 2026
 *Network Mapper* - A network scanner
 Part of `Reconnaisance` Tool
@@ -542,3 +715,11 @@ namp [options] target
 |  TCP Connect Scan   | `-sT`    |                              |
 |      UDP Scan       | `-sU`    |                              |
 |   Aggressive Scan   | `-A`     |                              |
+
+---
+
+### wireshark
+*July 11, 2026*
+A tool used to for packet analysis.
+
+**Capabilities:** *Network Troubleshooting, Security Analysis, Protocol Analysis, Deep Filtering*

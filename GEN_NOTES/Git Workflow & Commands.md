@@ -130,22 +130,53 @@ git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
 | `git show-branch` | For quick view                 |
 
 
-##### **Undoing Commits**
+#### GIT RESET
+---
+- undoes at Commit level — moves HEAD, rewrites history
 
-|                         Commands                          | desc                                                                                                                                                                                         |                                                        |
-| :-------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-|                   `git restore <file>`                    | -*undo ang changes sa working dir(di pa commit)*<br>-ibabalik ang file from latest commit to your working dir.<br>-kung may na edit pero gusto tanggalin ito. Ito ang gamitin.               |                                                        |
-|               `git restore --staged <file>`               | -*undo ang mga na git add na*<br>--tanggalin ang file sa staging area **hindi binabago ang working dir**<br>-useful kung na add by accidents                                                 |                                                        |
-|                 `git checkout -- <file>`                  | -undo from staged to working dir<br>-mag rereflect sa working dir ang staged file.                                                                                                           |                                                        |
-|            `git restore --source=HEAD <file>`             | -undo from latest commit to working dir<br>-mag rereflect sa working dir ang file from file na commited.                                                                                     |                                                        |
-| `git restore --source=HEAD --staged --worktree -- <file>` | -*undo changes both working dir and sa staging area*<br>1. kukuha ng version mula sa HEAD commit.<br>2. ilalagay ang source ver sa staging area<br>3. Ilalagay ang source ver sa working dir |                                                        |
-|                                                           |                                                                                                                                                                                              |                                                        |
-|                 **UNDO COMMITS LOCALLY**                  | **UNDO COMMITS LOCALLY**                                                                                                                                                                     |                                                        |
-|                        `git reset`                        | undo commits locally                                                                                                                                                                         | Use this when you want to fix something before pushing |
-|                 `git reset --soft HEAD~1`                 | --commit is removed<br>--changes stay in staged<br>--You can immediately recommit                                                                                                            |                                                        |
-|                    `git reset HEAD~1`                     | --Commit removed<br>--Changes go back to directory (not staged)                                                                                                                              |                                                        |
+>**Does `git reset` change the working directory?**
+Depends on the flag — this is actually the core difference between them:
 
-### **GIT CHECKOUT**
+- **`--soft`** — moves HEAD only. Your files in the working directory and staging area are **untouched**
+- **`--mixed`** _(default, if you don't pass a flag)_ — moves HEAD and clears the staging area, but working directory files are **untouched**
+- **`--hard`** — moves HEAD, clears staging, AND **overwrites your working directory** to match the commit. Changes are gone 
+
+---
+
+>Scenario1: You commited, but you noticed some typos, and need update them without new commits.
+```Bash
+git reset --soft HEAD~1
+[fix typos]
+git add .
+git commit -m "Your message"
+```
+This is the manual thing. Use [[#GIT COMMIT --AMEND]] instead 
+
+>Scenario2: You committed something sensitive. Like file with an API key, or password.
+```Bash
+#this wipes that commit and its changes entirely
+git reset --hard HEAD~1 
+```
+
+>Scenario3: You went too far down a wrong path. You made 3 commits experimenting with a feature, it didn't work out, and you want to scrap all of it and start fresh.
+```Bash
+# go back 3 commits, discard everything
+git reset --hard HEAD~3  
+```
+
+>Scenario4: Y**ou committed too early / want to reorganize** .You made 4 small messy commits locally and want to clean them up into 1 clean commit before pushing.
+```Bash
+# undo 4 commits, but keep all changes staged
+git reset --soft HEAD~4  
+git commit -m "one clean, proper commit"
+```
+---
+
+
+----
+
+#### GIT CHECKOUT
+---
 *Overview: * An old way of switching to view commits and perform branching.
 ```Bash
 git checkout <commitID>
@@ -222,8 +253,10 @@ c1<-----c2<-----c3 (main)
 >```
 >
 
+---
 
-### GIT SWITCH 
+#### GIT SWITCH 
+---
 *Overview: a command specialize for branch operations*
 
 >[!Example] 
@@ -240,9 +273,32 @@ c1<-----c2<-----c3 (main)
 | `git switch -c newBranch Commit2`<br><br><br>`-c` | Create branch named `newbranch` from start from `Commit2`<br><br>= create | use this for experimentation from old commits                                     |
 |             `git switch --detach c2`              | Equivalent of `git checkout c2`                                           | More explicit                                                                     |
 
+---
 
-### GIT RESTORE
--gamit para i-undo o -revert ang changes sa `working dir or staging area`. 
+#### GIT COMMIT --AMEND
+---
+Practical scenario to use it: If you commit a repo, but after some time you noticed some typos, or needs changes to formatting
+
+- It lets you fix the last commit **in place** :
+	- edit the files, 
+	- stage the changes, 
+	- then amend, and Git just updates the last commit as if the typo never happened.
+```Bash
+[edit files]
+git add 
+git commit --ammend
+```
+
+---
+
+
+---
+
+#### GIT RESTORE
+---
+- gamit para i-undo o -revert ang changes sa `working dir or staging area`. 
+- not for undoing commits. Refer [[#**Undoing Commits**|here]] for that,
+- 
 
 ***Basic Concept***	
 - May dalawang lugar kung saan pwede may changes:
@@ -262,17 +318,20 @@ c1<-----c2<-----c3 (main)
 |                                                                  `--worktree`                                                                  | Use for applying the changes to the working directory                                                    |                                                                                                                                                                                |                                                                                                                                              |
 |                                                                   `--staged`                                                                   | Use for applying the changes to staging area only                                                        |                                                                                                                                                                                |                                                                                                                                              |
 
-### GIT PULL
+#### GIT PULL
+---
 *june 25, 2026*
 *Use if you already have an exisiting local copy of a certain repo and you want to get the latest changes from the remote.*
 
-### GIT CLONE
+---
+#### GIT CLONE
+---
 *June 25, 2026*
 *Use for first-time download/copy of a certain repo to your local machine*
 
 ---
 
-##### Bakit isinasama ang .gitignore sa git add. ? 
+### Bakit isinasama ang .gitignore sa git add. ? 
 -  Ang **`.gitignore`** ay isang _configuration file_ na nagsasabi kay Git kung aling mga files/folders ang hindi dapat i-track.
 - Ang **`.gitignore`** ay hindi lang basta lagayan ng mga ignored files for **`git add.`** . Ito rin ang mag sisilbing automatic rules para sa mga collaborators. To avoid accidentally commit ng build files or secrets 
 - Ang **`.gitignore`** file ay: 
@@ -281,7 +340,7 @@ c1<-----c2<-----c3 (main)
 	- Bahagi ito ng strucutre ng project  
 
 
-#### Difference of `main`, `HEAD`, `pointer`
+### Difference of `main`, `HEAD`, `pointer`
 
 **MAIN**
 Sample Model:

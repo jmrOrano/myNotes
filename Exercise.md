@@ -197,7 +197,7 @@ ps -ef | grep sleep
 Notice that the 3 process has 3 different PID's but same PPID.
 This reinforce the [[PROCESS#The kernel's role in process management]] about resouirce management and isolation.
 
-### Observer CPU time
+### Observe CPU time
 ```
 yes > /dev/null
 

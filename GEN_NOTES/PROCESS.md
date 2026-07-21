@@ -1,5 +1,32 @@
 *June 30, 2026*
 
+>[!Note] Content
+>[[#Why study about processes?]]
+>[[#What is a Linux Process]]
+>[[#What makes a process?]]
+>[[#What happens when a process starts?]]
+>[[#Every running command becomes a process]]
+>[[#The kernel's role in process management]]
+>- [[#1. Process Creation and Destruction]]
+>- [[#2. CPU Scheduling (Time Sharing)]]
+>- [[#3. Process State Management]]
+>- [[#4. Resource Management and Isolation]]
+>[[#Basic ps command]]
+>[[#Basic ps command]]
+>- [[#ps -ef]]
+>- [[#BSD-style ps options]]
+>- [[#Common Flags and Patterns Used]]
+>[[#Process States]]
+>- [[#Why does it exist?]]
+>- [[#Important Idea]]
+>- [[#Common Linux Process States]]
+>- - [[#R-Running or Runnable]]
+>- - [[#S-Interruptible Sleep]]
+>- - [[#D-uninterruptible Sleep]]
+>- - [[#T-Stopped]]
+>- - [[#Z-Zombie]]
+>
+#
 ## Why study about processes? 
 ```
 Every attack that lands on linux system eventually has to 'become' a process — a reverse shell, a cryptominer, a privilege escaltion exploit, all of it runs as a a PID with a parent, a state, and a set of permissions. 
@@ -462,3 +489,111 @@ While waiting, there's no reason to waste CPU time.
 ## /proc filesystem
 ## TTY and Controlling Terminal
 ## Job Control
+
+
+# Extension
+
+## Launching an app/programs the general flow
+*July 11, 2026*
+
+#### When clicking a GUI icon
+---
+When an app is launched, it eventually reaches a **low-level OS interface**, but not through a shell.
+In abstraction example:
+```
+User clicks GUI icon
+        |
+        v
+Desktop Environment / Window Manager
+        |
+        v
+OS system call
+        |
+        v
+Kernel creates process
+        |
+        v
+Application runs
+```
+On linux, the important function is usually:
+```C
+
+execve()
+
+what is this fucntion?===================
+a system call that tells the kernel "Replace this process with this executable program."
+
+Example==================================
+execve("usr/bin/firfox")
+
+```
+
+#### When typing in terminal
+---
+```bash
+firefox
+```
+The Flow becomes:
+```C
+Terminal emulator
+        |
+        v
+bash
+        |
+        v
+execve("/usr/bin/firefox")
+        |
+        v
+Kernel
+        |
+        v
+Firefox
+```
+The only difference is that the `bash` is the program that calls the OS function instead of the Desktop Environment.
+
+Another example using [[Tools#Interactive Mode|Openssl interactive Mode]]
+```bash
+openssl s_client -connect example.com:443
+```
+The flow becomes:
+```C
+Terminal
+   ↓
+bash
+   ↓
+exec (openssl binary)
+   ↓
+openssl receives arguments
+   ↓
+openssl chooses subcommand: s_client
+   ↓
+s_client uses options: -connect example.com:443
+```
+Treat the `openssl` as a binary/program rather than a command.
+The subcommands gets parse(breakdown) inside the `opensssl` 
+```
+program:      openssl
+subcommand:   s_client
+arguments:    -connect example.com:443
+```
+
+>[!Note] Programs with Subcommands
+>There are programs that expects subcommands but others dont. 
+>It depends on how the developer designed the programs's user interface.
+>-its a thing that dont need to deeply think about it— in abstraction level ofcourse. 
+>Just Remember that:
+>`openssl`, `git`, `docker`  -> toolbox-style program
+>
+>	`[program] [subcommands] [options]`
+>	
+>`sqlite3`,. `parted`, gdb` -> interactive style
+>
+>	`[program] ->gets inside->[prompt/command]->parse inside`
+>	
+>>[!Question] 
+>>Are subcommands also a program? If so, in concepts of linux processes do they have their own PID and PPID during their execution?
+>>
+>>	|-*No, usually, subcommands are not seperate programs/processes. But, there can be some, like: `git` program that uses subcommands  like `status`, `commit` that are separate helper executables.*
+>>	So in short answer : *There are some cases, but usually it is not*
+
+

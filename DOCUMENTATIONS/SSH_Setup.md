@@ -41,7 +41,19 @@ A shell is started
 (bash, zsh, sh...)
    │
    ▼
-.profile/.bash_profile/.bashrc may run
+A shell exiss, but still bare minimum state. 
+   │
+   ▼
+A Shell reads ~/.profile
+   │
+   ▼
+.profile runs: source ~/.bashrc
+   │
+   ▼
+.bashrc loads the customizations
+   │
+   ▼
+interactive shell is ready
 ```
 
 ---
@@ -262,7 +274,6 @@ sudo cat /var/log/fail2ban.log.1
 >sudo systemctl disable ssh.socket
 >```
 
-
 >[!Info]- **REMOVING SSH INCLUDING CONFIGS ( FOR FRESH START)**
 >Delete port in ufw
 >```
@@ -306,8 +317,9 @@ sudo cat /var/log/fail2ban.log.1
 
 ### ACCESSING LOCAL NETWORK OF SERVER
 *Overview: **it’s possible**, but it’s not automatic. You’d need to configure tunneling or use the server as a gateway, and the network must allow it.*
+How to: [[Tools#SSH (Secure Shell)]]
 
-depends on how the server and its network are configured:
+depends on how the server and its network are configured: 
 
 - **Basic SSH session**: By default, you only have access to the server itself. You can run commands, transfer files, and interact with that machine, but not automatically with other devices on its local LAN.
     
@@ -316,70 +328,3 @@ depends on how the server and its network are configured:
 - **SSH tunneling / port forwarding**: SSH supports features like local port forwarding, remote port forwarding, and dynamic SOCKS proxying. These can let you route your traffic through the SSH server, effectively giving you access to services on its local network (if permitted).
 	
 -  **Restrictions**: Access depends on permissions, firewall rules, and security policies. Some networks deliberately block this kind of lateral access for safety reasons.
-
->[!Example] 
->*Suppose there's a web service running *
->```Bash
->curl http://192.168.1.50:8080
->#This command will work if you run it inside your SSH session, because the server can see that local IP and port.
->```
->
->If you want to access that local service **from your own computer’s browser or curl**, you’ll need to set up SSH port forwarding. For instance:
->```Bash
->ssh -L 8080:192.168.1.50:8080 user@your-ssh-server
->#- `-L` means local port forwarding.
->#- The first `8080` is the port on your local machine.
->#- `192.168.1.50:8080` is the target inside the SSH server’s LAN. - `user@your-ssh-server` is your SSH login.
->```
->After running that, you can open your browser at `http://localhost:8080` or run:
->```Bash
->curl http://localhost:8080
->```
-
->[!Note] Getting an error
->*If you get an error like the ff below:*
->```Error Message 
->curl: (7) Failed to connect to 127.0.0.1 port 5000 after 0 ms: Couldn't connect to server
->```
->
->Perform a test 
->```Bash
->python3 -m http.server 5000
->#That will start a simple HTTP server bound to `127.0.0.1:5000`
->```
->
->Verify locally via curl or accessing the browser directly
->```Bash
->curl http://127.0.0.1:5000
->```
-
-
-### `-D` flag
-*June 27, 2026*
-*Dynamic Port forwarding*  — turns your SSH client into a **local [[PROXY#SOCKS PROXY (SOCK4 & SOCKS5)|SOCKS Proxy]] server**.
-
-So instead of SSH just being a remote shell, it also becomes:
-> A local gateway that forwards arbitrary TCP connections through an encrypted SSH tunnel.
-
->Command
-```bash
-ssh -D 1080 <user>@<hostName>
-```
-This creates:
-```
-Local machine (127.0.0.1:1080)
-        ↓
-SOCKS proxy (inside SSH client)
-        ↓ encrypted tunnel
-SSH server (remote machine)
-        ↓
-Destination internet/server
-```
-
-#### Why it is called “dynamic” forwarding?
-Unlike:
-- `-L` (local port forwarding → fixed destination)
-- `-R` (remote port forwarding → fixed destination)
-  
->`-D` is dynamic because:
-The destination is NOT fixed in advance.

@@ -74,6 +74,7 @@ Your machine tells the SOCKS server:
 #### How it Works step by step
 ---
 ##### Step 0 — You configure a SOCKS proxy
+—Most of the time, They do it in browser.
 ```
 SOCKS proxy = 127.0.0.1:1080
 ```

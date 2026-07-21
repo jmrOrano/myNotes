@@ -3,6 +3,7 @@
 *The plan here to put only the 'worth things to note about'. If this things gets messy then i dont know how it happened*
 
 ## Level 4 to 5 
+---
 *Level Goal: The password for the next level is stored in the only human-readable file in the **inhere** directory. Tip: if your terminal is messed up, try the “reset” command.*
 
 **What I did and it worked**
@@ -35,6 +36,7 @@ file ./*
 ---
 
 ## Level 8 to 9
+---
 *Level Goal : The password for the next level is stored in the file data.txt and is the only line of text that occurs only once* 
 
 Reading the content of the file outputs a total 1001 lines of texts.
@@ -66,6 +68,7 @@ sort data.txt | uniq -u
 
 ---
 ## Level 13 to 14
+---
 *June 27, 2026*
 *Level Goal: The password for the next level is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.  
 If you need help with this level: a hint file can be found in the home directory.  
@@ -123,6 +126,7 @@ ssh -P 2200 -i ~/.ssh/[filename] <user>@<host_addr>
 ```
 
 ## Level 14 to 15
+---
 *June 27, 2026*
 *Level Goal: The password for the next level can be retrieved by submitting the password of the current level to **port 30000 on localhost**.*
 
@@ -133,6 +137,7 @@ ssh -P 2200 -i ~/.ssh/[filename] <user>@<host_addr>
 - [[How_host_do_speaks_on_the_internet#Layer Placement for Real world|TCP/IP Stack in Practical Visualization]]
 
 ## Level 16 to 17
+---
 July 03, 2026
 *Level Goal: The credentials for the next level can be retrieved by submitting the password of the current level to **a port on localhost in the range 31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.*
 
@@ -255,7 +260,131 @@ When used interactively (which means neither **-quiet** nor **-ign_eof** have be
     
     Send a key update message to the server and request one back (TLSv1.3 only)
 ```
-This means that if the password gets copied and display `KEYUPDATE` — its most likely in interactive mode unless added the flag `-quiet` during the connection
+This means that if the password gets copied and display `KEYUPDATE` — its most likely in **interactive mode** unless added the flag `-quiet` during the connection
 ```
 openss s_client -quiet localhost 31790
 ```
+
+
+---
+## Level 17 to 18
+---
+*July 11, 2026*
+```
+## Level Goal
+There are 2 files in the homedirectory: **passwords.old and passwords.new**. The password for the next level is in **passwords.new** and is the only line that has been changed between **passwords.old and passwords.new**
+
+**NOTE: if you have solved this level and see ‘Byebye!’ when trying to log into bandit18, this is related to the next level, bandit19**
+
+## Commands you may need to solve this level
+cat, grep, ls, diff
+```
+
+##### My mental approach
+---
+is : Use the [[Commands#sort command|sort]] + [[Commands#uniq command|uniq]] combo command 
+```
+ls
+passwords.new paswords.old
+sort passwords.new passwords.old | uniq -u
+```
+The output :
+```
+OQxXZjELndr90zuhOTDYBEomI0SZITXI
+qOg5pVOjPx9x9VccyYBADiT4xxyoUB8D
+```
+Im impressed. I can manually try those two password when logging in to next level. But, according to level goal. 
+`The password is in password.new` . 
+
+I dont know which one of them is is from the `new` or from the `old`. 
+
+
+---
+##### The Approach
+---
+Instead of using the `sort + uniq -u` approach.
+
+Use `diff` command.
+```Bash
+diff passwords.new passwords.old
+```
+*I have made a notes about the command which can be read here:* [[Commands#diff command|diff]]
+
+---
+
+## Level 18 to 19
+*July 12, 2026*
+```
+## Level Goal
+
+The password for the next level is stored in a file **readme** in the homedirectory. Unfortunately, someone has modified **.bashrc** to log you out when you log in with SSH.
+
+## Commands you may need to solve this level
+
+ssh, ls, cat
+```
+
+- This level is related to level 17 to 18. 
+- Logging in to level 18 just auto logs it out with message of `Byebye !`
+
+##### My Mental Approach
+---
+- According to the clue, someone modified the `.bashrc`. I have a note about this file before which can be read at : [[Linux_File_System__Major_Only_#The .bashrc File| .bashrc]] 
+- I have the notes, but i dont know the practicality of how it is related to ssh session. So i did a bit of search which now i added a diagram in the [[SSH_Setup#**Uncomplicated Architecture**]]
+- Moving on.  I tried reading the `/bashrch` file during the ssh:
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org "cat ~/.bashrc"
+```
+- Found out that at the end of the line, there is an added command of:
+```Bash
+echo 'Byebye !'
+exit 0
+```
+- I searched about it. It says that this will cause the terminal window or SSH session to **instantly close** every single time when trying to open it.
+- Online search also states that reading the `.bashrc` can be bypass directly since its just a `Bash Configuration`
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org "sed -i 'exit 0/d' ~/.bashrc"
+```
+- But it only result to:  (i dont know what `sed` command is) 
+```Bash
+sed: couldn't open temporary file /home/bandit18/sedUyiWg9: Permission denied
+```
+- So i tried to  rename the file hoping it the `.profile` would not read it. but: it did not work as well:
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org "mv ~/.bashrc ~/.bashrc_backup"
+mv: cannot move '/home/bandit18/.bashrc' to '/home/bandit18/.bashrc_backup': Permission denied
+```
+- I did expect though that this wont work because the game is strict in permissions.
+- Another method i found is using a different shell
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org -t "sh"
+```
+- **It worked.**
+
+##### The breakdown
+---
+- Using different shell like `sh` did worked because it doesnt read the `.bashrc` file. 
+- The `.bashrc` is specific for Bash only.
+- During the ssh login attempt, the `.bashrc` file gets read last therefore executing the `exit 0`. 
+- By changing the shell to `sh` it bypasses (indirectly) the file
+
+##### The Proper Approach
+---
+- After some thinking.  I realized i can just directly read the `readme` file in the home directory without an interactive shell
+```Bash
+cat readme
+```
+- I literally forgot about that. But it is, what it is.
+- I also realized that you the `-t` flag is "for interactive terminal" – which is already the default behavior of standard SSH login attempt, thus explicitly stating the flag like: 
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org -t 
+```
+- Is the same as :
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org
+```
+- The one that manages to solve it is the command `"sh"`: 
+```Bash
+ssh -p 2220 bandit18@bandit.labs.overthewire.org "sh"
+```
+- Though without the `-t` flag, the terminal will look like plain, with no symbol `$` .

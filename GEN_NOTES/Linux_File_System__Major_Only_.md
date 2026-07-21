@@ -98,6 +98,7 @@ tree ~ -L 2      # structured view, 2 levels deep
 ---
 
 #### The .bashrc File
+*Bash Shell Configuration*
 **Location:** `~/.bashrc`
 **When it runs:** Every time you open a new terminal.
 **What it's for:**
@@ -105,13 +106,19 @@ tree ~ -L 2      # structured view, 2 levels deep
 - Creating `alias` shortcuts (e.g. `alias ll='ls -lah'`)
 - Commands you want auto-executed every session
 
+Reminder: 
+ - The `.bashrc` file is specific for Bash shell only. 
+ - Other shells like (`zsh`, `fish`, `ksh`, etc) has their own config files. 
+
 >[!Warning] Don't put `gnome-terminal` inside `.bashrc` — it causes a terminal fork bomb.
 
 ---
 
 #### The ~/.profile / ~/.xprofile
 **When it runs:** Once at login — not every terminal open.
-**What it's for:** Scripts and [[Whatis#The `env` (environment variables)|env variables]] that only need to run once per session.
+**What it's for:**
+- Scripts and [[Whatis#The `env` (environment variables)|env variables]] that only need to run once for the entire session.
+
 
 *Think of `.bashrc` as "runs every new terminal tab" and `.profile` as "runs once when you first log in."*
 
@@ -858,18 +865,18 @@ grep [flags] "pattern" filename
 ```
 *Reads one line at a time, makes a decision, moves to the next.*
 
-|  Flag  | Description                              | Example                     |
-| :----: | ---------------------------------------- | --------------------------- |
-|  `-i`  | Case-insensitive                         | `grep -i "error" log.txt`   |
-|  `-r`  | Recursive — search all files in a folder | `grep -r "TODO" ./src`      |
-|  `-n`  | Show line numbers next to matches        | `grep -n "error" app.log`   |
-|  `-l`  | List only filenames that contain a match | `grep -rl "password"`       |
-|  `-c`  | Count matched lines                      | `grep -c "error" log.txt`   |
-|  `-v`  | Invert — show lines that do NOT match    | `grep -v "debug" log.txt`   |
-|  `-w`  | Whole word only                          |                             |
-| `-A 3` | Show 3 lines after each match            | `grep -A 3 "error" log.txt` |
-| `-B 3` | Show 3 lines before each match           |                             |
-| `-C 3` | Show 3 lines around match                |                             |
+|  Flag  | Description                              | Example                     |     |
+| :----: | ---------------------------------------- | --------------------------- | --- |
+|  `-i`  | Case-insensitive                         | `grep -i "error" log.txt`   |     |
+|  `-r`  | Recursive — search all files in a folder | `grep -r "TODO" ./src`      |     |
+|  `-n`  | Show line numbers next to matches        | `grep -n "error" app.log`   |     |
+|  `-l`  | List only filenames that contain a match | `grep -rl "password"`       |     |
+|  `-c`  | Count matched lines                      | `grep -c "error" log.txt`   |     |
+|  `-v`  | Invert — show lines that do NOT match    | `grep -v "debug" log.txt`   |     |
+|  `-w`  | Whole word only                          |                             |     |
+| `-A 3` | Show 3 lines after each match            | `grep -A 3 "error" log.txt` |     |
+| `-B 3` | Show 3 lines before each match           |                             |     |
+| `-C 3` | Show 3 lines around match                |                             |     |
 
 ```bash
 # AND logic — must match both
@@ -897,20 +904,20 @@ Slower compared to [[#locate]] because *find* command scans the live filesystem.
 |                Flag                | Description                                              |                                                                                  |                  |
 | :--------------------------------: | -------------------------------------------------------- | -------------------------------------------------------------------------------- | ---------------- |
 |                                    |                                                          |                                                                                  |                  |
-|            **BY NAME**             | **BY NAME**                                              | **BY NAME**                                                                      |                  |
+|          ==**BY NAME**==           | **BY NAME**                                              | **BY NAME**                                                                      |                  |
 |          `-name "*.txt"`           | Match pattern — case sensitive                           |                                                                                  |                  |
 |          `-iname "*.log"`          | Case-insensitive match                                   |                                                                                  |                  |
 |         `-name "config*"`          | Anything starting with `config`                          |                                                                                  |                  |
 |         `-name "*config"`          | Anything ending with `config`                            |                                                                                  |                  |
 |                                    |                                                          |                                                                                  |                  |
-|            **BY TYPE**             | **BY TYPE**                                              | **By Type:**                                                                     |                  |
+|          ==**BY TYPE**==           | **BY TYPE**                                              | **By Type:**                                                                     |                  |
 |             `-type f`              | Files only                                               |                                                                                  |                  |
 |             `-type d`              | Directories only                                         |                                                                                  |                  |
 |             `-type l`              | [[Whatis#**Symbolic Link?**                              | symlink]]                                                                        | For symlink only |
 |            `-readable`             | Human readable                                           |                                                                                  |                  |
 |          `! -executable`           | Find not executable files                                | combines with `-type f`                                                          |                  |
 |                                    |                                                          |                                                                                  |                  |
-|            **BY SIZE**             | *(units: `c`=bytes `k`=KB `M`=MB `G`=GB)*                |                                                                                  |                  |
+|          ==**BY SIZE**==           | *(units: `c`=bytes `k`=KB `M`=MB `G`=GB)*                |                                                                                  |                  |
 |           `-size +100M`            | Larger than 100MB                                        |                                                                                  |                  |
 |           `-size -100M`            | Smaller than 100MB                                       |                                                                                  |                  |
 |              `-empty`              | Empty files or folders                                   |                                                                                  |                  |
@@ -920,18 +927,23 @@ Slower compared to [[#locate]] because *find* command scans the live filesystem.
 |            `-mtime +30`            | Modified more than 30 days ago                           | `+` = older than N days                                                          |                  |
 |         `-newer file.txt`          | Modified more recently than `file.txt`                   |                                                                                  |                  |
 |                                    |                                                          |                                                                                  |                  |
-|            **BY OWNER**            |                                                          |                                                                                  |                  |
+|          ==**BY OWNER**==          |                                                          |                                                                                  |                  |
 |       `-user [UID or uname]`       |                                                          |                                                                                  |                  |
 |                                    |                                                          |                                                                                  |                  |
-|         DEPTH AND ACTIONS          | DEPTH AND ACTIONS                                        | DEPTH AND ACTIONS                                                                |                  |
+|       ==DEPTH AND ACTIONS==        | DEPTH AND ACTIONS                                        | DEPTH AND ACTIONS                                                                |                  |
 |           `-maxdepth 2`            | Don't go deeper than 2 levels                            | Avoid searching forever                                                          |                  |
 |           `-mindepth 1`            | Skip the starting folder itself                          |                                                                                  |                  |
 |             `-delete`              | Delete every file found                                  | **Use with extreme caution**                                                     |                  |
 |         `-exec cmd {} \;`          | Run a command on each result                             |                                                                                  |                  |
 |                                    |                                                          |                                                                                  |                  |
-|    BY [[#Inodes\|INODE]] NUMBER    |                                                          |                                                                                  |                  |
+|  ==BY [[#Inodes\|INODE]] NUMBER==  |                                                          |                                                                                  |                  |
 |   `-inum [inodeNum]` 2>/dev/null   | Use when single inode is link to multiple filename entry | Recommended to use  [[#ls\|ls command]] first to find the inode number of a file |                  |
 | `-samefile [filename] 2>/dev/null` | Same as above — but no need to use the inode number      |                                                                                  |                  |
+|                                    |                                                          |                                                                                  |                  |
+|         ==BY PERMISSIONS==         |                                                          |                                                                                  |                  |
+|            `-perm 777`             | exactly 777                                              |                                                                                  |                  |
+|            `-perm -777`            | at least these bits are set                              |                                                                                  |                  |
+|            `-perm /777`            | any of these bits are set                                |                                                                                  |                  |
 
 ```bash
 find /var/log -name "*.log" -mtime -7
@@ -1319,6 +1331,9 @@ df -i         : Shows inode usage vs total inodes available
 ```
 
 >**DEMONSTRATION**
+
+^aade10
+
 ```Bash
 touch original.txt
 ln original.txt copy.txt

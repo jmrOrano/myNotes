@@ -3,7 +3,7 @@
 How apache do the auto HTTPS vai
 
 
-#### **REVERSE PROXY**
+### **REVERSE PROXY**
 *Example: Nginx, Apache, HAProxy, Caddy, Traefik etc.*
 *Overview: a server that is in front of backends servers and forwards clients request to them. From client's perspective, they're talking directly to the proxy, they never see the actual servers.*
 
@@ -64,114 +64,30 @@ This is where the *TLS Termination* term comes into. Because this is where the H
 
 
 
-### **SSL/TLS Certificate and Its role in HTTPS/SSL/TLS**
-*Overview: ssl cert is the key uses to decrypt incoming https traffic*
+### Asymmetric Authentication
+July 06, 2026
+Example in this topic is: [[SSH_Setup#**SETTING IT UP WITH KEYPAIRS**|SSH with keypairs]](SSH public key authentication)
 
-#### **Why use https?**
-- **Encryption** (Confidentiality), without it, data travels on plain text, everyone intercepting the network can read it. Everyone can read the password you entered.
-- **Authentication** (Trust), https verifies that youre actually talking with the legit website. Withtout https, attacker can trick you into thinking youre on legit site even though youre not. *Imagine going into fake bank website*. The SSL Certificate proves the servers identity.
-- **Data Integrity**, ensures that data hasnt been tampered with during transmission. If someone tries to modify youll detect it. 
-- **Compliance & Trust**
-	-  Search engines (Google) rank HTTPS sites higher
-	- Browsers warn users when sites aren't HTTPS
-	- Payment processors (PCI DSS) require HTTPS
-	- Regulations (GDPR, HIPAA, etc.) often mandate encryption for sensitive data
-	- Users see the padlock icon—a visual signal of security
+There are two things: 
+- **Public Key**
+- **Private Key**
+Those two can be generated using tool `ssh-keygen`. 
+- The Private key. Stays on the Client
+- The Public Key. **Gets copied** to server side. **NOT MOVED**.
 
-**Real-world impact:** Without HTTPS, logging into Gmail on a coffee shop WiFi could expose your credentials to anyone on that network. With HTTPS, your password is encrypted from your browser to Google's servers.
+**The Authentication Flow is:**
+1. You generate a key pair with `ssh-keygen`.
+2. You keep the **private key** on your machine and place the **public key** in the server's `~/.ssh/authorized_keys`.
+3. When you connect, the server sees that your public key is authorized and sends your client a **random challenge** (a piece of unpredictable data).
+4. Your SSH client uses your **private key** to digitally **sign** that challenge and sends **only the signature** back to the server.
+5. The server uses your **public key** (from `authorized_keys`) to verify the signature.
+6. If the signature is valid, the server concludes:
+> 	*"Only someone possessing the matching private key could have created this signature."*
+7. Authentication succeeds, and the SSH session continues.
 
-#### **What is SSL Certificate?**
-*Overview: a digital file that enables HTTPS*
-Its human readable form its like a random text. But it contains the ff:
-- **The website's public key** (used for encryption)
-- **The website's identity information** (domain name, company name, location)
-- **A digital signature** from a trusted Certificate Authority (CA) that says "I verified this is legit"
-- **Validity dates** (when the certificate expires)
-- **Other metadata** (encryption algorithm used, etc.)
-
-#### **Where do we get SSL Certificate?**
-
-**CERTIFICATE AUTHORITIES(CAs)** - This is the primary and most common way.
-*A **Certificate Authority** is a trusted organization that issues SSL certificates. They verify your identity and then digitally sign a certificate for you.*
-
-Examples of well-known CAs:
-- DigiCert
-- Let's Encrypt (free)
-- Sectigo
-- GoDaddy
-- Comodo
-- GlobalSign
-
-**HOW YOU GET ONE FROM A CA?
-- You generate a certificate request (CSR - Certificate Signing Request) on your web server
-- You submit it to a CA
-- The CA verifies you own the domain (via email, DNS records, or file upload)
-- The CA signs it with **their private key** (making it trustworthy)
-- You download the certificate and install it on your web server**
-
->[!Note] With cloudflare setup
->With use of cloudflare. They became an intermediary between you and the CA. 
->- in generating cert from them, they are the one who generates the CSR
-
-##### **SELF-SIGNED CERTIFICATES (not recommended for production)**
-You can technically create your own certificate without a CA, but browsers will warn users "this site is not secure" because no trusted authority vouched for it.
-
->[!Question] Why Self-signed is not recommended.
->Think of it this way:
-> *Imagine someone hands you an ID card that says "I am a legitimate person, trust me" — but **they made the ID themselves.** There's no government, no authority that verified and issued it. Would you trust it?*
->
->That's exactly what a self-signed certificate is. **The website is vouching for itself.**
->- A legitimate cert says: **"DigiCert/Let's Encrypt verified I am really example.com"**
->- A self-signed cert says: **"Trust me bro, I am really example.com"**
->
->**No trusted CA signed it = browsers don't trust it = users see this:**
-> ⚠️ "Your connection is not private" / "This site is not secure"
-> 
->>[!Note] **But here's the nuance — encryption still works!**
->>
->>
->>A self-signed cert **still encrypts traffic** just fine. The encryption itself isn't broken. The problem is purely >**identity verification** — you can't confirm WHO you're encrypting with.
->>
->>This is dangerous because:
->>
->>- An attacker could set up a fake site
->>- Use a self-signed cert on it
->>- Your traffic is encrypted... but to the **wrong server**
-
-
-#### **Keys and Cryptography**
-
-###### **Assymetric Encryption** 
-- uses **two mathematically linked keys** — what one key encrypts, only the other can decrypt.
-- the public and private key is used to verify the identity of the owner and its public key so that trust is built
-
-- **Public Key** — shared with everyone openly. Anyone can have it.
-- **Private Key** — kept secret. Only the owner has it. Never shared.
-
-##### **What is Symmetric Key algorithm?**
-Its is use once the connection is established. Used to encrypt and decrypt all the traffic between the server and the client.
-
-
-##### **How does things work?**
-	**What is TLS Handshake?**
-
-
-**How does it work?**
-Behind an HTTPs an SSL cert plays a role. By definition an SSL Cert is a webserver's digital signature
-
-Step1: Client browser requests secure pages from a server(`https example.com`)
-
-Step2: The example.com server sends its public key with its SSL Certificate. Which is digitally signed by a CA
-
-Step3: Once the client's browser gets the certificate, it will check the issuers digital signature to make the cert is valid(the digital signature is made by CA's private key). *Note: browsers are installed with many majors CA's public key.*
-
-Step4: Once the verification is done, its time to exchange a secret. The client's browser creates a one [[#**What is Symmetric Key algorithm?**|Symmetric key]] . It keeps one and gives a copy to the web server. It uses the web server's public key to encrypt the secret and sends it to the web server. 
-
-Step5: When the web server gets the encrypted symmetric key, it uses its private key to decrypt it. Now the web server gets the browser's shared key.
-
-From now on. the traffic between them will be encrypted and decrypted with the same key.
-
-
+#### Misconception
+**The server does not compare the private key to the public key.**
+The server **never sees your private key**. Instead, it verifies that the signature produced by your client is mathematically valid for the stored public key. This is one of the fundamental properties of public-key cryptography.
 
 ### **ARP (Address Resolution Protocol)** 
 
@@ -216,7 +132,15 @@ So your program is basically saying: *"Kernel, please handle this network operat
 If confused you can refer to practical TCP/IP Stack
 - [[How_host_do_speaks_on_the_internet#Layer Placement for Real world]]
 
-### 
+### Ephemeral Port
+July 07, 2026
+is a short-lived, temporary network communication endpoint automatically assigned by an operating system to a client application for the duration of a single communication session. Once the session ends, the port is released and becomes available for reuse.
+
+#### How They Work in Client-Server Connections
+
+**When** a client (such as your web browser) wants to view a webpage, it must initiate a connection with a server.
+- **The Server Side:** The server uses a fixed, "well-known" port to listen for incoming requests (e.g., **Port 80** for HTTP or **Port 443** for HTTPS). 
+- **The Client Side:** The client's operating system automatically assigns a random, temporary port (an ephemeral port) as the return address for the communication. This ensures the server knows exactly where to send the webpage data back to your device. 
 
 ---
 

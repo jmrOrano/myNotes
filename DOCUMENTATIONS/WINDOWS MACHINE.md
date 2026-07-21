@@ -168,3 +168,36 @@ Back to cmd and type:
 ```
 oobe\bypassnro
 ```
+
+### Windows Sudden Crashed and Rebooted
+July 07, 2026
+
+Lenovo Ideapad Gaming 3 15ACH6, 
+Windows 11, version 25H2
+
+Overview: Laptop suddenly crashed, display below text about `Page File` , Its too fast i cant read it all. 
+
+As soon as the machine reboots. I directly went to Event Viewer. Under:
+```
+Winddows Logs-->System--->Filter Current Log ---> 
+Logged: Last Hour
+Event Level: Critial , Error
+```
+Found the Event ID 41, Kernel-Power. A plain report not useful.
+
+```
+The system has rebooted without cleanly shutting down first. This error could be caused if the system stopped responding, crashed, or lost power unexpectedly.
+```
+Note: *For faster search, filter to search ff ID  41, 6008, 1001, 27, 29, 7000, 7001, 7011*
+
+Found the Event 1001, A BugCheck Error. Which tells where the dump log is located
+```
+The computer has rebooted from a bugcheck.  The bugcheck was: 0x00000050 (0xffffec8584cf1b30, 0x0000000000000000, 0xfffff80066cadc36, 0x0000000000000002). A dump was saved in: C:\WINDOWS\Minidump\070726-18453-01.dmp. Report Id: 1653a7c8-7867-402e-a924-d72e09b23de9.
+```
+
+I dont know how to read hex. So i directly install WnDbg— a tool for analyzing the dump at `C:\WINDOWS\Minidump\`.
+Open WinDbg as an Admin
+```
+Open the dump file ---> Click analyze.
+```
+i couldnt understand the output, i had to rely to AI. 

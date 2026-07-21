@@ -13,7 +13,6 @@ Terminal -> ipconfig or ifconfig
 >Ang SHELL naman ang command interpreter. Ito ang gumagawa ng mga iutos mo bilang user.
 
 Ito ang middle man para makausap mo ang core OS/kernel.
-Summary/Note : Ang Shell ay mag rurun parin kahit GUI ang gamit mo dahil nagawa parin ito ng mga commands. 
 
 >[!Important]
 >**TERMINAL: is a tool**
@@ -25,9 +24,103 @@ Summary/Note : Ang Shell ay mag rurun parin kahit GUI ang gamit mo dahil nagawa 
 >[!Note] 
 **Note: Ang Terminal command as we know tulad ng GNOME Terminal, Console ay mga ***Terminal Emulator lang din*** na nag eemulate ng **[[Feynman-Technique#TTY: Teletype Writer|Teletype Writer]]
 
+#### Terminal
+Just a GUI based program that provides a text-based interface.
+Examples:
+```
+- GNOME Terminal
+- Konsole
+- Terminator
+```
+
+#### Shell
+A command interpreter running inside the Terminal
+Examples:
+```
+-Bash
+-Zhs
+-Fish
+```
+
+Main job is to:
+- Read the string input from terminal done by user
+- Parse the command (breakdown to sequence of data)
+- Execute 
+
+
+>[!Note] GUI Apps do not normally use a shell to launch.
+>
+>**in GUI:**
+>```
+>Click an App GUI
+>--> Desktop Env launches the app binary Directly
+>```
+>
+>The shell does not run the Terminal when clicking it. 
+>```
+>Operating System
+ >       |
+ >       v
+>Terminal emulator
+>       |
+>        v
+>Shell (bash)
+>        |
+>        v
+>Commands/programs
+>```
+>
+>**In Terminal:**
+>```
+>Type <appname>
+>--->The shell running in terminal reads it--->Run the applicaton
+>```
+>
+
+
+
 ___
+## How do commands run?
+---
+*July 11, 2026*
+A command is just a binary (executable command) that the shell launches.
+- Not all commands are designed or behave the same.
+Some programs :
+- Run once, perform a task then exit.
+- Accept Sub commands  `Good for running Scripts`
+- Stays running and will have its own command prompt `Interactive Mode`
+	- All `Interactive Mode` binaries have their own command parser loop. 
+
+
+#### Interactive Mode Commands
+The `sqlite3`, `parted` ,. and many more are just programs that gets executed by shell(bash).
+But in their interactive mode(inside), they have their own command parser(like interpreter)  specific to their own.
+
+
+They do not passed the command to the General Shell interpreter(Bash)
+```c
+Terminal
+   |
+   v
+bash
+   |
+   v
+sqlite3 process starts
+   |
+   v
+sqlite3's own parser handles input
+
+
+What happens:===============================
+1. Bash sees `sqlite3` as a command.
+2. Bash starts the `sqlite3` program.
+3. Bash is now mostly waiting.
+4. `sqlite3` reads your input and parses SQL itself.
+```
+
 
 ## **TTY Teletype Writer**
+---
 *Feb 22, 2026*
 ----Isang Terminal base interface nag nagbibigay ng way para magamit mo ang comptuter ng hindi na dumadaan sa GUI ng Desktop
 
@@ -47,17 +140,8 @@ ___
 ----
 
 
----
-
-
----
----
-
-
-
----
-
 ## **WHAT DOES GIT COLLABORATION WITHOUT GITHUB BACK THEN?**
+---
 *March 07, 2026*
 **Patches via email**
 1. Ang mga contributor ay gumagawa ng changes sa kanilang local repo.
@@ -81,6 +165,7 @@ git pull
 ---
 
 ## **The ZRAM technology**
+---
 *March 14, 2026*
 --Isang kernel feature sa linux
 -- Can be installed like `apt install zram-tools`
@@ -118,6 +203,7 @@ git pull
 
 ---
 ## Using sudo vs logging in as root
+---
 *March 14, 2026*
 --both gives `admin privilages` pero magkaiba ang principles.
 
@@ -163,4 +249,5 @@ git pull
 >```
 
 ---
+
 

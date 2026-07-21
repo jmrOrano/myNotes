@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Exercise.md",
+                "file": "DOCUMENTATIONS/The trap i keep falling into.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,16 +28,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Exercise"
+              "title": "The trap i keep falling into"
             }
           },
           {
-            "id": "6a4a113a3ebbc124",
+            "id": "440fccd2c5600c39",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "JARGONS.md",
+                "file": "GEN_NOTES/Logging & Monitoring.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,16 +52,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "JARGONS"
+              "title": "Logging & Monitoring"
             }
           },
           {
-            "id": "5eff0fa4e3ee7b3d",
+            "id": "9c230b34d0925b78",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Questions.md",
+                "file": "GEN_NOTES/Linux_File_System__Major_Only_.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -76,7 +76,31 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Questions"
+              "title": "Linux_File_System__Major_Only_"
+            }
+          },
+          {
+            "id": "3b022a83d2445e46",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "DOCUMENTATIONS/SIEM Setup.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "SIEM Setup"
             }
           }
         ]
@@ -111,7 +135,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "column",
+                "query": "fail2ban",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -227,8 +251,8 @@
             "state": {
               "type": "broken-links-view",
               "state": {},
-              "icon": "unlink",
-              "title": "Broken links"
+              "icon": "lucide-ghost",
+              "title": "broken-links-view"
             }
           }
         ],
@@ -247,38 +271,38 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "broken-links:View broken links": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "broken-links:View broken links": false
     }
   },
   "active": "18ce1424711a3f2d",
   "lastOpenFiles": [
-    "JARGONS.md",
     "GEN_NOTES/Questions.md",
-    "SECURITY/RANDOM NOTES FOR NOW.md",
-    "Exercise.md",
-    "GEN_NOTES/PROCESS.md",
-    "SECURITY/OBFUSCATION_GUIDE.md",
-    "GEN_NOTES/Commands.md",
-    "DOCUMENTATIONS/SSH_Setup.md",
-    "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "Networking/3-WAY_HANDSHAKE.md",
-    "GEN_NOTES/Docker-Reference.md",
     "GEN_NOTES/Tools.md",
-    "GEN_NOTES/Bashing And Scripting.md",
     "GEN_NOTES/Logging & Monitoring.md",
-    "DOCUMENTATIONS/Bandit_Wargames.md",
-    "GEN_NOTES/Intro.md",
-    "GEN_NOTES/Whatis.md",
-    "DOCUMENTATIONS/Documentations.md",
-    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
-    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "DOCUMENTATIONS/SIEM Setup.md",
     "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
     "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
-    "Networking/PROXY.md",
+    "DOCUMENTATIONS/Documentations.md",
+    "GEN_NOTES/Linux_File_System__Major_Only_.md",
+    "GEN_NOTES/HOW TO.md",
+    "GEN_NOTES/Intro.md",
+    "GEN_NOTES/User Management.md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
+    "GEN_NOTES/Commands.md",
+    "GEN_NOTES/Git Workflow & Commands.md",
+    "GEN_NOTES/Whatis.md",
+    "GEN_NOTES/Feynman-Technique.md",
+    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "DOCUMENTATIONS/WINDOWS MACHINE.md",
+    "GEN_NOTES/PROCESS.md",
+    "ETHICAL_HACKING/Reconnaissance.md",
+    "DOCUMENTATIONS/Bandit_Wargames.md",
+    "ETHICAL_HACKING/Exploitation.md",
     "ETHICAL_HACKING/RandomForNow.md",
-    "ETHICAL_HACKING/Recon.md",
     "ETHICAL_HACKING/Privilage Escalation.md",
+    "DOCUMENTATIONS/The trap i keep falling into.md",
     "ETHICAL_HACKING",
     "Untitled 1.base",
     "Untitled.base",
