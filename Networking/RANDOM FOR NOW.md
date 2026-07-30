@@ -65,6 +65,7 @@ This is where the *TLS Termination* term comes into. Because this is where the H
 
 
 ### Asymmetric Authentication
+---
 July 06, 2026
 Example in this topic is: [[SSH_Setup#**SETTING IT UP WITH KEYPAIRS**|SSH with keypairs]](SSH public key authentication)
 
@@ -73,7 +74,7 @@ There are two things:
 - **Private Key**
 Those two can be generated using tool `ssh-keygen`. 
 - The Private key. Stays on the Client
-- The Public Key. **Gets copied** to server side. **NOT MOVED**.
+- The Public Key. **Gets copied**(not move) to server side.
 
 **The Authentication Flow is:**
 1. You generate a key pair with `ssh-keygen`.
@@ -88,6 +89,8 @@ Those two can be generated using tool `ssh-keygen`.
 #### Misconception
 **The server does not compare the private key to the public key.**
 The server **never sees your private key**. Instead, it verifies that the signature produced by your client is mathematically valid for the stored public key. This is one of the fundamental properties of public-key cryptography.
+
+---
 
 ### **ARP (Address Resolution Protocol)** 
 

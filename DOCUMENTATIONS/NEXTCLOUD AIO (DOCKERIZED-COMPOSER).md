@@ -290,6 +290,7 @@ Add an `A Record` for how will the subdomain will be:
 
 #### **USING CLOUDFLARE + NGINX PROXY MANAGER**
 *Recommended to do a full reset first. see the [[Docker-Reference#Images]]
+
 **Change the port in compose file of the  mastercontainer**
 From:
 ```Bash
@@ -427,6 +428,7 @@ Cloudflare only has 100mb file upload
 
 
 #### **Fail2ban implementation**
+---
 Follow the documentation at: https://docs.nextcloud.com/server/stable/admin_manual/installation/harden_server.html#setup-fail2ban
 github : https://github.com/nextcloud/all-in-one#fail2ban
 

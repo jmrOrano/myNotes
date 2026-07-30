@@ -8,30 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "18ce1424711a3f2d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "DOCUMENTATIONS/The trap i keep falling into.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "The trap i keep falling into"
-            }
-          },
-          {
             "id": "440fccd2c5600c39",
             "type": "leaf",
             "state": {
@@ -56,31 +32,7 @@
             }
           },
           {
-            "id": "9c230b34d0925b78",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "GEN_NOTES/Linux_File_System__Major_Only_.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "Linux_File_System__Major_Only_"
-            }
-          },
-          {
-            "id": "3b022a83d2445e46",
+            "id": "586104008665d943",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -102,8 +54,33 @@
               "icon": "lucide-file",
               "title": "SIEM Setup"
             }
+          },
+          {
+            "id": "784798bed3798187",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "DOCUMENTATIONS/Documentations.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Documentations"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -135,7 +112,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "fail2ban",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -160,7 +137,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "6b367cb62b5d1f38",
@@ -275,33 +253,33 @@
       "broken-links:View broken links": false
     }
   },
-  "active": "18ce1424711a3f2d",
+  "active": "586104008665d943",
   "lastOpenFiles": [
-    "GEN_NOTES/Questions.md",
-    "GEN_NOTES/Tools.md",
-    "GEN_NOTES/Logging & Monitoring.md",
-    "DOCUMENTATIONS/SIEM Setup.md",
-    "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
-    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
     "DOCUMENTATIONS/Documentations.md",
-    "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "GEN_NOTES/HOW TO.md",
-    "GEN_NOTES/Intro.md",
-    "GEN_NOTES/User Management.md",
-    "DOCUMENTATIONS/SSH_Setup.md",
-    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
+    "GEN_NOTES/Tools.md",
+    "DOCUMENTATIONS/SIEM Setup.md",
     "GEN_NOTES/Commands.md",
-    "GEN_NOTES/Git Workflow & Commands.md",
-    "GEN_NOTES/Whatis.md",
-    "GEN_NOTES/Feynman-Technique.md",
-    "DOCUMENTATIONS/DOCKER SETUP  2.md",
-    "DOCUMENTATIONS/WINDOWS MACHINE.md",
-    "GEN_NOTES/PROCESS.md",
-    "ETHICAL_HACKING/Reconnaissance.md",
     "DOCUMENTATIONS/Bandit_Wargames.md",
-    "ETHICAL_HACKING/Exploitation.md",
-    "ETHICAL_HACKING/RandomForNow.md",
+    "GEN_NOTES/HOW TO.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "GEN_NOTES/Linux_File_System__Major_Only_.md",
+    "GEN_NOTES/Logging & Monitoring.md",
+    "GEN_NOTES/Docker-Reference.md",
+    "GEN_NOTES/User Management.md",
+    "Networking/RANDOM FOR NOW.md",
+    "Networking/How_host_do_speaks_on_the_internet.md",
+    "Networking/3-WAY_HANDSHAKE.md",
+    "SECURITY/OBFUSCATION_GUIDE.md",
+    "SECURITY/RANDOM NOTES FOR NOW.md",
+    "Networking/OSI_Model.md",
+    "Networking/PROXY.md",
+    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
+    "Exercise.md",
+    "GEN_NOTES/Bashing And Scripting.md",
     "ETHICAL_HACKING/Privilage Escalation.md",
+    "GEN_NOTES/Whatis.md",
     "DOCUMENTATIONS/The trap i keep falling into.md",
     "ETHICAL_HACKING",
     "Untitled 1.base",

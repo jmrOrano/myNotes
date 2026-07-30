@@ -130,6 +130,74 @@ CMD ["java", "-jar", "server.jar"]
 
 ---
 
+
+## Uninstallation 
+---
+
+>**Remove the Docker software only first**
+This removes Docker Engine, CLI, Compose plugin, containerd, etc.: reference at : [[DOCKER SETUP  2#**INSTALL DOCKER ENGINE + TOOLS**]]
+```Bash
+sudo apt purge \
+  docker-ce \
+  docker-ce-cli \
+  containerd.io \
+  docker-buildx-plugin \
+  docker-compose-plugin
+```
+Then clean unused dependencies:
+```bash
+sudo apt autoremove
+```
+
+---
+
+>Remove docker's official APT repo and GPG key
+Reference file at : [[DOCKER SETUP  2#**ADD DOCKER TO REPOSITORY**]]
+```bash
+sudo rm /etc/apt/sources.list.d/docker.sources
+sudo rm /etc/apt/keyrings/docker.asc
+```
+
+Then:
+```bash
+sudo apt update
+```
+At this point, Docker's official repository and its specific GPG key are gone.
+> Important: this does **not** uninstall GPG itself. The GPG key is just a file used by APT to verify packages from Docker's repository.
+---
+
+>**Remove all docker data**
+This is the destructive part
+```bash
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
+```
+This removes things such as:
+- Docker images
+- stopped and running container data
+- Docker-managed volumes
+- Docker networks metadata
+- containerd image layers and snapshots
+
+---
+
+>**Optional: remove the `docker` group
+>Reference at : [[DOCKER SETUP  2#**CONFIGURATION**]]
+```bash
+sudo groupde docker
+getent group docker # verify if it still exist
+```
+
+---
+
+>**Verify the cleanup**
+```bash
+which docke 
+dpkg -l | grep -Ei 'docker|containerd|runc'
+ls -l /etc/apt/sources/list.d/
+ls -l /etc/apt/keyrings/
+systemctl status docker
+```
 ## Notes & Questions
 
 ### Where are images stored when using Compose?

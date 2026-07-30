@@ -9,12 +9,40 @@
 - Memory Management  — assigns RAM so apps dont overwrite each others brain
 - Device Control              — talks to hardware (keyboard, ssd, GPU) through drivers.
 - System calls bridge       — apps cant touch hardware directly, so tehy ask kernel via `syscalls`
+---
+
+## What is a kernel ring buffer?
+*July 21, 2026*
+A temporary storage inside a memory.
+- Used to temporarily hold data 
+- Used to **record kernel messages** even before the userspace and other logging services starts.
+
+**How it works**
+
+Imagine a data:
+```
+[ A ][ B ][ C ][ D ][ E ]
+```
+If its full and there is new message `F`. The **oldest message** possibly will get overwritten first.
+```
+[ F ][ B ][ C ][ D ][ E ]
+[ F ][ G ][ C ][ D ][ E ]
+```
+The writing process rotates in the buffer:
+```
+A → B → C → D → E
+↑               ↓
+└───────────────┘
+```
+
+---
 
 ## systemd
 *June 30, 2026*
 The PID1(Process ID) that the kernel starts at boot. The ultimate ancestor of every other process on the system.
 - Used to be called `init` but most distros replaced it with systemd
 
+---
 
 ## **The `env` (environment variables)**
 A `environment variables` ay *configuration values na available sa shell at sa mga programs habang nag rurun sila*

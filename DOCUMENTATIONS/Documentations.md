@@ -281,10 +281,10 @@ UUID=YOUR-UUID-GOES-HERE /mnt/disk2 ext4 defaults  0 2
 - `0`                     - Dump field — 1 means dump, 0 means dont.
 - `2`                     - File system check — 0 means check, 1 means check first(reserved for root `/`), 2 means check after root.
 
-# Making a swap partition
+## Making a swap partition
 *June 16,2026*
 
-## METHOD FOR USING THE ENTIRE DISK
+### METHOD FOR USING THE ENTIRE DISK
 ---
 ### Step1: Make swap command
 ```Bash
@@ -301,7 +301,7 @@ Add an entry at `/etc/fstab`
 UUID=your-ID-goes-here none swap sw 0 0
 ```
 
-## METHOD FOR USING PARTITION OF A DISK
+### METHOD FOR USING PARTITION OF A DISK
 ---
 ### Step1: Make a partition for the swap in parted
 ```Bash
@@ -336,6 +336,76 @@ UUID=your-ID-goes-here none swap sw 0 0
 >- no pathname hierarchy
 
 ---
+
+## Using terminator
+*June 30, 2026*
+*Machine: Linux Mint, Cinnamon, Ubuntu Noble Base 24.0*
+*Purpose: For basic but useful functionality that the regular terminal doesnt have — mainly the side by side terminal in a single window.*
+
+```Note
+Other option can be is tmux, but i personally think its for advance customization — Ill opt to that if necessary.
+```
+
+Install:
+```bash
+sudo apt intall terminator
+```
+
+Setting a shortcut key for opening:
+```
+1. Open menu(press the super key or the windows key for windows keyboard)
+2. Search for 'keyboard' and open it.
+3. In the `Shortcuts` tab go to `Custom Shortcuts`
+4. Press `Add custom shortcuts` 
+   Name: `Launch Terminal` (or whatever you want)
+   Command: `terminator` (withtout the quotes)
+   Then click `Add`.
+5. Under the `Keybord Bindings`, double click an `unassigned`, then perform your desired shortcut. In regular terminal — its ctrl+alt+E, so for easier just do ctrl+alt+y
+   
+```
+
+Common shortcuts:  *For reference, visit : [Full Shortcuts](https://github.com/igniteflow/terminator-keyboard-shortcuts)*
+```
+ctrl + shift + E   =   Split vertically
+ctrl + shift + O   =   split horizontally
+ctrl + tab         =   Move to next terminal within the same window
+ctrl + shift + W   =   Close the current terminal
+```
+
+### Setting it for Autostart
+```
+cd ~/.config/autostart
+sudo nano terminator.desktop
+
+[Desktop Entry]
+Type=Application
+Name= Your terminator
+Exec=terminator
+X-GNOME-Autostart-enabled=true
+```
+
+---
+
+## tmux
+July 27, 2026
+
+split vertically   
+```
+ctrl+b [release] then %
+```
+
+split horizontally 
+```
+ctrl+b `[release]` then "
+```
+
+
+move to diff pane
+```
+ctrl+b `[release]` then arrow key 
+```
+
+
 # PROBLEMS ENCOUNTERED
 
 ## Cant established a connection to server from different network across internet.
@@ -502,49 +572,102 @@ sudo apt install --reinstall bash
 export PS1="\[\e[1;32m\]\u@\h:\w\$ \[\e[0m\]"
 ```
 
-## Using terminator
-*June 30, 2026*
-*Machine: Linux Mint, Cinnamon, Ubuntu Noble Base 24.0*
-*Purpose: For basic but useful functionality that the regular terminal doesnt have — mainly the side by side terminal in a single window.*
 
-```Note
-Other option can be is tmux, but i personally think its for advance customization — Ill opt to that if necessary.
-```
-
-Install:
+## snapd not installing via apt
+Planning to install speedtest via snap so im installing snapd first
 ```bash
-sudo apt intall terminator
+sudo apt update
+sudo apt install snapd
+Package snapd is not available, but is referred to by another package. This may mean that the package is missing, has been obsoleted, or is only available from another source
+E: Package 'snapd' has no installation candidate
+```
+Most likely,  APT sources are configured to **exclude Ubuntu's `universe` component**, where `snapd` is provided.
+
+Check:
+```bash
+apt-cache policy snapd
+
+snapd: Installed: (none) Candidate: (none) 
+Version table: 2.76+ubuntu24.04.1 -10 500 
+http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages 500 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages 2.62+24.04build1 -10 500 
+http://archive.ubuntu.com/ubuntu noble/main amd64 Packages
+```
+Also check Ubuntu repository lines:
+```bash
+grep -R "ubuntu.com/ubuntu\|archive.ubuntu.com/ubuntu" /etc/apt/sources.list /etc/apt/sources.list.d/ 2>/dev/null
+```
+ should have Ubuntu sources with `universe`, for example:
+ ```
+ noble main restricted universe multiverse
+noble-updates main restricted universe multiverse
+noble-security main restricted universe multiverse
+ ```
+
+>The problem is pinning priority:
+```
+2.76+ubuntu24.04.1 -10
+```
+The `-10` means the package is being given a very low priority, so APT does not consider it installable and reports:
+
+Check the snap block file
+```
+cat /etc/apt/preferences.d/nosnap.pref
+
+Package: snapd
+Pin: release a=*
+Pin-Priority: -10
+```
+Remove the block:
+```
+sudo rm /etc/apt/preferences.d/nosnap.pref
+```
+Then try reinstalling
+```
+sudo apt update
+sudo apt install snapd
+sudo snap install speedtest
 ```
 
-Setting a shortcut key for opening:
-```
-1. Open menu(press the super key or the windows key for windows keyboard)
-2. Search for 'keyboard' and open it.
-3. In the `Shortcuts` tab go to `Custom Shortcuts`
-4. Press `Add custom shortcuts` 
-   Name: `Launch Terminal` (or whatever you want)
-   Command: `terminator` (withtout the quotes)
-   Then click `Add`.
-5. Under the `Keybord Bindings`, double click an `unassigned`, then perform your desired shortcut. In regular terminal — its ctrl+alt+E, so for easier just do ctrl+alt+y
-   
-```
+---
+## Dynamic Port forwarding not working when accessing localhost
+---
+Browser: Firefox
 
-Common shortcuts:  *For reference, visit : [Full Shortcuts](https://github.com/igniteflow/terminator-keyboard-shortcuts)*
+when trying to do dynamic port forwarding:
 ```
-ctrl + shift + E   =   Split vertically
-ctrl + shift + O   =   split horizontally
-ctrl + tab         =   Move to next terminal within the same window
-ctrl + shift + W   =   Close the current terminal
+ssh -p[port] -D [port] user@host
 ```
+Setting a proxy in firefox:
+```
+in the address bar, navigate to: about:preferences#connectionSecurity  ---> configure proxy
 
-### Setting it for Autostart
+select : Manual proxy configuration
+SOCKS HOST: 127.0.0.1  PORT [portnum]
+socks 5
+check the "Proxy DNS when using SOCKS 5"
+hit save
 ```
-cd ~/.config/autostart
-sudo nano terminator.desktop
+Accessing  service in the address bar:
+```
+https://localhost:<portnumber>
+```
+It should be working, but for some reason it doesnt. 
+Tried doing local port forwarding but its working, well- its because those two are different thing.
 
-[Desktop Entry]
-Type=Application
-Name= Your terminator
-Exec=terminator
-X-GNOME-Autostart-enabled=true
+#### The fix:
+---
+**you must explicitly tell Firefox to allow proxying for local addresses**. By default, modern versions of Firefox automatically bypass proxies for loopback traffic. 
+[[1](https://www.redhat.com/en/blog/ssh-dynamic-port-forwarding), [2](https://gist.github.com/brentjanderson/6ed800376e53746d2d28ba7b6bdcdc12), [3](https://www.redhat.com/es/blog/ssh-dynamic-port-forwarding), [4](https://www.developsec.com/2020/05/29/proxying-localhost-on-firefox/), [5](https://stackoverflow.com/questions/57419408/how-to-make-firefox-use-a-proxy-server-for-localhost-connections), [6](https://bugzilla.mozilla.org/show_bug.cgi?id=1535581)]
+
+In the addresss bar navigate to:
+```
+about:config
+```
+Click accept and Continue. Search for the :
+```
+network.proxy.allow_hijacking_localhost
+```
+Turn it to 
+```
+True
 ```

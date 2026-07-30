@@ -149,6 +149,52 @@ jq 'select((.key | test("matching case"; "i")) and .key == value) | {key1, key2,
 
 # Log files
 
+### Abstraction level of how log works
+
+|       Layer        | Kernel Side                                              | Userspace Side                                                       |
+| :----------------: | -------------------------------------------------------- | -------------------------------------------------------------------- |
+|      Producer      | Kernel                                                   | Apps (sshd, dockerd, cron, etc)                                      |
+|    Temp holding    | Ring buffer (inside RAM)                                 | Sockets (for transport only)                                         |
+|     Collector      | journald(via /dev/kmsg)<br>reads kernel-messages         | journald(via /dev/log) or native socket<br>receives app messages     |
+|       Viewer       | `dmesg` (direct from ring buffer)<br>`journalctl -k`     | `journalctl` ( for processed journal)<br>`journalctl -u ssh`         |
+| Persistent storage | `/var/log/journal` (binary)<br>or<br>`/var/log/kern.log` | `/var/log/journal`(binary)<br>or<br>`/var/log/auth.log` and etc.<br> |
+
+### 2 main log producers
+```
+               PRODUCERS
+
+        Kernel            User Space
+           │                  │
+           │                  │
+           ▼                  ▼
+     Kernel Messages    Application Messages
+           │                  │
+           └──────────┬───────┘
+                      │
+              systemd-journald
+                      │
+               Journal Storage
+                      │
+             ┌────────┴─────────┐
+             ▼                  ▼
+        journalctl         rsyslog (optional)
+                               │
+                               ▼
+                        /var/log/*.log
+```
+
+---
+### Persistent Log
+
+|        Types        | Examples                                                 |     |
+| :-----------------: | -------------------------------------------------------- | --- |
+| Authentication Logs | - `/var/log/auth.log`<br>- `sshd`<br>-`sudo`<br>-`PAM`   |     |
+|                     |                                                          |     |
+|     System logs     | -`/var/log/syslog`<br>-General System events             |     |
+|                     |                                                          |     |
+|     Kernel Logs     | - `/var/log/kern.log`<br>Hardware, Driver, Kernel Events |     |
+|    Service Logs     | `Docker`<br>`Fail2ban`<br>`Nginx`<br>etc                 |     |
+
 ### kernel log
 */var/log/kern.log*
 
@@ -160,10 +206,72 @@ It logs the ff events:
 - and Kernel warning/errors
 
 
-# Commands
+## Commands
 
 ### dmesg 
 *Diagnostic message*
 
-- Reads the messages from the kernel ring buffer
+- Reads the messages from the [[Whatis#What is a kernel ring buffer?|kernel ring buffer]]
 - A temporary log
+
+For a modern linux system:
+```
+                    Kernel
+                       │
+          ┌────────────┴─────────────┐
+          │                          │
+          ▼                          ▼
+ Kernel Ring Buffer          systemd-journald
+          │                          │
+          │                          ▼
+       dmesg                 Journal Database
+                                     │
+                                     ▼
+                               journalctl
+                                     │
+                        (-k filters kernel messages)
+```
+
+## journaling
+---
+July 28, 2026
+- Reading persistent log files at  `/var/log/*` – is the traditional file-based logging
+- Reading logs via `journald` – a query tool for `systemd journal`, a structured logging system
+
+### Common commands used
+---
+- `--since`:  – options are : `today`, `"yyyy-mm-dd"`, `"N minutes ago"` ``
+- `--until`
+- `--verify`
+
+---
+### How to check journaling current usage
+---
+- Just like regular log files, a journal is stored as a binary journal files.
+- In a sense it looks like continuous, But, its not infinite. It has a retention policy:
+	- `SystemMaxUse=`         – Max disk usage
+	- `SystemMaxFileSize` – Max individual file size
+	- `MaxRetentionSec=`   – Retention time
+The location of binary journal files is at:
+```
+/var/log/journal/
+└── machine-id/
+    ├── system@0005a3.journal
+    ├── system@0005a4.journal
+    └── system@0005a5.journal
+```
+
+>Check current usage:
+```bash
+journalctl --disk-usage
+```
+
+---
+### How to journal ssh
+---
+```bash
+sudo journalctl -u ssh
+journalctl -u ssh --since "2026-07-20" --until "2026-07-28"
+```
+
+---

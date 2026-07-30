@@ -40,3 +40,4 @@ July 07, 2026
 
 ### How to log management
 [[Logging & Monitoring#How to read parse a json log file]]
+[[Logging & Monitoring#How to journal ssh]]

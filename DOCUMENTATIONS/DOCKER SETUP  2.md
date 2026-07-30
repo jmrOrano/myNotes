@@ -7,8 +7,10 @@
 >- [[#CONFIGURATION]]
 >- [[#TEST]]
 
+Official referrence: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
 #### **PREPARATION**
-   
+---
+
 Update the system
 ```Bash
 sudo apt update && sudo apt upgrade -y
@@ -18,7 +20,11 @@ Remove old / conflicting Docker installs
 ```Bash
 sudo apt remove docker docker-engine docker.io containerd runc
 ```
+
+---
+
 ####  **INSTALLATION (NOT FROM APT docker.io)**
+---
 ```Bash
 sudo apt install ca-certificates curl gnupg
 ```
@@ -32,20 +38,22 @@ Add Docker GPG key
 	-This is the purpose of installing the 3 package above.
 	
 ```bash
-	
+#======CREATE A DIRECTORY keyrings WITH SPECIFIC PERMISSIONS
 	sudo install -m 0755 -d /etc/apt/keyrings
-
-	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
-	sudo chmod a+r /etc/apt/keyrings/docker.gpg
+#=====DOWNLOAD THE DOCKERS SIGNING KEY INSIDE THE /etc/apt/keyring	
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.asc
+#====ADD A read permission to all=================
+	sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
 
 Why this matters:
 - Prevents tampered packages
 - Confirms packages really came from Docker
 
+---
 
 ####  **ADD DOCKER TO REPOSITORY**
+---
 
 ```bash
 	echo \
@@ -58,8 +66,10 @@ Why this matters:
 
 	`noble` = Ubuntu 24.04 (correct for this machine)
 
+---
 
 #### **INSTALL DOCKER ENGINE + TOOLS**
+---
    
 ```Bash
 	sudo apt update
@@ -75,18 +85,21 @@ Why this matters:
 >**buildx plugin** - advanced build
 >**compose plugin** - `docker compose` (modern version)
 
+---
 
 ####  **CONFIGURATION**
+---
+Add your current user to the docker group
 ```Bash
 sudo usermod -aG docker $USER
 	
 	Then:
 newgrp docker
 ```
-	
+
+---
 ####  **TEST**
-   
-   
+---
    `docker run hello-world`
 	
  ```console
