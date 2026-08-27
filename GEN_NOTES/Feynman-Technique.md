@@ -24,7 +24,8 @@ Ito ang middle man para makausap mo ang core OS/kernel.
 >[!Note] 
 **Note: Ang Terminal command as we know tulad ng GNOME Terminal, Console ay mga ***Terminal Emulator lang din*** na nag eemulate ng **[[Feynman-Technique#TTY: Teletype Writer|Teletype Writer]]
 
-#### Terminal
+#### **Terminal**
+---
 Just a GUI based program that provides a text-based interface.
 Examples:
 ```
@@ -33,7 +34,9 @@ Examples:
 - Terminator
 ```
 
-#### Shell
+---
+#### **Shell**
+---
 A command interpreter running inside the Terminal
 Examples:
 ```
@@ -91,8 +94,8 @@ Some programs :
 - Stays running and will have its own command prompt `Interactive Mode`
 	- All `Interactive Mode` binaries have their own command parser loop. 
 
-
 #### Interactive Mode Commands
+---
 The `sqlite3`, `parted` ,. and many more are just programs that gets executed by shell(bash).
 But in their interactive mode(inside), they have their own command parser(like interpreter)  specific to their own.
 
@@ -250,4 +253,72 @@ git pull
 
 ---
 
+## Linux Boot Process
+---
+*August 23, 2026*
+Reference: https://youtu.be/XpFsMB6FoOs?si=p8kB_h3q8UtB-OuB
+The linux boot process follows five main stages from power-on to login screen:
 
+The process starts when a user press the power button of a computer, then followed by:
+- [[#BIOS/UEFI]]
+- [[#GRUB Boot Loader]]
+- [[#Kernel & Initramfs]]
+- [[#Init System (Systemd)]]
+- [[#User Login]]
+
+### BIOS/UEFI
+---
+A `BIOS(old)`and `UEFI(modern)` are low-level software on computers motherboard.
+
+What it does in boot process are:
+- `POST` — Post-On-Self-Test: The firmware tests core parts like the CPU, memory (RAM), and keyboard to make sure they work
+- `Hardware Initialization`:  It wakes up devices like storage drives, graphics cards, and USB ports
+- It finds and loads up the Bootloader
+
+---
+### GRUB Boot Loader
+---
+A `bootloader` is a separate software program stored in hard drive that the firmware launches next to load the actual operating system.
+
+- For `BIOS`, the bootloader lives in the first little chunk of hard drive called (`Masterboot Record`).
+- For `UEFI`, the bootloader is stored in a separate partition.
+
+>The key jobs are:
+- `Locate` the operating system kernel on the disk
+- `Load` the kernel into the computers memory(`RAM`)
+- `Starts` running the kernel code
+
+---
+### Kernel & Initramfs
+---
+*Read about kernel*: [[Whatis#**What is a kernel?**]]
+
+Once the kernel is loaded into memory. The [[Whatis#**What is a kernel?**|kernel]] takes over the computers resources, and starts initiating the background processes and services.
+
+What happens in this step are:
+- `Decompress` — The kernel decompresses itself into memory
+- `Checks` — The hardware
+- `Loads` — Device drivers and other kernel modules
+
+>The kernel by itself cannot access the real disk yet (it may be missing drivers, or the disk might be encrypted). So before the *real* root filesystem can be mounted:
+
+- `Mount initramfs` — a temporary, minimal root filesystem stored in RAM. This is where the kernel gets the missing drivers/tools it needs (e.g. disk controller driver, decryption tools)
+
+- `switch_root` — once the real disk is accessible, the kernel switches over to the REAL root filesystem (leaving the temporary initramfs behind)
+
+---
+### Init System (Systemd)
+---
+Once mounted the root filesystem. The kernel runs the first process— PID 1. 
+The Process ID 1 is the — [[Whatis#systemd|Systemd]] and is the parent of all processes.
+
+The responsibilities of Systemd are:
+- `Checks` — for remaining hardware that needs drivers to be loaded.
+- `Mounts up` — all different filesystem and disk so it can be accessible
+- `Launch` — all the background services needed (networking, cron daemon, display managers etc.)
+
+
+---
+### User Login
+---
+Once all the services started. The user gets to the graphical interface and the desktop environment loads up.

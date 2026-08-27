@@ -44,12 +44,6 @@
 
 ## Overview — The Big Picture
 
->[!Info] Dynamic vs Static — Know This First
->Before diving in, understand this split:
->- **Dynamic** — contents change constantly as the system runs (logs grow, temp files appear, user files change)
->- **Static** — contents only change when you install/update software or edit configs
->
->This matters because it tells you *who owns it* and *how risky it is to touch.*
 
 ```
 /                         ← Root. Everything starts here.
@@ -100,7 +94,7 @@ tree ~ -L 2      # structured view, 2 levels deep
 #### The .bashrc File
 *Bash Shell Configuration*
 **Location:** `~/.bashrc`
-**When it runs:** Every time you open a new terminal.
+**When it runs:** It runs Every time you open a new terminal. Read about the [[SSH_Setup#**Uncomplicated Architecture**]] for more
 **What it's for:**
 - Setting [[Whatis#The `env` (environment variables)|environment variables]] for your user
 - Creating `alias` shortcuts (e.g. `alias ll='ls -lah'`)
@@ -115,10 +109,9 @@ Reminder:
 ---
 
 #### The ~/.profile / ~/.xprofile
-**When it runs:** Once at login — not every terminal open.
+**When it runs:** Once at login — not every terminal open. Read about the [[SSH_Setup#**Uncomplicated Architecture**]] for more
 **What it's for:**
 - Scripts and [[Whatis#The `env` (environment variables)|env variables]] that only need to run once for the entire session.
-
 
 *Think of `.bashrc` as "runs every new terminal tab" and `.profile` as "runs once when you first log in."*
 
@@ -232,7 +225,7 @@ sudo apt clean    # wipes /var/cache/apt/archives — frees space, nothing break
 **What it is:** Queued tasks waiting to happen.
 *Think of it as a waiting room — jobs sit here until processed.*
 
-Things like: print jobs, mail queue, cron tasks.
+Things like: print jobs, mail queue, [[Tools#**Cron**]] tasks.
 
 ---
 
@@ -983,7 +976,7 @@ updatedb
 ```
 
 >[!Tip] Good thing to do
->The database located at /var/lib is update once daily by systemd timer or [[Tools#**CRON**]].  Its good thing to practice doing that as an exercise.
+>The database located at /var/lib is update once daily by systemd timer or [[Tools#Cron]].  Its good thing to practice doing that as an exercise.
 
 
 
@@ -1172,6 +1165,7 @@ A utility that targets the file status. It reads the filesystem metadata to show
 
 ---
 # Other information
+
 ---
 ### A file named `-`
 `cat` won't work on a file literally named `-` — it interprets the dash as stdin, not a filename.
@@ -1360,3 +1354,53 @@ ls -li
 
 Unlike with [[Whatis#**Symbolic Link**]] which displays the path name with use `ls -la` — a hard link does not.
 But you can refer to [[#find]] for the flags that is used in searching for filename that uses the same inode.
+
+---
+
+### Cache
+---
+There is the `filesystem` and `RAM/kernel` cache:
+```
+        CACHE
+          |
+   ┌──────┴──────┐
+   |             |
+filesystem     RAM/kernel
+   |             |
+~/.cache       page cache
+/var/cache     slab
+               buffers
+```
+
+**Common contents of users cache**
+- **Browser cache** — downloaded web resources, images, scripts, etc.
+- **Thumbnail cache** — previews ng images/videos/files para hindi kailangang i-generate ulit.
+- **Font cache** — information about available fonts para mas mabilis ma-discover ng applications.
+- **Package/dependency cache** — downloaded packages or metadata, depending on the application.
+- **Application-generated temporary data** — optimized copies, indexes, compiled resources, etc.
+
+---
+#### How and where to view user/application cache
+---
+```
+Located at : ~/.cache
+
+===COMMANDS====
+ls -lah ~/.cache
+
+====TO CLEAR====
+rm -rf ~/.cache/*
+```
+
+---
+#### How and where to view system-wide application cache
+---
+```
+Located at : /var/cache
+
+=====TO CLEAR====
+sudo rm -rf /var/cache/*
+
+=====REMINDER======
+But **don't blindly clear `/var/cache`**. Some applications/package managers expect specific cache structures.
+```

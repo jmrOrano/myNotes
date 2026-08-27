@@ -567,6 +567,14 @@ The `No decoder matched` should be expected.
 
 ### Adding a custom decoder
 ---
+#### For Ban decoder:
+---
+Reference
+```
+2026-07-30 15:56:03,337 fail2ban.actions        [345215]: NOTICE  [nextcloud] Ban 162.xxx.xxx.132
+```
+
+Go inside the docker
 ```bash
 docker exec -it single-node-wazuh.manager-1 bash
 ```
@@ -580,7 +588,7 @@ cat > /var/ossec/etc/decoders/local_decoder.xml << 'EOF'
 
 <decoder name="fail2ban-ban">
     <parent>fail2ban</parent>
-    <prematch>Ban \S+</prematch>
+    <prematch>] Ban \S+</prematch>
     <regex>[(\w+)] Ban (\S+)</regex>
     <order>jail, srcip</order>
 </decoder>
@@ -602,23 +610,56 @@ docker exec -it single-node-wazuh.manager-1 /var/ossec/bin/wazuh-logtest
 ```
 
 ---
+#### For Unban decoder:
+---
+Reference log:
+```
+2026-07-31 15:56:02,676 fail2ban.actions        [345215]: NOTICE  [nextcloud] Unban 162.xxx.xxx.132
+```
+
+Go inside the docker:
+```
+docker exec -it single-node-wazuh.manager-1 bash
+```
+
+Then add the ff to the `/var/ossec/etc/decoders/local_decoder.xml`
+```bash
+<decoder name="fail2ban-unban">
+  <parent>fail2ban</parent>
+  <prematch>] Unban \S+</prematch>
+  <regex>[(\w+)] Unban (\S+)</regex>
+  <order>jail, srcip</order>
+</decoder>
+```
+
+Then restart:
+```
+docker restart single-node-wazuh.manager-1
+```
+
+---
 
 ### Adding a Rule
 ---
 Even though the log is decoded, it wont appear in index unless we make one.
 
+Also : Read reminder first: [[#Reminder]]
+
+#### For Ban rule:
+---
+Go inside the docker:
 ```bash
 docker exec -it single-node-wazuh.manager-1 bash
 ```
 
-Add:
+Add to the local_rules.xml:
 ```bash
 cat > /var/ossec/etc/rules/local_rules.xml << 'EOF'
 cat > /var/ossec/etc/rules/local_rules.xml << 'EOF'
  <group name="fail2ban,">
   <rule id="100100" level="8">
    <decoded_as>fail2ban</decoded_as>
-   <match>Ban </match>
+   <match>] Ban </match>
    <description>Fail2ban has banned an IP: $(srcip) from jail: $(jail)</description>
    <group>authentication_failures,</group>
   </rule> 
@@ -632,11 +673,51 @@ Restart:
 docker restart single-node-wazuh.manager-1
 ```
 
-Do a test:
+---
+#### For Unban Rule:
+---
+Go inside the docker:
+```bash
+docker exec -it single-node-wazuh.manager-1 bash
 ```
+
+Add the ff to the `/var/ossec/etc/rules/local_rules.xml`:
+```bash
+<rule id="100101" level="3">
+    <decoded_as>fail2ban</decoded_as>
+    <match>] Unban </match>
+    <description>Fail2ban has unbanned an IP: $(srcip) from jail: $(jail)</description>
+    <group>authentication_failures,</group>
+  </rule>
+```
+
+Restart:
+```bash
+docker restart single-node-wazuh.manager-1
+```
+
+---
+
+## Testing
+---
+Run
+```Bash
 docker exec -it single-node-wazuh.manager-1 /var/ossec/bin/wazuh-logtest
-
-#AND PASTE A LOG======================
-2026-07-20 09:16:08,067 fail2ban.actions         [2113606]: NOTICE  [sshd] Ban <ip_here>
 ```
 
+AND PASTE A LOG
+```bash
+#======There should be phase 3
+2026-07-31 15:56:02,676 fail2ban.actions        [345215]: NOTICE  [nextcloud] Unban 162.XXX.XXX.132
+
+#=====There should be phase 3:
+2026-07-20 09:16:08,067 fail2ban.actions         [2113606]: NOTICE  [sshd] Ban 162.158.118.132
+
+#======There should only be 
+2026-07-30 15:55:56,790 fail2ban.filter         [345215]: INFO    [nextcloud] Found 162.XXX.XXX.132 - 2026-07-30 15:55:56
+```
+
+## Reminder
+---
+Avoid using a [[Whatis#Heredoc|heredoc]] approach when [[#Adding a Rule]] , *though its the approach used in this documentation, still dont use it.* 
+- Install nano instead `yum install nano` inside the docker

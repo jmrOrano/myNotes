@@ -146,28 +146,6 @@ Understand:
 > sockets don’t care about format, everything becomes bytes
 ```
 
-### Random Section
----
-
-#### Generate a random number between 1 and 100
-```bash
-echo $((RANDOM % 100 + 1))
-```
-
-#### Roll a dice (generate a random number between 1 and 6)
-```bash
-echo $((RANDOM % 6 + 1))
-```
-
-#### Shuffle an array of numbers
-```bash
-shuf -i 1-100 -n 5
-```
-
-#### Generate a random password of length 8
-```bash
-tr -dc 'A-Za-z0-9!@#$%^&*()' < /dev/urandom | head -c 8
-```
 
 ### Process exercise
 

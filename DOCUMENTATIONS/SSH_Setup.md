@@ -41,7 +41,7 @@ A shell is started
 (bash, zsh, sh...)
    │
    ▼
-A shell exiss, but still bare minimum state. 
+A shell exist, but still bare minimum state. 
    │
    ▼
 A Shell reads ~/.profile

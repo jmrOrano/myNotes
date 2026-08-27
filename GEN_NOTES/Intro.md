@@ -171,6 +171,9 @@ Then change it
 ## Initial Quote PC build 
 July 02, 2026
 
+
+Budget
+
 | Parts   | Model                                                 | Price          |                                                                                                                                                                                                                                                                                  |
 | :------ | ----------------------------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CPU     | R5 5600 (AM4, 6C/12T, no iGPU)<br>R5 5600X            | 7,053<br>8,100 | [EasyPC](https://easypc.com.ph/products/amd-ryzen-5-5600-socket-am4-3-5ghz-processor-with-wraith-stealth-cooler-mpk)<br>[EasyPC](https://easypc.com.ph/products/amd-ryzen-5-5600x-socket-am4-3-7ghz-processor-with-wraith-stealth-cooler-mpk-vr-ready-premium-desktop-processor) |
@@ -181,3 +184,15 @@ July 02, 2026
 | PSU     | 550-650W 80+ Bronze (RAKK AGOS 650W or similar)       | 1,800 - 2,800  |                                                                                                                                                                                                                                                                                  |
 | Case    | Budget mATX/ATX case with fans                        | 1,750          |                                                                                                                                                                                                                                                                                  |
 *Upgrade roadamp*
+
+Slightly expensive(focusing both gaming and running AI locally)
+
+|  Parts  | Model                                                 | Price  |                                                                                                                                         |
+| :-----: | ----------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+|   CPU   | R5 5600 (AM4, 6C/12T, no iGPU)                        | 7,053  | [EasyPC](https://easypc.com.ph/products/amd-ryzen-5-5600-socket-am4-3-5ghz-processor-with-wraith-stealth-cooler-mpk)                    |
+|  Mobo   | # Gigabyte B550M DS3H R2                              | 5,150  | [Datablitz](https://ecommerce.datablitz.com.ph/products/gigabyte-b550m-ds3h-r2-ultra-durable-motherboard)                               |
+|   RAM   | 16GB (2x*) DDR4-3200 (G.Skill Ripjaws V or equiv.)    | 9,195  | [GameOnePh](https://gameone.ph/g-skill-ripjaws-v-series-16gb-2x8gb-288-pin-sdram-pc4-25600-ddr4-3200-f4-3200c16d-16gvkb.html)           |
+| Storage | 500GB NVMe SSD Gen4 (Kingston NV3 / MSI Spatium M450) | 6,900  | [PCExpresss](https://pcx.com.ph/products/kingston-500gb-nv3-m-2-pcie-nvme-solid-state-drive)                                            |
+|   GPU   | Rx 7600XT 16GB DDR                                    | 26,500 | [EasyPC](https://easypc.com.ph/products/asus-dual-rx-7600-xt-dual-rx7600xt-o16g-oc-16gb-128-bit-gddr6-videocard?variant=43909964988587) |
+|   PSU   | Cooler Master MWE 650W and 650W V2 80+ bronze         | 3350   | [EasyPC](https://easypc.com.ph/products/coolermaster-mwe-650w-80-bronze-power-supply?variant=45295690317995)                            |
+|  Case   | # Montech Air 100 Lite Mesh TG Micro-ATX Case         | 2295   | [Datablitz](https://ecommerce.datablitz.com.ph/products/montech-air-100-lite-mesh-tg-micro-atx-case)                                    |

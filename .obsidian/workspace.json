@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "440fccd2c5600c39",
+            "id": "d9c4a6d3150d75ca",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Logging & Monitoring.md",
+                "file": "GEN_NOTES/Linux_File_System__Major_Only_.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,16 +28,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Logging & Monitoring"
+              "title": "Linux_File_System__Major_Only_"
             }
           },
           {
-            "id": "586104008665d943",
+            "id": "8d30e17f8a6171c0",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DOCUMENTATIONS/SIEM Setup.md",
+                "file": "GEN_NOTES/HOW TO.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,16 +52,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "SIEM Setup"
+              "title": "HOW TO"
             }
           },
           {
-            "id": "784798bed3798187",
+            "id": "5b9883854b4aeb34",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DOCUMENTATIONS/Documentations.md",
+                "file": "GEN_NOTES/Bash_Scripting.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -76,11 +76,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Documentations"
+              "title": "Bash_Scripting"
+            }
+          },
+          {
+            "id": "d9df97837e3b67df",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "GEN_NOTES/Commands.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Commands"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -100,7 +124,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -112,7 +138,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "\"command substitution\"",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -137,8 +163,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "6b367cb62b5d1f38",
@@ -253,43 +278,44 @@
       "broken-links:View broken links": false
     }
   },
-  "active": "586104008665d943",
+  "active": "5b9883854b4aeb34",
   "lastOpenFiles": [
-    "DOCUMENTATIONS/Documentations.md",
-    "GEN_NOTES/Tools.md",
-    "DOCUMENTATIONS/SIEM Setup.md",
     "GEN_NOTES/Commands.md",
-    "DOCUMENTATIONS/Bandit_Wargames.md",
+    "GEN_NOTES/Bash_Scripting.md",
     "GEN_NOTES/HOW TO.md",
-    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
-    "DOCUMENTATIONS/SSH_Setup.md",
     "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "GEN_NOTES/Logging & Monitoring.md",
-    "GEN_NOTES/Docker-Reference.md",
-    "GEN_NOTES/User Management.md",
-    "Networking/RANDOM FOR NOW.md",
-    "Networking/How_host_do_speaks_on_the_internet.md",
-    "Networking/3-WAY_HANDSHAKE.md",
-    "SECURITY/OBFUSCATION_GUIDE.md",
-    "SECURITY/RANDOM NOTES FOR NOW.md",
-    "Networking/OSI_Model.md",
-    "Networking/PROXY.md",
-    "DOCUMENTATIONS/DOCKER SETUP  2.md",
-    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
-    "Exercise.md",
-    "GEN_NOTES/Bashing And Scripting.md",
-    "ETHICAL_HACKING/Privilage Escalation.md",
+    "GEN_NOTES/PROCESS.md",
+    "DOCUMENTATIONS/ProjectTemp.md",
+    "GEN_NOTES/Intro.md",
     "GEN_NOTES/Whatis.md",
+    "GEN_NOTES/Tools.md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "GEN_NOTES/Feynman-Technique.md",
+    "GEN_NOTES/Logging & Monitoring.md",
+    "DOCUMENTATIONS/SIEM Setup.md",
+    "GEN_NOTES/User Management.md",
+    "DOCUMENTATIONS/Bandit_Wargames.md",
+    "GEN_NOTES/Questions.md",
+    "DOCUMENTATIONS/Balcony-Gardening.md",
+    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "ETHICAL_HACKING/Exploitation.md",
+    "ETHICAL_HACKING/Privilage Escalation.md",
+    "Pasted image 20260811194808.png",
+    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
+    "Untitled",
+    "DOCUMENTATIONS/Documentations.md",
     "DOCUMENTATIONS/The trap i keep falling into.md",
+    "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
+    "GEN_NOTES/Git Workflow & Commands.md",
+    "Exercise.md",
+    "path/to/index.html",
+    "path/to",
+    "path",
     "ETHICAL_HACKING",
     "Untitled 1.base",
     "Untitled.base",
     "AI_NOTES/practical_obfuscation.py",
     "AI_NOTES/beginner_obfuscation.py",
-    "AI_NOTES",
-    "engine/install",
-    "engine",
-    "Networking",
-    "SECURITY"
+    "AI_NOTES"
   ]
 }

@@ -222,7 +222,6 @@ What does it do?
 
 
 
-
 ### GROUPS
 *Overview: is a way to organize users so you can manage permissions more efficiently. *
 Instead of giving permissions to each user one-by-one, you assign them to a **group**, then add users to that group.
@@ -327,6 +326,8 @@ Create a new group:
 >Set group administrators:
 >`sudo gpasswd -A user1,user2 devs`
 >
+
+^cfeabc
 
 >[!Info] Common Flags  
 >`-a` → add user to group  
@@ -682,6 +683,7 @@ For commands : [[Commands#LINUX| GO HERE]]
 # Practical Test
 
 #### How to find files with unusual permissions
+---
 *Use the [[Linux_File_System__Major_Only_#find|find command]]*
 
 Common patterns.
@@ -699,4 +701,27 @@ sudo find / -perm -0002 2>/dev/null
 Another thing.  there are virtual filesystem like [[Linux_File_System__Major_Only_#/proc|/proc]] , or `/sys` or `/run`. For cleaner output use :
 ```Bash
 sudo find / -xdev -perm -0002 2>/dev/null   #-xdev means dont cros into other mounted fs
+```
+
+
+---
+#### How to add user to the group
+---
+User the [[#**USERMOD**]]
+```bash
+sudo usermod -aG sudoGroup <usernaame>
+```
+
+---
+#### How to list members in a group
+---
+```bash
+getent group <groupname>
+```
+
+---
+#### How to know more about a certain user
+---
+```
+id <username> 
 ```

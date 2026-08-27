@@ -388,3 +388,423 @@ ssh -p 2220 bandit18@bandit.labs.overthewire.org
 ssh -p 2220 bandit18@bandit.labs.overthewire.org "sh"
 ```
 - Though without the `-t` flag, the terminal will look like plain, with no symbol `$` .
+
+## Level 19 to 20
+---
+*Augus 08, 2026*
+
+Level goal:
+```
+To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
+```
+
+###### **My mental approach**
+---
+
+Upon logging in, i run the ff commands:
+```
+ls
+stat bandit20-do
+```
+It shows the ff:
+```bash
+  File: bandit20-do
+  size: 14880     	Blocks: 32         IO Block: 4096   regular file
+Device: 259,1	Inode: 300215      Links: 1
+Access: (4750/-rwsr-x---)  Uid: (11020/bandit20)   Gid: (11019/bandit19)
+Access: 2026-08-07 17:27:05.229489493 +0000
+Modify: 2026-06-24 14:59:09.608243504 +0000
+Change: 2026-06-24 14:59:09.613243539 +0000
+ Birth: 2026-06-24 14:59:09.608243504 +0000
+```
+
+>The way i understand this is level is :
+- The file `bandit20-do` is owned by user `bandit20`
+- The file has a special permission of [[User Management#**SUID**|SUID]] 
+- The file belongs to the group `bandit19`, The user of this current session — meaning, i can execute it.
+
+**Executing the file**
+*I tried the ff:*
+```bash
+bash bandit20-do
+===========bandit20-do: bandit20-do: cannot execute binary file
+
+bandit20-do
+===========bandit20-do: command not found
+```
+Both failed, i  had to google.
+
+##### **The proper approach**
+---
+Same principles to beginning. DO:
+```
+./bandit20-do
+```
+
+Outputs:
+```c
+bandit19@bandit:~$ ./bandit20-do
+Run a command as another user.
+  Example: ./bandit20-do whoami
+```
+Its a clue, meaning i can run a single line command when executing the file.
+```c
+bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
+```
+The password is:
+```
+4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA
+```
+
+**How things works in this level**
+- Normally,  a program runs as the user who executes it.
+- With SUID, the program runs as the file's owner regardless of who actually runs it.
+- In this level the file is a tool that temporarily grants the user `bandit19` the identity of user `bandit20`– just enough to read the password.
+
+
+
+---
+
+## Level 20 to 21
+---
+*August 08, 2026*
+
+Level goal:
+```
+There is a setuid binary in the homedirectory that does the following: 
+---it makes a connection to localhost on the port you specify as a commandline argument. 
+---It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
+
+**NOTE:** Try connecting to your own network daemon to see if it works as you think
+
+## Commands you may need to solve this level
+ssh, nc, cat, bash, screen, tmux, Unix ‘job control’ (bg, fg, jobs, &, CTRL-Z, …)
+```
+
+##### **My mental approach**
+---
+This is like same principle to [[#Level 19 to 20]] but with complexity.
+I checked the binary file:
+```c
+bandit20@bandit:~$ stat suconnect
+  File: suconnect
+  size: 15604           Blocks: 32         IO Block: 4096   regular file
+Device: 259,1   Inode: 300217      Links: 1
+Access: (4750/-rwsr-x---)  Uid: (11021/bandit21)   Gid: (11020/bandit20)
+Access: 2026-08-07 16:57:01.129159582 +0000
+Modify: 2026-06-24 14:59:10.943252643 +0000
+Change: 2026-06-24 14:59:10.949252684 +0000
+Birth: 2026-06-24 14:59:10.943252643 +0000
+```
+
+When i run the file, a message appears
+```c
+bandit20@bandit:~$ ./suconnect                                                       
+Usage: ./suconnect <portnumber>                                                      
+This program will connect to the given port on localhost using TCP. If it receives th
+e correct password from the other side, the next password is transmitted back.  
+```
+
+I dont know what port to use so i run nmap targeted to localhost:
+```
+bandit20@bandit:~$ nmap localhost
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-08-08 14:12 +0000
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00011s latency).
+Other addresses for localhost (not scanned): ::1
+Not shown: 992 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+1111/tcp  open  lmsocialserver
+1234/tcp  open  hotline
+1840/tcp  open  netopia-vo2
+4321/tcp  open  rwhois
+8000/tcp  open  http-alt
+30000/tcp open  ndmps
+50001/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 0.05 seconds
+```
+
+I tested each port, most of them does nothing except `port 4321`
+```
+bandit20@bandit:~$ ./suconnect 4321
+Read: 100 phrack search daemon, type help for more information
+ERROR: This doesn't match the current password!
+```
+
+i tried pasting the password, for level 20 but didnt work:
+```
+bandit20@bandit:~$ ./suconnect 4321 4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA
+Read: 100 phrack search daemon, type help for more information
+ERROR: This doesn't match the current password!
+```
+
+A bit of reiew about the level:
+`**NOTE:** Try connecting to your own network daemon to see if it works as you think`
+So i try connecting to localhost using [[Tools#Netcat (nc)]]
+```
+bandit20@bandit:~$ nc 127.0.0.1 4321
+100 phrack search daemon, type help for more information
+4pIjcunZ0fK2vmp3IwfG8Vf7VhxD6pOA
+```
+But it didnt do anything.
+
+---
+
+##### **The proper approach**
+---
+I misunderstood the instruction. 
+There should be two terminal running
+
+1st terminal within the ssh session:
+```
+echo "bW9kBv5WC3P4yoDyf12LSdGuNz5ka6hY" | nc -l 9999
+```
+
+2nd terminal within the ssh session as well:
+```
+./suconnect 9999
+```
+
+The break down:
+- `Terminal 1` – the one who will listen and will wait for those who will connect
+- `Terminal 2` – the one who will connect using the `suconnect` binary file.
+- `suconnect` – the binary file that Terminal 2 will use.
+- Once terminal 2 runs the file, it will connect to terminal 1 and will echo the password.
+- The Terminal 2 will receive the echoed password and if its correct, it will send the next password to terminal 1
+
+---
+
+## Level 21 to 22
+---
+*August 14, 2026*
+
+Level Goal:
+```
+A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+```
+
+##### **My Approach**
+---
+Upon logging in I immediately checked the location
+```bash
+cd /etc/cron.d && ls
+
+===OUTPUT===
+behemoth4_cleanup  clean_tmp  cronjob_bandit22  cronjob_bandit23  cronjob_bandit24  e2scrub_all  leviathan5_cleanup  manpage3_resetpw_job  otw-tmp-dir
+```
+
+>I dont know where to start so i first searched about cron jobs and took a note of it at:
+[[Tools#**Cron**]]
+
+I tried to output all whats inside the directory:
+```bash
+cat *
+====OUTPUT=====
+bandit21@bandit:/etc/cron.d$ cat *
+*/30 * * * * root find /tmp -amin +60 -type f,l -delete &> /dev/null && find /tmp -amin +5 -type d -empty -delete &> /dev/null
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+30 3 * * 0 root test -e /run/systemd/system || SERVICE_MODE=1 /usr/libexec/e2fsprogs/e2scrub_all_cron
+10 3 * * * root test -e /run/systemd/system || SERVICE_MODE=1 /sbin/e2scrub_all -A -r
+cat: behemoth4_cleanup: Permission denied
+cat: leviathan5_cleanup: Permission denied
+cat: manpage3_resetpw_job: Permission denied
+cat: otw-tmp-dir: Permission denied
+```
+I know how to read them as i made a searching first before proceeding. But still, i dont know what to do with them.  Im aware there are cron jobs running every minute executing a file.
+
+>I tired listing cron jobs, but didnt work due to permission as expected:
+```bash
+bandit21@bandit:/etc/cron.d$ cron jobs
+
+===OUTPUT===
+cron: can't open or create /var/run/crond.pid: Permission denied
+
+bandit21@bandit:/etc/cron.d$ crontab -l
+===OUTPUT===
+crontabs/bandit21/: fopen: Permission denied
+
+```
+
+>Next, i tried navigating where the script is located. I first check the `/usr/bin/cronjob_bandit22.sh `
+```bash
+cd /usr/bin/
+cat cronjob_bandit22.sh
+
+===OUTPUT===
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
+My translation. 
+- the [[User Management#chmod|chmod]] changes the permission for the `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv` to have a read access to `others`
+- it then redirects `>` the password  for `/etc/bandit_pass/bandit22` using cat command into the temp file. Giving me –`bandit21` a read access
+
+>I can now have the content of the file without actually having a read access to `/etc/bandit_pass/bandit22 `
+```bash
+bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+====OUTPUT=========
+RYVux2rHEm9tiXHmLFzuR7Vhx6AZQMEz
+```
+
+>**Additional Information**
+
+The script file is actually owned by `bandit22`. But the group owner is `bandit21`
+```bash
+bandit21@bandit:/usr/bin$ stat  /usr/bin/cronjob_bandit22.sh 
+====OUTPUT====
+  File: /usr/bin/cronjob_bandit22.sh
+  size: 130             Blocks: 8          IO Block: 4096   regular file
+Device: 259,1   Inode: 26504       Links: 1
+Access: (0750/-rwxr-x---)  Uid: (11022/bandit22)   Gid: (11021/bandit21)
+Access: 2026-08-13 15:12:01.612051668 +0000
+Modify: 2026-06-24 14:59:12.219261377 +0000
+Change: 2026-06-24 14:59:12.226261425 +0000
+ Birth: 2026-06-24 14:59:12.219261377 +0000
+```
+The permission for the group is set by `5` having a `read` and `execute` permission.  Allowing me to read it.
+
+---
+
+## Level 22 to 23
+---
+*August 18, 2026*
+Level Goal:
+```
+A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+
+**NOTE:** Looking at shell scripts written by other people is a very useful skill. The script for this level is intentionally made easy to read. If you are having problems understanding what it does, try executing it to see the debug information it prints.
+```
+
+##### **My approach**
+---
+>Upon logging in i checked for the crontab related to bandit23:
+```
+====COMMAND===
+ls -lah
+
+===OUTPUT====
+-rw-r--r--   1 root root  122 Jun 24 14:59 cronjob_bandit23
+```
+
+>It has read access to others. So i read it:
+```
+===COMMAND===
+bandit22@bandit:/etc/cron.d$ cat cronjob_bandit23
+
+===OUTPUT===
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+```
+The script being run by user `bandit23` is located at ` /usr/bin`. Similar to previous level.
+
+>Inside the `/usr/bin`. I first checked for the permission of the script.
+```
+====COMMAND====
+bandit22@bandit:/usr/bin$ ls -lah | grep "cronjob_bandit23.sh"
+
+===OUTPUT===
+-rwxr-x---       1 bandit23 bandit22   211 Jun 24 14:59 cronjob_bandit23.sh
+```
+- It doesnt have any permission to `others`
+- But it has execute permission for group owner. 
+- The group owner of this file is `bandit22` — meaning as bandit 22, i can execute this.
+
+>I check the content of the script next.
+```
+===COMMAND===
+bandit22@bandit:/usr/bin$ cat cronjob_bandit23.sh
+
+===OUTPUT===
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+The way i understand how this work is:
+- The cron job set for user `bandit23` is executing the script ` /usr/bin/cronjob_bandit23.sh`
+- Inside the script it has line `myname=$(whoami)`. Its a `command substitution` mentioned at my notes about [[Linux_File_System__Major_Only_#mktemp|mktemp]]
+- The value for the `myname` variable will be `bandit23` since. Its the username set to execute the command at crontab. 
+- My problem is, i dont understand the `md5sum` command is used for at the line : `mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)`
+- I did google about `md5sum` : All i understand for now is that it creates a unique digital signature called `checksum` — which im not aware yet as of this writing. But i read what i think is important:
+  `Changes completely if even one letter in the file changes.` I have a hunch that its random but its a fixed output depending on input.
+
+> I tried checking the contents inside `/tmp`
+```
+===COMMAND===
+cd /tmp
+bandit22@bandit:/etc/cron.d$ cd /tmp/
+
+===OUTPUT===
+ls: cannot open directory '.': Permission denied
+```
+Got denied.
+
+>Attempt workaround.
+- Since the i have the line of command for the variable `mytarget`. Maybe i can recreate it.
+```
+===COMMAND===
+bandit22@bandit:/tmp$ mytarget=$(echo I am user bandit23 | md5sum | cut -d ' ' -f1)
+bandit22@bandit:/tmp$ echo $mytarget
+
+===OUTPUT===
+8ca319486bfbbc3663ea0fbe81326349
+
+```
+
+>Now attemping to read.
+```
+===COMMAND===
+bandit22@bandit:/tmp$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+
+===OUTPUT====
+gKXDTAXnIz3OBxiPjRZ2uqutUlPZrBsw
+```
+**IT WORKED**
+
+---
+
+## Level 23 - 24
+---
+*August 19, 2026*
+
+Level Goal:
+```
+A program is running automatically at regular intervals from **cron**, the time-based job scheduler. Look in **/etc/cron.d/** for the configuration and see what command is being executed.
+
+**NOTE:** This level requires you to create your own first shell-script. This is a very big step and you should be proud of yourself when you beat this level!
+
+**NOTE 2:** Keep in mind that your shell script is removed once executed, so you may want to keep a copy around…
+```
+
+##### **My Approach**
+---
+Check what's inside the `/etc/cron.d`:
+```
+====COMMAND====
+cd /etc/cron.d && ls
+
+====OUTPUT====
+behemoth4_cleanup  cronjob_bandit22  cronjob_bandit24  leviathan5_cleanup    otw-tmp-dir
+clean_tmp          cronjob_bandit23  e2scrub_all       manpage3_resetpw_job
+```
+
+Reading the crontab for `bandit24`:
+```
+====COMMAND====
+cat cronjob_bandit24
+
+====OUTPUT====
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+```
