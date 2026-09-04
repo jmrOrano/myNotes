@@ -67,6 +67,24 @@ Running the `--help` is good, but can be overwhelming. So, i'll list some common
 
 #### Tips in *`cut`* command
 ---
+Common usage pattern:
+```
+cut -d":" -f1,7 /etc/passwd
+```
+- `/etc/passwd` — the file used as input example
+- `-d":"` — set the `:` as the `delimeter`
+- `-f1,7` — get the field 1 and field 7 of each line
+
+In the `/etc/passwd`. There is a line:
+```c
+linuxuser@linuxuser:~/bandit$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+```
+- `":"` — will act like a seperator
+- `root` — is the field 1 
+- `/bin/bash` — is the field 7
+
+
 The **`cut`** command outputs in new line if the text has multiple lines.
 
 *What if you want to put each delimiter in new line. But the text is only a single-line?*

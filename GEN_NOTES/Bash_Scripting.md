@@ -12,6 +12,9 @@ These are what i considered the most minimal foundation.
 - [[#Shebang]]
 - [[#Variables]]
 	- [[#How to use Positional Parameters]]
+	- [[#How to use command substitution]]
+	- [[#How to use export]]
+	- [[#PATH]]
 	- [[#Arrays]]
 - [[#Reading Input]]
 - [[#Conditional Expressions]]
@@ -20,6 +23,7 @@ These are what i considered the most minimal foundation.
 	- [[#Arithmetic Expressions]]
 	- [[#Exit Status Operators]]
 - [[#Conditional Statements]]
+	- [[#If statement]]
 - [[#Loops]]
 
 ```
@@ -60,7 +64,7 @@ A good reference: [bobbyiliev bash scripting](https://github.com/bobbyiliev/intr
 
 ---
 
-### Variables
+### **Variables**
 ---
 A variable is used to store value and make it easy to use.
 There are no data types like `string`, `bool` , etc. 
@@ -139,7 +143,7 @@ echo "This is file named ${0}"
 rm -f "${0}"
 ```
 
->You can also use the `"@"` to indicate all arguments.
+>==You can also use the `"@"` to indicate all arguments.==
 
 Example:
 ```
@@ -171,6 +175,89 @@ echo "${today}"
 
 ---
 
+##### How to use export 
+---
+
+> **==SETUP 1==**
+Example:  ==parent== script
+```
+#!/bin/bash
+
+export parent_var="This is from parent's variable"
+
+./child.sh
+```
+Then: ==child== script
+```
+#!/bin/bash
+
+echo "${parent_var}" 
+```
+In this setup: Its not ideal to directly execute the `child` script— the output will be blank. It will be better if the `parent` script will be the one who executes the `child` script so that the `export`line will work.
+
+##### PATH
+---
+```
+echo "${PATH}" | tr ":" "\n"
+``` 
+`PATH` — a built-in environment variable containing list of directories
+- Used by shell when searching for commands.
+
+> ==**SETUP**==
+A file named `hello` exist in `~/lab/scripts/mycommands/hello`
+```
+#!/bin/bash
+
+echo "Hello from my custom commands"
+```
+Now navigate outside the directory and type `hello`
+```
+cd ~/
+hello
+
+linuxuser@linuxuser:~$ hello
+Command 'hello' not found,
+```
+
+But you can directly execute it—though you have to type the absolute each path each time.
+```
+linuxuser@linuxuser:~$ /home/linuxuser/lab/scripts/mycommands/hello
+
+Hello from my custom command
+```
+The directory containing `hello` is not included in `PATH`,
+so Bash cannot find `hello` by command name.
+
+> ==**ADDING PATH**==
+
+in terminal
+```
+export PATH="${PATH}:/home/linuxuser/lab/scripts/mycommands
+```
+*Note:  
+- This is temporary in current shell session. To make it persistent, add the line to [[Linux_File_System__Major_Only_#The .bashrc File|~/.bashrc]]*
+- the variable name `PATH`  is fixed when goal is adding a path for a shell into, because it is a special variable that the `shell` recognize and uses as part of its mechanism. 
+
+Then it can be executed anywhere
+```
+linuxuser@linuxuser:~$ cd /
+linuxuser@linuxuser:/$ hello
+
+Hello from my custom command
+```
+
+>**==To trace or verbose the actual search of shell==**
+```
+strace -e trace=file bash -c "hello"
+```
+
+>**==The flow of how searches in PATH is done==**
+When you type `hello`
+- 1—.Bash determines what kind of command it is ((alias, function, builtin, etc.))
+- 2—.If it needs to find an external command, Bash searches the directories in `PATH`
+- 3—.Once found, it executes the program
+
+----
 ##### Arrays
 ---
 Id like to define `Arrays`—  assigning multiple values in a single variable.
@@ -350,12 +437,8 @@ Common usage:
 
 ==`$?`== — Is a special bash parameter that contains exit status of the most recent command 
 
-
 ---
-
-
----
-## Logical Operator
+### Logical Operator
 ---
 Useful for control over the execution flow of commands.
 
@@ -377,8 +460,77 @@ cp ~/this/file /to/destination && echo "success"
 cd /thisDirectory && ls
 ```
 
+---
+
+### Conditional Statements
+---
+This is paired with [[#Conditional Expressions]] 
+Uses the `if`, `if-else`,  `elif`, `switch case` statements. 
+
+##### If statement
+---
+Example: *combined with conditional expressions, and other lesson so far*
+```
+username="username"
+password="password"
+
+read -p "Username: " in_username
+read -s -p "Password: " in_password
+echo   #this is for newline
+
+if [[ "${in_username}" = "${username}" ]] &&
+   [[ "${in_password}" = "${password}" ]]; then 
+    echo "You are correct"
+elif [[ -z "${in_username}" ]] ||
+     [[ -z "${in_password}" ]]; then
+     echo "It must not be blank"
+else
+     echo "Wrong credentials"
+fi 
+```
+
+---
+
+### Loops
+---
+This is a section where everything is combined to work together. 
+Things like: `variables`,  `arrays`,  `conditioanal expressions and statements`, even `read input`
+##### For loops
+---
+For  more reference: [bobbyiliev_repo](https://github.com/bobbyiliev/introduction-to-bash-scripting/blob/main/ebook/en/content/011-bash-loops.md#for-loops)
+
+Good to check the script at [[Bandit_Wargames#Level 23 to 24]]
 
 
+>==**Example 1**== : **Counting from 1 to 100**
+```bash
+for everynumber in {1..100};
+do
+  echo "Number: ${everynumber}"
+done
+```
+
+>==**Example 2**== : **Printing all files in a directory**
+```bash
+cd /to/this/directory/
+
+for everyfile in *.*;  #uses a wildcard 
+do
+  echo "${everyfile}"
+done
+```
+
+>==**Example 3**==: **Printing what's inside an [[#Arrays]]**
+```bash
+array=("Item1" "Item2" "Item3" "Item4" "Item5")
+
+for everyitem in "${array[@]}";   #USES the "[@]" to expand
+do
+  echo "${everyitem}"
+done
+```
+
+---
 ## **FIFO** 
 ----
 *June 28, 2026*
@@ -443,6 +595,101 @@ nc sends output back to attacker
 attacker sees result, types next command...
 ```
 
+---
+
+## **List**
+---
+Contains of commands that i personally dont know where or how to use for now but i once encountered.
+
+###### shopt
+```
+shopt -s nullglob
+```
+- `Shell Options` — A bash `built-in` command.
+	- Used to `enable/disable` different bash-speciifc behavior.
+- `nullglob` — a shell option that makes unmatched wildcard patterns expand to nothing
+
+---
+##### timeout
+---
+is a command-line utility used to **run a program or process with a strictly enforced time limit**, automatically terminating it if it runs longer than specified.
+
+Pattern: ==`timeout [options] [duration] [args/commands] `==
+```
+timeout -s 9 60 "./$i"
+```
+- `-s 9` — is an option means [[PROCESS#Signal 9|Signal 9]] 
+
+##### sleep
+---
+A useful tool to add a `pause` or `delay` effect in scripts
+
+```bash
+for everyitem in {1..10};
+do
+  echo "Number: ${everyitem}"
+  sleep 0.5s   #can be s,m,h,d
+done
+```
+
+##### printf
+---
+An `advance version of echo` with capabilities to format an output.
+```bash
+for everynum in {0..9999}
+do
+    padded=$(printf "%04d" "$everynum")
+    echo "$padded"
+done
+```
+
+Pattern: `printf "%[flag][width][type] <value>`
+```
+printf "%04d" 6
+```
+- `0` — fill it with zeros if the required width/lenght is not met
+- `4` — the width/length is 4 digits
+- `d` — decimal data types
+
+---
+##### exec
+---
+Encounter at [[Bandit_Wargames#Level 25 to 26]]
+
+Example:
+```
+#!/bin/sh
+
+exec more filename
+```
+
+>It replaces the current shell (`/bin/sh` ) with the `more` 
+
+==Without exec==
+```
+/bib/sh ——> more ——> display texts ——> more command exits ———> continues to /bin/bash
+```
+==With Exec==
+```
+/bin/sh ——> running script ——> AFTER exec ———> more 
+```
+
+---
+
+##### more
+---
+Encountered at : [[Bandit_Wargames#Level 25 to 26]]
+A pager:
+```
+more filename
+```
+Instead of dumping all the content of a file from line 0 to end.
+It shows a page and waits for input.
+
+
+
+
+----
 ## **HOW TO**
 ---
 *August 19,2026*

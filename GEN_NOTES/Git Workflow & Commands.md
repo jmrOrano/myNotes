@@ -14,7 +14,12 @@
 >**COMMANDS**
 >- [[#FOR VIEWING AND COMPARING|For Viewing and Comparing]]
 >- [[#**Undoing Commits**]]
->- 
+>- [[#GIT PULL]]
+>- [[#GIT RESET]]
+>- [[#GIT CLONE]]
+>- [[#GIT SWITCH]]
+>- [[#GIT RESTORE]]
+>- [[#GIT PUSH]]
 >
 >**OTHERS**
 >[[#Bakit isinasama ang .gitignore sa git add. ?]]
@@ -25,6 +30,10 @@
 >
 >
 
+```
+Working Dir  →  git add  →  Staging Area  →  git commit  →  History (permanent)
+   (galaw mo)                (paghanda)                        (save point)
+```
 ### **OVERVIEW**
 ##### Version Control
 *Napaka useful method/system para ma revert ang state ng isang project kung sakaling may mistake or undesireable changes.*
@@ -49,39 +58,23 @@
 
 ### SETUPS
 #### Initial workflow
+---
 
-|                                                                                               | Desc                                                                                      |
-| :-------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| First is install git. Can look it up online.                                                  |                                                                                           |
-| `git config --global user.name "YourName`<br>`git config --global user.email "yourEmail"`<br> | The initial setup<br>- for it to know kung sino gumagawa ng changes                       |
-| `navigate to your working dir` <br>then do: <br>`git init`                                    | - initialize a git repo sa iyong working dir                                              |
-| `git status`                                                                                  | - this is self explanatory                                                                |
-| add a `.gitignore` file                                                                       | - learn more here [[#Bakit isinasama ang .gitignore sa git add. ?\|.gitignore]]           |
-| `git add . `<br>`git add file1 file2 etc`                                                     | - ang dot `.` = lahat ng files<br>-pwede i specify each ang mga files na may changes lang |
-| `git commit -m "Your message here" `                                                          | `-m` = ang message or notes mo<br>                                                        |
-| `git push`                                                                                    | to share it sa internet.                                                                  |
+|                                                                                                    | Desc                                                                                      |
+| :------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| First is install git. Can look it up online.                                                       |                                                                                           |
+| `git config --global user.name "YourName"`<br><br>`git config --global user.email "yourEmail"`<br> | The initial setup<br>- for it to know who made the changes                                |
+| `navigate to your working dir` <br>then do: <br>`git init`                                         | - initialize a git repo sa iyong working dir                                              |
+| `git status`                                                                                       | - this is self explanatory                                                                |
+| add a `.gitignore` file                                                                            | - learn more here [[#Bakit isinasama ang .gitignore sa git add. ?\|.gitignore]]           |
+| `git add . `<br>`git add file1 file2 etc`                                                          | - ang dot `.` = lahat ng files<br>-pwede i specify each ang mga files na may changes lang |
+| `git commit -m "Your message here" `                                                               | `-m` = ang message or notes mo<br>                                                        |
+| [[#GIT PUSH\|git push]]                                                                            | to share it online                                                                        |
 
 ---
-#### **Git Command-Marking a dir as safe**
-Overview: *usually this is done when a repo is stored in a portable storage, and plugged into different machines.*
-
-```
-git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
-```
-
-**When to use the command??**
---when using the **`git status`** and lumabas ang message na ito :
-```
-	`$ git status fatal: detected dubious ownership in repository at 'F:/ObsidianNotes' 
-	'F:/ObsidianNotes' is on a file system that does not record ownership To add an exception for this directory, call:
-```
-
-	git config --global --add safe.directory F:/ObsidianNotes`
-
----
-#### **Creating a Git repo**
-*Ang `github` ay isang platform lamang hindi ito ang git. Maramin pang platform*
-1. Pumunta sa Github
+#### **Creating a remote Git repo**
+`Github` is one the platform that everyone can use to upload their repo publicly
+1. Go to Github
 2. Click **New Repo**
 3. Do not initialize or Do initialize *ReadMe*
 4. Then Done
@@ -103,12 +96,12 @@ git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
 
 ```
 
-
 ---
 
 ### **COMMANDS**
 
 ##### **FOR VIEWING AND COMPARING**
+---
 
 | Commands (for Viewing & Comparing)                                                                                                             | Desc                                                                                                        |
 | :--------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -122,14 +115,17 @@ git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
 | `git diff commit1 commit2`                                                                                                                     | -compare two commits                                                                                        |
 | `git diff --colors-words`                                                                                                                      | -ipakita lang ang pagbabago sa words hindi buong line diff                                                  |
 
+---
 ##### LISTING BRANCHES
+---
+
 | Commands          | Description                    |
 | :---------------- | ------------------------------ |
 | `git branch -r`   | Remote branches sa remote repo |
 | `git branch -a`   | All branches (local + remote)  |
 | `git show-branch` | For quick view                 |
 
-
+----
 #### GIT RESET
 ---
 - undoes at Commit level — moves HEAD, rewrites history
@@ -170,8 +166,6 @@ git reset --hard HEAD~3
 git reset --soft HEAD~4  
 git commit -m "one clean, proper commit"
 ```
----
-
 
 ----
 
@@ -291,9 +285,6 @@ git commit --ammend
 
 ---
 
-
----
-
 #### GIT RESTORE
 ---
 - gamit para i-undo o -revert ang changes sa `working dir or staging area`. 
@@ -321,7 +312,7 @@ git commit --ammend
 #### GIT PULL
 ---
 *june 25, 2026*
-*Use if you already have an exisiting local copy of a certain repo and you want to get the latest changes from the remote.*
+*Use if you already have an existing local copy of a certain remote repo and you want to get the latest changes from the remote.*
 
 ---
 #### GIT CLONE
@@ -329,9 +320,69 @@ git commit --ammend
 *June 25, 2026*
 *Use for first-time download/copy of a certain repo to your local machine*
 
+```
+             Git
+              │
+        git clone/push/pull
+              │
+              ▼
+        ┌───────────┐
+        │ Transport │
+        └───────────┘
+          │       │
+       HTTPS     SSH
+          │       │
+          ▼       ▼
+       Server   Server
+```
+
+>This creates a new directory in the current directory location.
+It uses `HTTPS` as its transport protocol
+```
+git clone https://github/com/username/reponame.git
+```
+
+>This uses `SSH` as its transport protocol 
+```
+git clone ssh://username@server.com:custom_port/path/to/repo.git
+```
+***Note***: You don't necessarily need a dedicated **"Git service"** running on the remote machine.
+It only needs:
+- Git installed on the remote machine
+```
+Your machine                         Remote machine
+─────────────                        ───────────────
+
+git clone
+    │
+    │ SSH connection
+    ├──────────────────────────────► sshd
+    │
+    │                              authenticates user
+    │
+    │                              runs Git command
+    │
+    │◄───────────────────────────── Git data
+    │
+local .git + working tree
+```
+
+>If you want a different folder name
+```
+git clone https://github/com/username/reponame.git reponamecopy
+```
+
+---
+
+#### GIT PUSH
+---
+A command used to upload the local repo to the remote repository
+
+
 ---
 
 ### Bakit isinasama ang .gitignore sa git add. ? 
+---
 -  Ang **`.gitignore`** ay isang _configuration file_ na nagsasabi kay Git kung aling mga files/folders ang hindi dapat i-track.
 - Ang **`.gitignore`** ay hindi lang basta lagayan ng mga ignored files for **`git add.`** . Ito rin ang mag sisilbing automatic rules para sa mga collaborators. To avoid accidentally commit ng build files or secrets 
 - Ang **`.gitignore`** file ay: 
@@ -369,3 +420,23 @@ Usually pointing to branch not directly to commits
 - Branches are pointers
 - `Head` is also a pointer
 - Its because both of them points to commits or branches
+
+---
+### Git Command-Marking a dir as safe
+---
+Overview: *usually this is done when a repo is stored in a portable storage, and plugged into different machines.*
+
+```
+git config --global --add safe.directory yourDriveLetter:/pathToyourRepo
+```
+
+**When to use the command??**
+--when using the **`git status`** and lumabas ang message na ito :
+```
+	`$ git status fatal: detected dubious ownership in repository at 'F:/ObsidianNotes' 
+	'F:/ObsidianNotes' is on a file system that does not record ownership To add an exception for this directory, call:
+```
+
+	git config --global --add safe.directory F:/ObsidianNotes`
+
+---

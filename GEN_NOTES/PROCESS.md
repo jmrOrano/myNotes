@@ -484,6 +484,25 @@ While waiting, there's no reason to waste CPU time.
 ### kill
 ### SIGTERM
 ### SIGKILL
+---
+Immedidately and forcibly terminates a process
+
+- Unconditional — the [[#The kernel's role in process management|kernel]] directly executes it
+- No Cleanup — it is instant therefore not save state
+
+###### Signal 9
+---
+Prefers to `SIGKILL`
+
+```
+kill -9 <PID>             # The standard numeric shortcut
+
+kill -SIGKILL <PID>       # The full text-name alternative
+
+killall -9 <process_name> # Force all running instance of specific program name
+```
+
+ 
 ## Orphan and Zombies
 ## Niceness and Priorities
 ## /proc filesystem

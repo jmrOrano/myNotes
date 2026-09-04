@@ -1,23 +1,63 @@
 
 
-### Enable/Disable "Aggresive Mode" For AMD CPU
-*Date : April 17, 2026*
-*Purpose: To enable toggle for performance flexibility use under the power management*
 
-1. Open Regedit(Registry editor)
-2. Navigate to `Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\be337238-0d82-4146-a960-4f3749d470c7`
-3. Find the `attributes` and set the value to 2
-4. Go advance power settting management in control panel
-5. Find the processor power management and the `Processor Performance Boost Mode` should be visible now.  
-6. Tweak it
 
+
+## **Excel Notes**
+---
+August 28, 2026
+
+##### How auto-numbering even with filtering enabled
+---
+Use the formula: SUBTOTAL
+```
+=SUBTOTAL(103,$column$rowNum:column+rowNum)
+=SUBTOTAL(103,$B$2:B2)
+```
+Note: the `103` is fixed.
+
+
+## **Some "How To" Section**
+---
 ### INSALL LENOVO LEGION TOOL KIT
+---
 *Overview: Mainly for lenovo only*
 Date: `*****` 
 *Purpose: Replace the Lenovo vantage *
 
+### Mount Fat32 drive in WSL
+---
+Create a mount dir
+```
+sudo mkdir /mnt/<driveLetter>
+```
+
+Mount the drive by specifying `drvfs` or `vfat`
+```
+sudo mount -t drvfs F: /mnt/<driveletter>
+```
+*(Replace `E:` and `/mnt/e` with your specific drive letter).*
+
+---
+
+### Bypass the Win 11 sign in/ sign up
+---
+During the setup, Hit `Shift+F10` then type
+```
+ncpa.cpl
+```
+A control panel windows will appear. 
+>Disable the wifi adapter
+
+Back to cmd and type:
+```
+oobe\bypassnro
+```
+
+---
 
 ### UNDERVOLTING MY LAPTOP
+---
 *Overview: Philippines is a hot country. Imagine a laptop running at max load in a room with NO AC and with ambient temperature of 32C during summer.*
 Date: May 01 2026
 Purpose: To cooldown CPU temperature 
@@ -83,7 +123,60 @@ Settings:
 
 ---
 
+### Enable/Disable "Aggresive Mode" For AMD CPU
+---
+*Date : April 17, 2026*
+*Purpose: To enable toggle for performance flexibility use under the power management*
+
+1. Open Regedit(Registry editor)
+2. Navigate to `Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\be337238-0d82-4146-a960-4f3749d470c7`
+3. Find the `attributes` and set the value to 2
+4. Go advance power settting management in control panel
+5. Find the processor power management and the `Processor Performance Boost Mode` should be visible now.  
+6. Tweak it
+
+
+---
+
+## **Troubleshooting Section**
+---
+### Windows Sudden Crashed and Rebooted
+---
+July 07, 2026
+
+Lenovo Ideapad Gaming 3 15ACH6, 
+Windows 11, version 25H2
+
+Overview: Laptop suddenly crashed, display below text about `Page File` , Its too fast i cant read it all. 
+
+As soon as the machine reboots. I directly went to Event Viewer. Under:
+```
+Winddows Logs-->System--->Filter Current Log ---> 
+Logged: Last Hour
+Event Level: Critial , Error
+```
+Found the Event ID 41, Kernel-Power. A plain report not useful.
+
+```
+The system has rebooted without cleanly shutting down first. This error could be caused if the system stopped responding, crashed, or lost power unexpectedly.
+```
+Note: *For faster search, filter to search ff ID  41, 6008, 1001, 27, 29, 7000, 7001, 7011*
+
+Found the Event 1001, A BugCheck Error. Which tells where the dump log is located
+```
+The computer has rebooted from a bugcheck.  The bugcheck was: 0x00000050 (0xffffec8584cf1b30, 0x0000000000000000, 0xfffff80066cadc36, 0x0000000000000002). A dump was saved in: C:\WINDOWS\Minidump\070726-18453-01.dmp. Report Id: 1653a7c8-7867-402e-a924-d72e09b23de9.
+```
+
+I dont know how to read hex. So i directly install WnDbg— a tool for analyzing the dump at `C:\WINDOWS\Minidump\`.
+Open WinDbg as an Admin
+```
+Open the dump file ---> Click analyze.
+```
+i couldnt understand the output, i had to rely to AI. 
+
+---
 ### Fixing boot error in Windows
+---
 *June 21,2026*
 *Machine: Windows 11*.
 ```
@@ -155,49 +248,4 @@ What makes it broken is due to force shutdown:
 
 
 
-### Bypass the Win 11 sign in/ sign up
 
-During the setup, Hit `Shift+F10` then type
-```
-ncpa.cpl
-```
-A control panel windows will appear. 
->Disable the wifi adapter
-
-Back to cmd and type:
-```
-oobe\bypassnro
-```
-
-### Windows Sudden Crashed and Rebooted
-July 07, 2026
-
-Lenovo Ideapad Gaming 3 15ACH6, 
-Windows 11, version 25H2
-
-Overview: Laptop suddenly crashed, display below text about `Page File` , Its too fast i cant read it all. 
-
-As soon as the machine reboots. I directly went to Event Viewer. Under:
-```
-Winddows Logs-->System--->Filter Current Log ---> 
-Logged: Last Hour
-Event Level: Critial , Error
-```
-Found the Event ID 41, Kernel-Power. A plain report not useful.
-
-```
-The system has rebooted without cleanly shutting down first. This error could be caused if the system stopped responding, crashed, or lost power unexpectedly.
-```
-Note: *For faster search, filter to search ff ID  41, 6008, 1001, 27, 29, 7000, 7001, 7011*
-
-Found the Event 1001, A BugCheck Error. Which tells where the dump log is located
-```
-The computer has rebooted from a bugcheck.  The bugcheck was: 0x00000050 (0xffffec8584cf1b30, 0x0000000000000000, 0xfffff80066cadc36, 0x0000000000000002). A dump was saved in: C:\WINDOWS\Minidump\070726-18453-01.dmp. Report Id: 1653a7c8-7867-402e-a924-d72e09b23de9.
-```
-
-I dont know how to read hex. So i directly install WnDbg— a tool for analyzing the dump at `C:\WINDOWS\Minidump\`.
-Open WinDbg as an Admin
-```
-Open the dump file ---> Click analyze.
-```
-i couldnt understand the output, i had to rely to AI. 

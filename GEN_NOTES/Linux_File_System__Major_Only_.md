@@ -94,7 +94,9 @@ tree ~ -L 2      # structured view, 2 levels deep
 #### The .bashrc File
 *Bash Shell Configuration*
 **Location:** `~/.bashrc`
-**When it runs:** It runs Every time you open a new terminal. Read about the [[SSH_Setup#**Uncomplicated Architecture**]] for more
+**When it runs:** 
+- It runs Every time you open a new terminal. 
+- Read about the [[SSH_Setup#**Uncomplicated Architecture**]] for how `/.bashrc` works
 **What it's for:**
 - Setting [[Whatis#The `env` (environment variables)|environment variables]] for your user
 - Creating `alias` shortcuts (e.g. `alias ll='ls -lah'`)

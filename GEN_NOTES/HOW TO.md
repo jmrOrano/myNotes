@@ -41,7 +41,12 @@ July 07, 2026
 
 ---
 ### How to git
-[[Git Workflow & Commands#**Creating a Git repo**| Create your first remote repo]]
+[[Git Workflow & Commands#Initial workflow|How to start with git init]]
+[[Git Workflow & Commands#**Creating a Git repo**| Create remote repo]]
+[[Git Workflow & Commands#GIT RESTORE| How to unstage a file]]
+[[Git Workflow & Commands#GIT CLONE|How to clone a repo]]
+
+
 
 ---
 
@@ -72,7 +77,10 @@ July 07, 2026
 [[Bash_Scripting#How to declare a variable]]
 [[Bash_Scripting#How to use command substitution]]
 [[Bash_Scripting#How to use Positional Parameters]]
+[[Bash_Scripting#PATH|How to export PATH]]
 [[Bash_Scripting#Reading Input|How to read input]]
+[[Bash_Scripting#For loops|How to do for loop]]
+
 
 ---
 
