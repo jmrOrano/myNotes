@@ -1,8 +1,6 @@
 
 
 
-
-
 ## **Excel Notes**
 ---
 August 28, 2026
@@ -137,6 +135,114 @@ Settings:
 
 
 ---
+
+### Timelapse recording
+---
+#### Setup: 
+```
+Machine & OS: Wuindows 11
+Tools: OBS, ffmpeg
+```
+*This setup assumes there is already OBS Installed*
+
+--1. ==Download the ffpmeg== 
+Link: https://ffmpeg.org/download.html#build-windows  
+	- Two options are: `ffmpeg-git-essentials` or `ffmpeg-git-full`
+
+--2. ==Extract the downloaded== 
+Place the extracted folder somwhere easy to access.
+- Inside the folder, there is a `bin` folder which contains:
+	- `ffmpeg.exe`
+	- `ffplay.exe`
+	- `ffprobe.exe`
+
+--3. ==Add the folder dir to the PATH== 
+- Search in windows: `Environment Variables`
+- Inside the `User Variable for <youruser>`, click the `Path`
+- Inside the window of listed `path`, click `new`
+- Paste the `location` where the 3 exe is located : `\C:Users\<youruser>\ffmpeg\bin`
+
+--==4. Verify==
+```
+ffmpeg -version
+```
+
+#### Usage
+
+--1. ==Naviagte to where the recording is==
+```
+cd C:\Users\<youruser>\Vidoes
+```
+
+--2. ==Record normally in OBS==
+No special OBS settings needed. Record at normal fps (e.g. 30fps), stop whenever done. This produces a full-length `.mkv` file — not a frame-interval capture.
+
+--3. ==Run the ffmpeg speed-up command==
+```
+ffmpeg -i input.mkv -filter:v "setpts=SPEED_FACTOR*PTS" -an output_timelapse.mp4
+```
+- `input.mkv` = actual OBS output filename
+- `-an` = strips audio (not needed for timelapse, and hard to sync at high speed anyway)
+- `SPEED_FACTOR` = computed below
+
+#### ===Method used: Post-process speed-up (not frame-interval capture)===
+This is the approach actually implemented. OBS records the full session normally; ffmpeg speeds it up afterward. Simpler, no capture-side scripting/overhead, but full-length video sits on disk while recording (vs. saving only individual frames).
+
+**Formula:**
+```
+speed_factor = target_duration ÷ original_duration_in_seconds
+```
+
+**Real example used (48min 13sec recording → 10sec output):**
+```
+48 min × 60 = 2880 sec
+2880 + 13 = 2893 sec
+
+speed_factor = 10 ÷ 2893 = 0.003456
+```
+==Command:==
+```
+ffmpeg -i input.mkv -filter:v "setpts=0.003456*PTS" -an output_timelapse.mp4
+```
+
+Reference table (speed factor ÷2893, adjust denominator per actual recording length):
+
+| Target output | Speed factor |
+| ------------- | ------------ |
+| 10 sec        | 0.003456     |
+| 15 sec        | 0.005184     |
+| 20 sec        | 0.006912     |
+| 30 sec        | 0.010368     |
+
+---
+#### Reference only: Frame-interval formula (true timelapse capture — NOT the method used)
+
+This is for the *actual* "1 frame every N seconds" capture approach (OBS/ffmpeg grabbing individual frames at intervals, then encoding the image sequence) — different from the speed-up method above. Kept here in case this gets implemented later (more overhead, more setup, but produces literal interval-based frames instead of a sped-up full recording).
+
+```
+TotalFrames = recording_duration_in_sec ÷ interval_capture_per_sec
+Duration = TotalFrames ÷ desired_fps
+```
+
+Example (interval known first):
+```
+1hr (3600s) ÷ 12s per frame = 300 total frames
+300 frames ÷ 30fps = 10 sec output
+```
+
+Or, if duration is decided first, solve backwards for the interval:
+```
+TotalFrames = desired_duration × fps
+Interval = recording_duration ÷ TotalFrames
+```
+
+Example:
+```
+10s × 30fps = 300 frames
+3600s (1hr) ÷ 300 frames = 12 sec per frame
+```
+
+**Next step (not yet implemented):** wrap the speed-up method into a `.bat` file for one-click conversion instead of manual command typing.
 
 ## **Troubleshooting Section**
 ---

@@ -33,3 +33,18 @@ with new resistors:
 - 24mA current
 - but 1 led is still little bit dimmer could it be broken? (with no resistor it measure at 105mA, with resistor, just 5mA
 - all led measured each with 220 ohm resistor is just 5mA??
+
+
+## Chili Experiment
+
+- Seed source: Fresh red chili
+- Seed preparation: Washed + air-dried
+- Drying duration: 2 days
+- Sowing method: Direct soil sowing
+- Container: Paper egg tray
+- Soil: Random soil from leaf/yard waste burning area
+- Date sown: 2026-09-06
+### Observations
+- Expected germination: ~7–21 days
+- First sprout: TBD
+- Germination rate: TBD

@@ -153,10 +153,43 @@ Note: "Sex" wasn't previously discussed in the audit or interview-flow notes abo
 **Important distinction confirmed: CSV columns ≠ certificate template variables.** Not every stored field needs to appear in the printed certificate text. Specifically: Sex will be collected during the interview and stored in the CSV (for record-keeping/searchability), but will NOT be inserted into the certificate wording itself — the certificate continues using the existing relationship-word / neutral phrasing logic already established in v4, regardless of the stored Sex value. This distinction (data log is a superset of what's printed) should be kept in mind as more columns get defined.
 
 ---
+## **IMPLEMENTATION LOG — Core loop build (Phase 1)**
+---
+*Marks the transition from architecture planning into actual running code.*
+
+**Setup:**
+- Project location: `F:\indigency-automation` (separate from the Obsidian vault — this is the actual codebase)
+- Git repo initialized for the project (for potential future GitHub upload)
+- Stack: Python + Flask (chosen over Node.js despite an existing Node/Express test project, because python-docx will be needed later for certificate generation — one language for the whole backend, fewer moving parts)
+- Installed: Flask, python-docx
+
+**What's built and confirmed working (tested live on the actual laptop, not just in a sandbox):**
+- Flask server (`app.py`) serving a single-page interview form (`templates/index.html` + `static/app.js`)
+- CSV-backed storage (`data/records.csv`) — create/update records, auto-assigns record IDs
+- Search by full name (existing record lookup)
+- Certificate text generation (preview only — not yet a real .docx) implementing the full v4 logic: household head vs subject/relationship split, guardian handling, cohabiting+independent dependency rule for household counting
+- Client-side + server-side input validation (age, income, spouse/guardian ages must be numeric — added after a real bug was caught: a non-numeric age silently produced broken output with no error shown)
+
+**Bugs found through real usage and fixed:**
+1. Non-numeric age/income accepted silently, produced broken certificate text with no error — fixed with validation on both frontend (before the request is even sent) and backend (defense in depth)
+2. Income wasn't formatted as currency (e.g. showed `2500` instead of `2,500.00`) — fixed with a `format_currency()` helper
+3. "supporting 1 members" appeared even when the applicant is completely alone (no spouse, no guardian, no household members) — fixed: the "supporting N members" clause is now omitted entirely when the total household count is exactly 1. Rule confirmed: this is based on the actual household count, NOT on marital status label (e.g. a widowed person living alone should also omit this clause)
+4. Age fields were missing "years old" (e.g. showed "JUANA SANTOS DELA CRUZ, 44" instead of "...44 years old") — fixed across all four places ages appear: subject, spouse, guardian 1, guardian 2
+
+**Purpose/Institution dropdown audit (from the 748-record file):**
+Replaced the original 10-category purpose grouping with two separate, audited dropdowns (each with an "Others" free-text fallback) after realizing the original categories were too coarse to match real certificate wording:
+- **Purpose labels** (16 options incl. Others): Educational Assistance, Scholarship Program, Medical Assistance, SPES, Financial Assistance, Securing Certificate of Live Birth, Late Registration of Birth, Correction of Entry (R.A. 9048), Burial Assistance, Tulong Puhunan Program, Legal Assistance, Senior High School Voucher Program, ESC Program, TES, Whatever legal purpose (generic)
+- **Institutions** (13 options incl. Others): Provincial Government of Aurora, CHED-TDP, TESDA Baler, MCRO San Luis, MHO San Luis, Aurora Memorial Hospital, LGU San Luis, Office of the Congressman, PSWDO, PCA, DOST, ASCOT — frequency-ranked from the actual 748 records (Provincial Government of Aurora was by far the most common, ~204 occurrences)
+- Kept as two independent dropdowns rather than one combined list, since a purpose (e.g. Scholarship) isn't tied to one fixed institution in practice
+
+**Currently in progress:** manual audit of exact certificate wording per purpose/institution combination. Turned out to be harder than expected — the 748 records don't follow one uniform phrasing even within the same purpose category (e.g. "issued for the purpose of availing X" vs "issued for X" vs special cases like the Board/Bar Exam Review certificate referencing a specific Municipal Ordinance). This confirms the earlier design principle that purpose wording is genuinely case-by-case and not fully automatable — the current generation logic produces a structurally correct but not always word-perfect certificate; manual review/edit before printing is still expected at this stage.
+
+---
 ## **Open questions — not yet decided**
 ---
 - [x] **Storage format for the data log**: **CSV — decided.** Meets both requirements cleanly: easy to open (Excel/any text editor, no special tooling), easy to manually aggregate later across devices if that ever becomes necessary. Note: this is separate from the certificate archive .docx — the data log (CSV) is the searchable/editable record; the .docx is the printable/archival output. Implementation note for later: the household members list (dynamic, variable-length per record) doesn't flatten naturally into a single CSV row — will likely need a second linked CSV (e.g. members.csv with a record ID column) rather than forcing it into one row. Not a blocker, just a detail for the build phase.
 - [ ] **Data sensitivity**: this is real resident PII (income, family composition, address) — needs at least basic protection even as local storage, since it's beneficiary/VAW-adjacent data
 - [ ] **Backup**: what happens if the laptop running this fails/is lost? Old records were at least on paper/Word files before — need to not regress on durability
 - [ ] Prototype v4 itself still needs wider testing against more of the 748 records to catch edge cases not yet seen (e.g. purpose types beyond the ones already categorized)
+- [ ] **Manual wording audit (in progress)**: going through the 748 records purpose-by-purpose / institution-by-institution to capture the exact phrasing each combination actually uses, since a single generic template doesn't match real usage. Findings to be logged here as they come in.
 

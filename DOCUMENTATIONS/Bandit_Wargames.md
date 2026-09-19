@@ -1269,3 +1269,94 @@ Found this  pattern
 ```
 git clone ssh://git@server.com:custom_port/path/to/repo.git
 ```
+
+---
+
+## Level 29 to 30
+---
+Level goal:
+```
+There is a git repository at `ssh://bandit30-git@bandit.labs.overthewire.org/home/bandit30-git/repo` via the port `2220`. The password for the user `bandit30-git` is the same as for the user `bandit30`.
+
+From your local machine (not the OverTheWire machine!), clone the repository and find the password for the next level. This needs git installed locally on your machine.
+```
+
+All the previous levels are instructions but uses different [[Git Workflow & Commands|git commands]] to get the password. 
+This one is a bit tricky for a beginner.
+
+Because attempting the ff commands will show nothing
+```
+git reset
+git restore
+git status 
+git diff
+git log --oneline 
+```
+
+The one that worked where it displays all is:
+```c
+git log --oneline --graph --all
+
+* 0bf8160 (origin/dev) add data needed for development
+* 1b95ced add gif2ascii
+| * a0e9e9c (origin/sploits-dev) add some silly exploit, just for shit and giggles
+|/  
+* b607fba (HEAD -> master, origin/master, origin/HEAD) fix username
+* 84c16f8 initial commit of README.md
+
+```
+There are 3 branches:
+- `origin/dev` 
+- `origin/sploits-dev`
+- `origin/master` ——where the HEAD currently is
+```
+                 0bf8160  ← origin/dev
+                /
+84c16f8 → b607fba
+                \
+                 a0e9e9c  ← origin/sploits-dev
+```
+with
+```
+git show <id>
+```
+it shows the password
+
+---
+
+## Level 30 to 31
+---
+Level Goal:
+```
+There is a git repository at `ssh://bandit30-git@bandit.labs.overthewire.org/home/bandit30-git/repo` via the port `2220`. The password for the user `bandit30-git` is the same as for the user `bandit30`.
+
+From your local machine (not the OverTheWire machine!), clone the repository and find the password for the next level. This needs git installed locally on your machine.
+```
+
+Same instruction but this time the repo seems like doesnt have a commit history or branch:
+```c
+linuxuser@linuxuser:~/bandit/repo30$ git log --oneline --graph --all
+* 929c564 (HEAD -> master, origin/master, origin/HEAD) initial commit of README.md
+```
+
+I then checked the Git references:
+```
+git show-ref
+
+929c564... refs/heads/master
+929c564... refs/remotes/origin/HEAD 
+929c564... refs/remotes/origin/master 
+6a76bc8... refs/tags/secret
+```
+The important part was:
+```
+6a76bc8... refs/tags/secret
+```
+This revealed that the repository had a **tag named** `**secret**` pointing to a different Git object from the `master` branch.
+
+Confirmed the tag with:
+```
+git tag
+secret
+git show secret
+```

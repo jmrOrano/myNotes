@@ -8,8 +8,8 @@
 >
 
 
-# **HOW TO/HOW I**
-## Things to do after fresh install ng linux
+## **HOW TO/HOW I**
+### Things to do after fresh install ng linux
 *03/28/2026*
 *Linux mint cinnamon 22.3  Zena*
 *Purpose : for easy future set up*
@@ -82,7 +82,7 @@
 	- No firewall
 ---
 
-## Get Fullscreen in Vbox linux
+### Get Fullscreen in Vbox linux
 *03/28/2026*
 *Mainly for Ubuntu*
 *Purpose : avoid repetition at googling*
@@ -105,7 +105,7 @@ Just click `view` then `Fullscreen Mode`
 ---
 
 
-## CHANGES IN GRUB FILE
+### CHANGES IN GRUB FILE
 *03/29/2026*
 Purpose : *To see the grub menu and doesnt need to press shift or esc button every time system boots. Mainly for changing kernel version*
 
@@ -122,7 +122,7 @@ My changes are:
 `GRUB_TIMEOUT_STYLE=menu`
 `GRUB_TIMEOUT=5`
 
-## Know battery health via terminal
+### Know battery health via terminal
 *June11-2026*
 ##### **Via Upower**
 Find battery's device path by running
@@ -138,7 +138,7 @@ Or you can use the [[Whatis#**The `xargs`**|xargs]] for seamlessnes:
 upower -e | grep -i | xargs upower -i
 ```
 
-## Eject a flashdrive
+### Eject a flashdrive
 
 >Use the [[Linux_File_System__Major_Only_#The *`lsblk`* command|lsblk]] command
 ```Bash
@@ -169,7 +169,7 @@ sudo udisksctl power-off -b /dev/sdc
 
 ---
 
-## Partition a second disk
+### Partition a second disk
 *June13, 2026*
 ```
 Machine: Virtual Machine | Linux Mint Zena Ubuntu base
@@ -281,7 +281,7 @@ UUID=YOUR-UUID-GOES-HERE /mnt/disk2 ext4 defaults  0 2
 - `0`                     - Dump field — 1 means dump, 0 means dont.
 - `2`                     - File system check — 0 means check, 1 means check first(reserved for root `/`), 2 means check after root.
 
-## Making a swap partition
+### Making a swap partition
 *June 16,2026*
 
 ### METHOD FOR USING THE ENTIRE DISK
@@ -337,7 +337,7 @@ UUID=your-ID-goes-here none swap sw 0 0
 
 ---
 
-## Using terminator
+### Using terminator
 *June 30, 2026*
 *Machine: Linux Mint, Cinnamon, Ubuntu Noble Base 24.0*
 *Purpose: For basic but useful functionality that the regular terminal doesnt have — mainly the side by side terminal in a single window.*
@@ -406,9 +406,12 @@ ctrl+b `[release]` then arrow key
 ```
 
 
-# PROBLEMS ENCOUNTERED
 
-## Cant established a connection to server from different network across internet.
+
+
+## Problems Encountered:
+---
+### Cant established a connection to server from different network across internet.
 ---
 *Overview: I Setup an [[SSH_Setup|SSH Server]]  and a [[SETUP MINECRAFT SERVER IN DOCKER|Minecraft Server]]. Both are port forwarded.*
 - Machine : Lenovo thinkpad L480,
@@ -420,7 +423,7 @@ ctrl+b `[release]` then arrow key
 	- Using IPV4 
 	- Not lock behind in CGNAT
 
-### The anomaly: 
+#### The anomaly: 
 ---
 - **When accessing the server from different network across the internet, its not reaching the destination**
 ```
@@ -465,7 +468,7 @@ C:\Users\orano>
 - The anomaly is different network to network. Some able to connect other network cant. 
 
 
-### THE CONCLUSION (most likely)
+#### THE CONCLUSION (most likely)
 ---
 **Most likely the internal routing issue with my ISP**
 - With the use of cloudflare warp, the request gets redirected to the routing of the cloudflare. 
@@ -474,7 +477,7 @@ C:\Users\orano>
 
 ---
 
-## WARPINATOR CANT CONNECT
+### WARPINATOR CANT CONNECT
 *06/06/2026*
 *Overview*: the warpinator app in linux is not connecting to other devices. 
 
@@ -501,7 +504,7 @@ sudo ufw reload
 
 ---
 
-## Fixing sluggish and slow response trackpad (NOT RESOLVE)
+### Fixing sluggish and slow response trackpad (NOT RESOLVE)
 *03/28/2026*
 *Machine : Thinkpad L490 ***
 *Kernel : 6.8.0-106 -generic*
@@ -536,7 +539,7 @@ Didnt work : reloading psmouse module
 
 ---
 
-## Fix if the colors in the bash shell is gone.
+### Fix if the colors in the bash shell is gone.
 *June 28,2026*
 *Overview: I did a practice using reverse shell using netcat, Used the named FIFO method and the VM served as an outbound endpoint for connection. But, somehow i dont what happened after i exited the session that the colors for the terminal is gone.
 
@@ -573,7 +576,7 @@ export PS1="\[\e[1;32m\]\u@\h:\w\$ \[\e[0m\]"
 ```
 
 
-## snapd not installing via apt
+### snapd not installing via apt
 Planning to install speedtest via snap so im installing snapd first
 ```bash
 sudo apt update
@@ -629,7 +632,7 @@ sudo snap install speedtest
 ```
 
 ---
-## Dynamic Port forwarding not working when accessing localhost
+### Dynamic Port forwarding not working when accessing localhost
 ---
 Browser: Firefox
 

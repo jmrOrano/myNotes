@@ -8,7 +8,6 @@
 >
 >**SETUPS**
 >- [[#Initial workflow]]
->- [[#Git Command-Marking a dir as safe]]
 >- [[#Creating a Git repo]]
 >
 >**COMMANDS**
@@ -23,6 +22,7 @@
 >
 >**OTHERS**
 >[[#Bakit isinasama ang .gitignore sa git add. ?]]
+>[[#Git Command-Marking a dir as safe]]
 >
 >
 >
@@ -71,30 +71,6 @@ Working Dir  →  git add  →  Staging Area  →  git commit  →  History (per
 | `git commit -m "Your message here" `                                                               | `-m` = ang message or notes mo<br>                                                        |
 | [[#GIT PUSH\|git push]]                                                                            | to share it online                                                                        |
 
----
-#### **Creating a remote Git repo**
-`Github` is one the platform that everyone can use to upload their repo publicly
-1. Go to Github
-2. Click **New Repo**
-3. Do not initialize or Do initialize *ReadMe*
-4. Then Done
-5. You will see instructions like:
-```Bash
- git remote add origin https://github.com/username/project.git
-	 #the `origin` is NOT special, its just like a shortcut name
-	 #its like stating to the local repo its new remote home for the 
-	 
- git branch -M main  
-	 #it renames the current branch to `main` 
-	 #uncessary if you branch name is already main
-	 
- git push -u origin main  
-	 # push the local branch named `main` to remote origin
-	 #the flag -u means it remembers the connection
-	 #with flag -u you can do just `git push` next time 
-	 #the `origin` is NOT special, its just like a shortcut name
-
-```
 
 ---
 
@@ -114,6 +90,10 @@ Working Dir  →  git add  →  Staging Area  →  git commit  →  History (per
 | `git diff <commit>`<br><br>- for `<commit>` arguments.  Ay pwede ang `commit hash` , `partial hash`,  or `tags` or `main` or `branch name`<br> | -show diff **working dir + stageing area vs specified commit**                                              |
 | `git diff commit1 commit2`                                                                                                                     | -compare two commits                                                                                        |
 | `git diff --colors-words`                                                                                                                      | -ipakita lang ang pagbabago sa words hindi buong line diff                                                  |
+|                                                                                                                                                |                                                                                                             |
+| `git show <commitID>`                                                                                                                          | inspecting history                                                                                          |
+|                                                                                                                                                |                                                                                                             |
+| `git show-ref`                                                                                                                                 |                                                                                                             |
 
 ---
 ##### LISTING BRANCHES
@@ -133,7 +113,7 @@ Working Dir  →  git add  →  Staging Area  →  git commit  →  History (per
 >**Does `git reset` change the working directory?**
 Depends on the flag — this is actually the core difference between them:
 
-- **`--soft`** — moves HEAD only. Your files in the working directory and staging area are **untouched**
+- **`--soft`** — moves [[#Difference of `main`, `HEAD`, `pointer`|Head]] only. Your files in the working directory and staging area are **untouched**
 - **`--mixed`** _(default, if you don't pass a flag)_ — moves HEAD and clears the staging area, but working directory files are **untouched**
 - **`--hard`** — moves HEAD, clears staging, AND **overwrites your working directory** to match the commit. Changes are gone 
 
@@ -287,9 +267,10 @@ git commit --ammend
 
 #### GIT RESTORE
 ---
-- gamit para i-undo o -revert ang changes sa `working dir or staging area`. 
+- used to undo or revert changes in the `working dir or staging area`. 
 - not for undoing commits. Refer [[#**Undoing Commits**|here]] for that,
-- 
+- **is designed to manipulate files** (working directory and staging area) without touching your commit history,
+
 
 ***Basic Concept***	
 - May dalawang lugar kung saan pwede may changes:
@@ -378,6 +359,72 @@ git clone https://github/com/username/reponame.git reponamecopy
 ---
 A command used to upload the local repo to the remote repository
 
+##### **Remote Github method**
+---
+`Github` is one the platform that everyone can use to upload their repo publicly
+1. Go to Github
+2. Click **New Repo**
+3. Do not initialize or Do initialize *ReadMe* (For a beginners workflow)
+4. Then Done
+5. You will see instructions like:
+```Bash
+ git remote add origin https://github.com/username/project.git
+	 #the `origin` is NOT special, its just like a shortcut name
+	 #its like stating to the local repo its new remote home for it
+	 #you could do:
+	 #git remote add randomBS https://github.com/username/project.git
+	 
+ git branch -M main  
+	 #it renames the current branch to `main` 
+	 #uncessary if you branch name is already main
+	 
+ git push -u origin main  
+	 # push the local branch named `main` to remote origin
+	 #the flag -u means it remembers the connection
+	 #with flag -u you can do just `git push` next time 
+	 #the `origin` is NOT special, its just like a shortcut name
+
+```
+
+---
+##### **Self-hosted remote**
+---
+With GitHUb, we normally create the remote repository through the Webpage UI
+
+>==**Creating bare repository in personal server**==
+
+Abstract Architecture:
+```
+             Git
+              │
+        git clone/push/pull
+              │
+              ▼
+        ┌───────────┐
+        │ Transport │
+        └───────────┘
+          │       │
+       HTTPS     SSH
+          │       │
+          ▼       ▼
+       Server   Server
+```
+
+> In the ssh server side:
+```bash
+mkdir -p ~/git
+cd ~/git
+git init --bare <project-name.git>
+```
+`--bare` is specifically meant to be a remote repo. It DOENST HAVE A WORKING DIRECOTRY  containing the actual project files
+
+>On local machine side
+ Add the server as the remote:
+```bash
+git branch -M main
+git remote add randomBS username@your-server:~/git/my-project.git
+git push -u randomBS main
+```
 
 ---
 

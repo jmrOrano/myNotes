@@ -2,5 +2,6 @@
   "readableLineLength": false,
   "showLineNumber": true,
   "showInlineTitle": true,
-  "useMarkdownLinks": false
+  "useMarkdownLinks": false,
+  "alwaysUpdateLinks": false
 }

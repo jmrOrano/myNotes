@@ -339,6 +339,7 @@ Or you can make the code shorter by doing `read -p`
 read -p "What is your name? " name
 echo "Your name is: ${name}"
 ```
+
 >Other options/flags combination to use are:
 - `-s -p` — Silent mode: Hides characters (useful for password input)
 - `-t 5 -p` — Enforce timeout in 5 seconds if no input is detected. (common examples are quizzes)

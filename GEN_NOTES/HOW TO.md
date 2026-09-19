@@ -42,11 +42,17 @@ July 07, 2026
 ---
 ### How to git
 [[Git Workflow & Commands#Initial workflow|How to start with git init]]
-[[Git Workflow & Commands#**Creating a Git repo**| Create remote repo]]
-[[Git Workflow & Commands#GIT RESTORE| How to unstage a file]]
 [[Git Workflow & Commands#GIT CLONE|How to clone a repo]]
 
-
+You accidentally added a file to stage? [[Git Workflow & Commands#GIT RESTORE|Use git restore --staged]]
+You want to undo changes in your working dir (not added yet)? [[Git Workflow & Commands#GIT RESTORE|Use git restore]]
+You committed but there's a typo, and it was just now? [[Git Workflow & Commands#GIT COMMIT --AMEND|Use git commit --amend]]
+You committed, but the problem is a few commits back? [[Git Workflow & Commands#GIT RESET|Use git reset]]
+You just want to look at an old commit, no editing? [[Git Workflow & Commands#GIT SWITCH|Use git switch --detach]]
+You want to create or move to a branch? [[Git Workflow & Commands#GIT SWITCH|Use git switch]]
+You want to see what changed before you commit? [[Git Workflow & Commands#FOR VIEWING AND COMPARING|Use git diff]]
+You want to send your local commits to the remote repo? [[Git Workflow & Commands#GIT PUSH|Use git push]]
+You want to get the latest changes from a remote repo to what you already have locally? [[Git Workflow & Commands#GIT PULL|Use git pull]]
 
 ---
 
