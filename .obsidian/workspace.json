@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "1a48c7f35cd47b81",
+        "id": "7655e2aca791a04f",
         "type": "tabs",
         "children": [
           {
-            "id": "68836da95d51c87b",
+            "id": "acb277460892cbc6",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -32,7 +32,55 @@
             }
           },
           {
-            "id": "d688052ec7d62a4e",
+            "id": "0a4c438ec5053f7d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "microcontrollers-idea/Components and Modules.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Components and Modules"
+            }
+          },
+          {
+            "id": "d90aaf1cc1f37af4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - How to.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Nextcloud AIO - How to"
+            }
+          },
+          {
+            "id": "b0dba0ea990e8776",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -55,7 +103,8 @@
               "title": "Libraries"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -115,7 +164,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 404.16926193237305
   },
   "right": {
     "id": "6b367cb62b5d1f38",
@@ -230,35 +279,37 @@
       "broken-links:View broken links": false
     }
   },
-  "active": "68836da95d51c87b",
+  "active": "d90aaf1cc1f37af4",
   "lastOpenFiles": [
-    "microcontrollers-idea/Libraries.md",
-    "microcontrollers-idea/ProjectTemp.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Troubleshooting Log.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - How to.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Overview & Basic Setup.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Cloudflare Domain Setup.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Cloudflare + NPM.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Cloudflared Tunnel.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Fail2ban & Security.md",
     "microcontrollers-idea/Study&Learn_Section.md",
-    "microcontrollers-idea/dht22-u8g2-conflict-debugging.md",
     "microcontrollers-idea/Code_Artifacts.md",
-    "microcontrollers-idea/Mistakes.md",
-    "Untitled.md",
-    "microcontrollers-idea/dht22-u8g2-conflict-debugging (1).md",
+    "microcontrollers-idea/Components and Modules.md",
+    "microcontrollers-idea/Libraries.md",
+    "GEN_NOTES/Intro.md",
     "microcontrollers-idea/Communication Protocols.md",
     "GEN_NOTES/Bash_Scripting.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
+    "GEN_NOTES/Linux_File_System__Major_Only_.md",
+    "microcontrollers-idea/dht22-u8g2-conflict-debugging.md",
+    "GEN_NOTES/Tools.md",
     "GEN_NOTES/HOW TO.md",
-    "DOCUMENTATIONS/Bandit_Wargames.md",
-    "general_idea/Cert of Indigency Audit.md",
-    "general_idea/Indigency-Cert-Automation.md",
-    "SECURITY/OBFUSCATION_GUIDE.md",
-    "SECURITY/RANDOM NOTES FOR NOW.md",
-    "JARGONS.md",
+    "DOCUMENTATIONS/SSH_Setup.md",
+    "AgriculturalNotes/Germination.md",
+    "AgriculturalNotes/Chili Germination.md",
     "temporary-note.md",
-    "GEN_NOTES/GIT/Git - Concepts.md",
-    "GEN_NOTES/GIT/Git - Daily Workflow.md",
-    "GEN_NOTES/GIT/Git - Inspecting.md",
-    "GEN_NOTES/GIT/Git - Setup.md",
-    "GEN_NOTES/Git Workflow & Commands.md",
-    "GEN_NOTES/GIT/Git - Undo (After Commit).md",
-    "GEN_NOTES/GIT/Git - Undo (Before Commit).md",
+    "AgriculturalNotes",
+    "microcontrollers-idea/Balcony-Gardening.md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO",
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER) - CLOUDFLARE SECTION.md",
+    "DOCUMENTATIONS/SIEM Setup.md",
     "GEN_NOTES/GIT",
-    "GEN_NOTES/Feynman-Technique.md",
     "general_idea",
     "microcontrollers-idea",
     "Pasted image 20260811194808.png",
@@ -266,8 +317,6 @@
     "path/to",
     "path",
     "ETHICAL_HACKING",
-    "Untitled 1.base",
-    "Untitled.base",
-    "AI_NOTES/practical_obfuscation.py"
+    "Untitled 1.base"
   ]
 }

@@ -209,6 +209,8 @@ Generates:
 >	Weather API ——> Local Sensor + Outdoor Weather
 
 This is where the actual data correlation comes into play.
+And will perform "differential or delta analysis"
+
 
 ---
 
@@ -420,3 +422,29 @@ Soldering iron, solder, flux, perfboard — only needed once circuit is stable a
 - Eventually: a ventilated enclosure
 
 **Not needed yet**: soldering iron, solder, flux, perfboard, custom PCB — see Prototyping Platform decision above.
+
+---
+
+# Method of Execution
+---
+
+## Core idea: build through Phase 5 first, then start official logging
+---
+The plan is to treat Phase 1 to Phase 5 [[#Can this project scale to progressively harder?||(Read this) ]]as a build-and-learn stage, not as the real data collection. This means every reading gathered while wiring up the sensor, testing the display, testing the transport method, and testing sensor placement is just practice data — not the "official" dataset. The official, year-long logging only begins once all 5 phases are working together and stable.
+
+**Why do it this way:**
+
+- Every time something changes in the system — a new sensor, a new field being logged, a different way of storing data — it creates a break or inconsistency in the dataset if logging already "officially" started. Fixing or improving the system while also trying to keep a clean permanent record at the same time becomes messy fast.
+- If logging starts too early (like right after Phase 1), the dataset would carry all the growing pains of the project: gaps from testing, inconsistent formats, missing weather data for the early months since that only gets added in Phase 5.
+- By keeping the build stage completely separate from the official run, the messy part (failing, fixing, changing components) never touches the "real" data. Once Phase 5 works, the architecture is already proven, and the data collected from that point on can be trusted as consistent from day one to the end of the year.
+- In short: better to be unstable while nobody is counting on the data yet, than to be unstable while trying to maintain a serious dataset at the same time.
+
+## Reminder: perfect is the enemy of started
+---
+The risk of this approach is getting stuck trying to make Phase 5 "perfect" before ever really starting. There will always be one more thing that feels worth improving — better sensor, better wiring, better code — and if that mindset isn't kept in check, the official logging might never actually begin.
+
+**Why this matters:**
+
+- The goal of Phase 1-5 is not to build something flawless, it's to build something stable and working. Stable is enough to start. Waiting for perfect usually just means waiting forever, since there's always something more to improve.
+- A simple way to avoid this trap is to set a clear, minimum checklist of what "done enough" looks like before moving to official logging (e.g. sensor placement finalized, transport working reliably, storage format decided, weather API connected). Once that checklist is met, start — even if the system isn't the most optimized version it could be.
+- Improvements can still happen later, but they happen as intentional, tracked changes to an already-running project, not as an excuse to keep delaying the actual start.

@@ -139,7 +139,7 @@ Confirmed constraints:
 
 **Certificate generation — resolved:**
 - Signature block: only ONE social worker signs per certificate (not three, as first assumed — confirmed by auditing the actual 748 records: one name is on any given certificate, but it rotates between 3 known social workers depending on who's on duty at the time). Implementation: a dropdown to pick which of the 3 to place in the signature block — no complex multi-signature layout needed.
-- Archive behavior (the trickiest requirement): the office's current practice is one continuously-growing .docx file where every certificate is a separate page (separated by a page break), searched via Word's Ctrl+F. **This exact behavior is what the script will replicate** — confirmed with python-docx: the script opens the existing big archive file, appends a new page break + the new certificate's content at the end, saves. Same file, same Ctrl+F search workflow, just automated instead of manual copy-paste. No separate single-page files needed — printing still means opening the archive and printing the relevant page, same as today.
+- ~~Archive behavior~~ **SUPERSEDED — see "Archive decision reversed" in the implementation log below.** (Original plan was one continuously-growing .docx with page breaks per certificate, mirroring the office's manual Ctrl+F workflow. Reversed to one .docx file per client after direct experience with the manual file's performance degrading at scale.)
 - "Change of signatory after cert is ready but before issuance" (raised as a nice-to-have, not urgent): since the interview data is logged separately from the generated document, this becomes a non-issue — just regenerate the certificate from the same logged data with a different signatory selected. No special mechanism needed beyond keeping the data log intact.
 
 **CSV column structure — core identity fields locked in (batch 1 of N):**
@@ -183,6 +183,37 @@ Replaced the original 10-category purpose grouping with two separate, audited dr
 - Kept as two independent dropdowns rather than one combined list, since a purpose (e.g. Scholarship) isn't tied to one fixed institution in practice
 
 **Currently in progress:** manual audit of exact certificate wording per purpose/institution combination. Turned out to be harder than expected — the 748 records don't follow one uniform phrasing even within the same purpose category (e.g. "issued for the purpose of availing X" vs "issued for X" vs special cases like the Board/Bar Exam Review certificate referencing a specific Municipal Ordinance). This confirms the earlier design principle that purpose wording is genuinely case-by-case and not fully automatable — the current generation logic produces a structurally correct but not always word-perfect certificate; manual review/edit before printing is still expected at this stage.
+
+---
+## **IMPLEMENTATION LOG — Phase 2 (real .docx generation)**
+---
+*Covers the transition from text-preview-only to actual downloadable, letterhead-formatted Word documents.*
+
+**Approach:** rather than recreate the office letterhead (seal + DSWD logo + header text) from scratch, JohnMark built two "empty shell" .docx files himself in Word — correct margins, paper size, header/logo already in place — and supplied them alongside the original 748-record archive for reference. `docx_generator.py` opens a fresh copy of the relevant shell per generation and appends the certificate body + signature block programmatically. This split (shell = visual letterhead, code = structural content) avoided the fragility of trying to rebuild a Word header/logo purely from python-docx.
+
+**Signatories — PhilHealth vs General Indigency differ:**
+- General Indigency: name + title only ("Social Worker")
+- PhilHealth Incapable: name + title + License No. + Valid Until — a 4-line signature block. Title also differs per person, not always "Social Worker":
+  - CHRISAN JOYCE P. DELOS SANTOS — Social Worker — License No. 0038895 — Valid until January 2029
+  - MYLIN A. LUCQUIAO — Social Worker — License No. 0010659 — Valid until April 2026
+  - NIMFHA G. JACINTO — MSWDO — License No. 0011195 — Valid until May 2029
+
+**Formatting bugs found and fixed (through direct screenshot comparison against expected output):**
+1. `KeyError: no style with name 'No Spacing'` — the shell files don't have that built-in Word style defined until it's actually been used once in the document. Fixed by setting paragraph spacing (space_before/after = 0) directly rather than depending on a named style existing.
+2. PhilHealth checkbox turned out to be a drawing/inline-shape object in the original, not a text character — not practically reproducible via python-docx. Replaced with Unicode ☐/☒ characters, close enough visually and far simpler/more reliable.
+3. Paragraph indentation ("THIS IS TO CERTIFY...", "THIS CERTIFICATION...") is a genuine paragraph-level `first_line_indent` (0.5") in the original, not literal leading spaces — audited directly from the source docx's XML and matched exactly.
+4. Signature block wasn't spaced/positioned correctly at first — fixed with `left_indent` (2.5") combined with center alignment, matching the audited original.
+5. Excess blank paragraphs between "CERTIFICATE OF INDIGENCY" and "TO WHOM IT MAY CONCERN:" — partly leftover in the shell file itself (5 blank paragraphs, trimmed down to 2 via a one-off script) and partly a redundant blank line the generator code was also adding — both fixed.
+6. Font wasn't reliably Arial 12pt even after JohnMark set it in the shell's "Normal" style in Word — turned out the shell's Normal style had no font *name* set (only a size), so Word fell back to a system default. Fixed by setting Arial 12pt directly on every run in code, rather than depending on the shell's style being configured correctly.
+
+**Bold/superscript formatting (per explicit spec):** "TO WHOM IT MAY CONCERN:", all names (subject/spouse/guardian/signatory) wherever they appear, and the literal words "THIS CERTIFICATION" (not the whole sentence) render bold; ordinal day suffixes (1st/2nd/3rd/4th...) render as true superscript. Implemented via a `_add_mixed_para()` helper that splits a line into multiple runs at the matched substrings, since a plain paragraph can't have mixed formatting — `generate_certificate_text()` in `app.py` now also returns a `bold_names` list alongside the text, so the docx generator doesn't have to re-parse/guess which substrings are names.
+
+**New wording rule — guardian marital status (single applicant living with guardian):** mirrors the subject's own marital-status wording logic, but applied to the guardian(s) instead:
+- One guardian only → ask Widowed or Separated → renders as a parenthetical suffix, e.g. "(Widowed)"
+- Two guardians → ask Legally married or Not legally married → "spouses" prefix (no parentheses — corrected from an earlier "(spouses)" formatting mistake) if married, "(not legally married)" suffix if not
+This was missed in the original interview-flow audit because it's a distinct question from the subject's own civil status — it only comes up when the subject is single and dependent on two-parent or single-parent guardians.
+
+**Archive decision reversed:** the original plan (see CHECKPOINT above) was one continuously-growing .docx archive with a page break per certificate, mirroring the office's current manual Ctrl+F workflow. This is now explicitly abandoned — JohnMark reported direct experience with that pattern degrading badly in Word as the file scales to hundreds of pages. Since the CSV data log already provides fast, real search (no need to page through a huge Word doc), the actual design is simply **one standalone .docx file per certificate**, which is what `/api/generate_docx` already produces. No further "append" work is needed — this part of the original plan is complete, just different from what was originally scoped.
 
 ---
 ## **Open questions — not yet decided**

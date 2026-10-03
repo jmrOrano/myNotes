@@ -167,22 +167,43 @@ ssh-keygen -t ed25519 -C "yourComment"
 	   Press enter to accept the default location.
 	   
    **Then it will ask:**
-	`Enter passphrase (empty for passphrase)`	
+	`Enter passphrase (empty for no passphrase)`	
 	Enter a passphrase for extra security or leave empty for convenience
 	
-   Result: Two files are actually created in `~/.ssh/`:
-	`id_ed25519` -> **private key** (keep it secret)
-	`id_ed25519.pub` -> **Public key** (to share with server)
+   Result: Two files are actually created in `~/.ssh/` **(on the client machine)**:
+	`id_ed25519` -> **private key** (keep it secret, NEVER leave the client machine, do not copy/send it anywhere)
+	`id_ed25519.pub` -> **Public key** (safe to share, this is the only one you send to the server)
 
 2.**Copy the public key to the ssh server**
+
+   `theIp` here is the **server/target machine** (not the client), and the path on the server side where the public key ends up is:
+   `/home/linuxuser/.ssh/authorized_keys`
+
 ```bash
 ssh-copy-id linuxuser@theIp
 ```
-	 
-  Manual method (alternative)
+   **Breakdown:** this copies the contents of `id_ed25519.pub` (client) into `~/.ssh/authorized_keys` (server, under the `linuxuser` account). If the `.ssh` folder or `authorized_keys` file doesn't exist yet on the server, the command creates them automatically with the correct permissions.
+
+   Manual method (alternative — if `ssh-copy-id` isn't available, e.g. on minimal installs)
 ```Bash
   cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
   chmod 600 ~/.ssh/authorized_keys
+```  
+
+   SCP method (alternative — transfer the pubkey file first, then append it on the server)
+```Bash
+  # on the client, copy the pubkey to the server's home directory
+  scp ~/.ssh/id_ed25519.pub linuxuser@theIp:~/temp_key.pub
+
+  # then ssh into the server (password login must still work at this point)
+  ssh linuxuser@theIp
+
+  # on the server, append it to authorized_keys
+  mkdir -p ~/.ssh
+  cat ~/temp_key.pub >> ~/.ssh/authorized_keys
+  chmod 700 ~/.ssh
+  chmod 600 ~/.ssh/authorized_keys
+  rm ~/temp_key.pub
 ```  
 
 3.**Test key-based login**
@@ -196,9 +217,183 @@ ssh linuxuser@ipaddress
 	`chmod 600 ~/.ssh/authorized_keys`
 
 4.**Recommended: Disable password login**
-	Refer to number the config at [[#^613b03| OpenSSH config ]]
+	Refer to  the config at [[#^613b03| OpenSSH config ]]
 
 ---
+
+# Cloudflare tunnel
+Steps:
+- [[#==Step 1 Install Cloudflare in server==]]
+- [[#==Step 2 Authenticate the Cloudflared to your Cloudflare account==]]
+- [[#==Step 3 Create a tunnel==]]
+- [[#==Step 4—Configure the tunnel (config.yml)==]]
+- [[#==Step 5 Route the DNS==]]
+- [[#==Step 6 Run the cloudflared as systemd service==]]
+- [[#==Step 7 (Recommended) Put the cloudflare access in front==]]
+- [[#Step 8 Clientside—(Install cloudflared)]]
+
+An option if behind the CGNAT
+Overview of the flow:
+```
+Client (you)          Cloudflare Edge          Server (homelab)
+   │                         │                         │
+   ├── cloudflared access ──►│◄── cloudflared daemon ──┤
+   │   (outbound only)       │    (outbound only)      │
+   │                         │                         │
+   └── ssh linuxuser@ssh.yourdomain.com ────────────────┘
+```
+Both sides — client at server — **outbound  only**  connections to  Cloudflare edge. 
+CGNAT nat allows outbound connection.
+
+##### ==Step 1: Install Cloudflare in server==
+
+```bash
+sudo mkdir -p --mode=0755 /usr/share/keyrings
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared noble main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+
+sudo apt update
+sudo apt install cloudflared
+```
+Verify:
+```bash
+cloudflared --version
+```
+
+##### ==Step 2: Authenticate the Cloudflared to your Cloudflare account==
+```bash
+cloudflared tunnel login
+```
+This will open a browser and select the domainname you want to have tunnel.
+Click authorize.
+
+In the commandline. It will have message :
+```
+If you wish to copy your credentials to a server, they have been saved to : [path]
+
+#example:
+/home/user/.cloudflared/cert.pem
+```
+
+##### ==Step 3: Create a tunnel==
+```
+cloudflared tunnel create <Tunnel_name>
+```
+It will have a message saying:
+```
+Tunnel credentials written to ~/.cloudflared/TUNNEL_ID.json, cloudflared chose this file based on where your origin certificate was found. Keep this file secret. To revoke these credentials, delete the tunnel
+```
+And a tunnel ID:
+```
+Created tunnel <Tunnel_name> with id: xxxxxxxxxxxxx
+```
+
+##### ==Step 4—Configure the tunnel (config.yml)==
+```bash 
+sudo mkdir -p /etc/cloudflared
+sudo nano /etc/cloudflared/config.yml
+```
+
+Configuration:
+```nano
+tunnel: <TUNNEL_ID>
+credentials-file: /home/<user>/.cloudflared/TUNNEL_ID.json
+
+ingress:
+  - hostname: ssh.yourdomain.com
+    service: ssh://localhost:22
+  - service: http_status:404
+```
+**==the path to credential file must be absolute path.==** 
+
+In case you clear the message from step 3
+Do this to find the tunnel id:
+```bash
+cloudflared tunnel list
+```
+
+##### ==Step 5: Route the DNS==
+```bash
+cloudflared tunnel route dns <Tunnel_name> <desired_subdoamin>.yourdomain.com
+```
+A message will display:
+```
+Added CNAME <desired_subdoamin>.yourdamin.com which will route to this tunnel tunnelID=xxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+##### ==Step 6: Run the cloudflared as systemd service==
+Purpose: no need manual run
+
+```bash
+sudo cloudflared service install
+sudo systemctl enable --now cloudflared
+sudo systemctl status cloudflared
+```
+Verify:
+```bash
+journalctl -u cloudflared -f
+```
+
+##### ==Step 7: (Recommended) Put the cloudflare access in front==
+In cloudflare webpage:
+```
+Zero trust ——> Access ——> Applications ——> Add an Application ——> self hosted
+```
+Point to `<yoursubdoamin.yourdoamin.com>`. 
+Apply policies
+
+##### Step 8: Clientside—(Install cloudflared)
+
+==For windows:==
+```
+winget install --id Cloudflare.cloudflared
+```
+Create a config file at `C:\Users\<YourUser>\.ssh\config`. OR just do : `notepad $env:USERPROFILE\.ssh\config`
+```
+Host <subdomain>.yourdomain.com
+    ProxyCommand cloudflared access ssh --hostname %h
+```
+
+Test the connection:
+```
+ssh <user>@<subdomain>.yourdomain.com
+```
+This will open a browser to authenticate through the Cloudflare Access policy before establishing the connection.
+
+==For Linux:==
+```bash
+sudo mkdir -p --mode=0755 /usr/share/keyrings
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared noble main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+
+sudo apt update
+sudo apt install cloudflared
+```
+Verify:
+```bash
+cloudflared --version
+```
+Note: `cloudflared tunnel login` is NOT needed on the client — that step is only for the server side (creating the tunnel). On the client, `cloudflared` is only used as a proxy helper for the SSH connection.
+
+Create/edit the config file:
+```bash
+nano ~/.ssh/config
+```
+```
+Host <subdomain>.yourdomain.com
+    ProxyCommand cloudflared access ssh --hostname %h
+```
+Test the connection:
+```bash
+ssh <user>@<subdomain>.yourdomain.com
+```
+This will open a browser to authenticate through the Cloudflare Access policy before establishing the connection.
+If `cloudflared` is not on PATH, use the absolute path instead (check with `which cloudflared`):
+```
+ProxyCommand /usr/bin/cloudflared access ssh --hostname %h
+```
 
 # SECURITY
 
@@ -231,8 +426,6 @@ sudo nano jail.local
    
    [DEFAULT]
    ignoreip = 127.0.0.1/8 ::1
-   
-   [DEFAULT]
    destemail = myemail@email.com
    action = %(action_mw)s
 ```
@@ -266,7 +459,7 @@ sudo cat /var/log/fail2ban.log.1
 >
 >Disable from starting boot
 >```
->sudo system disable ssh
+>sudo systemctl disable ssh
 >```
 >Stop and disable ssh.socket for security
 >```

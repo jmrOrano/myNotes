@@ -4,6 +4,11 @@
 A library for many oled displays
 Check the [[Code_Artifacts#==Simple OLED Display==|code artifacts]] for example usage
 
+- [[#==Choosing Correct Frame Buffer==]]
+- [[#==setFont()==]]
+- [[#==drawStr()==]]
+- [[#==setCursor()==]]
+- [[#==drawXBMP();==]]
 
 ##### ==Choosing Correct Frame Buffer==
 Reference : [[Code_Artifacts#==Simple OLED Display==]]
@@ -148,6 +153,10 @@ Screen : 128 x 64 pixels (entire) canvas)
 
 To display strings.
 - refer to [[#==setCursor()==]] to how to print integers
+- In order to display `int` or `float`. Convert it first to string
+	- [[Study&Learn_Section#==Convert int value into string==]]
+	- [[Study&Learn_Section#==Convert float into string==]]
+
 
  ```c
  drawStr(x, y text)
@@ -204,7 +213,20 @@ print(number);
 ```
 
 ---
+##### ==drawXBMP();==
 
+Reference code: [[Code_Artifacts#OLED + bitmap array]]
+
+```c
+oled.drawXBMP(x, y, width, height, bitmap_name);
+```
+- doesnt use [[#==setFont()==]] because it already uses the bitmap array for pixel placement. 
+- doesnt use [[#==drawStr()==]]
+- commonly used for basic animation
+
+Memory usage:
+- Uno R3 has about 32kb of flash memory
+- And in display each pixel is about 1bit of memory. If the display is 128x64, its about 1024byte(1kb) or memory each frame
 
 ---
 

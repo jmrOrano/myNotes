@@ -10,6 +10,8 @@ tag: study
 >- [[#==Potentiometer + LEDs + Button==]]
 >- [[#==Simple OLED Display==]]
 >- [[#==OLED + LED + Poteniometer + Button==]]
+>- [[#==OLED + DHT22==]]
+>- [[#OLED + bitmap array]]
 
 ##### ===Millis with PMW===
 ---
@@ -665,3 +667,395 @@ void loop(){
   delay(1000);
 }
 ```
+
+==Iteration 2==
+The display is too small, so in this iteration, the font is bigger and the each information is displayed at an interval:
+```c++
+#include <Arduino.h>
+#include <DHT.h>
+#include <U8g2lib.h>
+  
+//variables for swtitching
+int currentDisplay = 0;
+unsigned long lastSwitch = 0;
+
+#define DHTPIN 3
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+U8G2_SH1106_128X64_NONAME_2_HW_I2C oled(U8G2_R0);
+
+//helper functions to convert
+char* float_to_str(float value){
+  static char buf[8];
+  dtostrf(value, 1, 2, buf);
+  return buf;
+}
+//helper function to center a text on x axis
+int x_value(char* text){
+  int textWidth = oled.getStrWidth(text);
+  int x = (128 - textWidth) /2;
+  return x;
+}
+
+void setup(){
+  dht.begin();
+  oled.begin();
+  pinMode(DHTPIN, INPUT);
+}
+
+void loop(){
+  float temp = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  float heat_index = dht.computeHeatIndex(temp, humidity, false);
+  
+  //timing interval
+  if(millis() - lastSwitch >= 2000){
+    currentDisplay = (currentDisplay + 1) % 3; //uses modulo to swtich value [0%3=0, 1%3=1, 2%3=2, 3%3=0]
+    lastSwitch = millis();
+  }
+
+  //oled  page buffer
+  oled.firstPage();
+  do{
+    oled.setFont(u8g2_font_fub30_tr);
+    //swtiching
+    if(currentDisplay ==  0){
+      char* temp_string = float_to_str(temp);
+      int x = x_value(temp_string);
+      oled.drawStr(x, 57, temp_string);
+    } else if (currentDisplay == 1){ 
+      char* humidity_string = float_to_str(humidity);
+      int x = x_value(humidity_string);
+      oled.drawStr(x, 59, humidity_string);
+    } else {
+      oled.setFont(u8g2_font_timR24_tr);
+      char* heatIndex_string = float_to_str(heat_index);
+      int x = x_value(heatIndex_string);
+      oled.drawStr(x, 40, heatIndex_string);
+    }
+  }while (oled.nextPage());
+}
+```
+
+---
+##### ==OLED  + bitmap array==
+- read about [[Libraries#==drawXBMP();==]]
+
+Display a qrcode
+```c
+#include <Arduino.h>
+#include <U8g2lib.h>
+
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(U8G2_R0);
+
+const unsigned char qrBitmap[] PROGMEM = { 0xff,0x3f,0xfc,0x33,0xf3,0xff,0x03,0xff,0x3f,0xfc,0x33,0xf3,0xff,0x03,0x03,0x30,0xcf,0x3c,0x33,0x00,0x03,0x03,0x30,0xcf,0x3c,0x33,0x00,0x03,0xf3,0x33,0x33,0xf3,0x33,0x3f,0x03,0xf3,0x33,0x33,0xf3,0x33,0x3f,0x03,0xf3,0x33,0xc3,0xcf,0x33,0x3f,0x03,0xf3,0x33,0xc3,0xcf,0x33,0x3f,0x03,0xf3,0x33,0x0c,0x0c,0x33,0x3f,0x03,0xf3,0x33,0x0c,0x0c,0x33,0x3f,0x03,0x03,0x30,0xf0,0x0c,0x33,0x00,0x03,0x03,0x30,0xf0,0x0c,0x33,0x00,0x03,0xff,0x3f,0x33,0x33,0xf3,0xff,0x03,0xff,0x3f,0x33,0x33,0xf3,0xff,0x03,0x00,0x00,0xc3,0xc3,0x03,0x00,0x00,0x00,0x00,0xc3,0xc3,0x03,0x00,0x00,0x03,0x30,0xff,0x3c,0x3c,0xfc,0x00,0x03,0x30,0xff,0x3c,0x3c,0xfc,0x00,0xcc,0x0f,0x0f,0xff,0xcc,0xff,0x00,0xcc,0x0f,0x0f,0xff,0xcc,0xff,0x00,0xfc,0x3f,0x3c,0xf3,0xff,0xcc,0x03,0xfc,0x3f,0x3c,0xf3,0xff,0xcc,0x03,0xc0,0x00,0x00,0xf3,0x30,0x0f,0x03,0xc0,0x00,0x00,0xf3,0x30,0x0f,0x03,0x3f,0xf0,0x00,0xc3,0xf3,0x00,0x03,0x3f,0xf0,0x00,0xc3,0xf3,0x00,0x03,0x0f,0x0c,0x30,0xf3,0xc3,0xc0,0x00,0x0f,0x0c,0x30,0xf3,0xc3,0xc0,0x00,0xc3,0x3f,0x33,0xcc,0xc0,0xcf,0x03,0xc3,0x3f,0x33,0xcc,0xc0,0xcf,0x03,0x33,0xc3,0xf0,0xf0,0xf0,0x33,0x03,0x33,0xc3,0xf0,0xf0,0xf0,0x33,0x03,0x03,0x3f,0xfc,0x33,0xff,0x33,0x00,0x03,0x3f,0xfc,0x33,0xff,0x33,0x00,0x00,0x00,0xc3,0x0c,0x03,0x33,0x00,0x00,0x00,0xc3,0x0c,0x03,0x33,0x00,0xff,0x3f,0xcc,0x03,0x33,0x0f,0x03,0xff,0x3f,0xcc,0x03,0x33,0x0f,0x03,0x03,0x30,0xf0,0x30,0x03,0x03,0x00,0x03,0x30,0xf0,0x30,0x03,0x03,0x00,0xf3,0x33,0xc0,0xff,0xff,0x3f,0x00,0xf3,0x33,0xc0,0xff,0xff,0x3f,0x00,0xf3,0x33,0xcc,0x00,0x3c,0xcc,0x03,0xf3,0x33,0xcc,0x00,0x3c,0xcc,0x03,0xf3,0x33,0x30,0xcc,0xcc,0x30,0x03,0xf3,0x33,0x30,0xcc,0xcc,0x30,0x03,0x03,0x30,0x0c,0x03,0xff,0x03,0x03,0x03,0x30,0x0c,0x03,0xff,0x03,0x03,0xff,0x3f,0xcf,0x03,0x33,0x0c,0x03,0xff,0x3f,0xcf,0x03,0x33,0x0c,0x03};
+  
+void setup(){
+  oled.begin();
+}
+
+void loop(){
+  oled.clearBuffer();
+  oled.drawXBMP(40, 6, 50, 50, qrBitmap);
+  oled.sendBuffer();
+}
+```
+
+----
+##### ==OLED + bitarray in different file location==
+In PIO, you can store the bit array in different `.h` file so you can call it in `main.cpp` file. For cleaner code.
+
+- read about [[Libraries#==drawXBMP();==]]
+
+**Structure:**
+```
+study-practice/
+│
+├── include/
+│   └── qrcocde.h
+│
+├── src/
+│   └── main.cpp
+│
+└── platformio.ini
+```
+
+qrcode.h 
+```c
+//include guard
+#ifndef QRCODE_H
+#define QRCODE_H
+#include <Arduino.h>
+
+const unsigned char qrBitmap[] PROGMEM = {
+	//arrays
+	}
+#endif
+```
+- `#ifndef QRCODE_H` and `define QRCODE_H` — called an `include guard` to prevent contents from being included more than once in same compilation
+
+main.cpp
+```c
+//setup
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <qrcode.h>
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0);
+
+void setup(){
+  oled.begin();
+}
+void loop(){
+  
+    oled.clearBuffer();
+    oled.drawXBMP(40,6,BITMAP_ANIM_WIDTH, BITMAP_ANIM_HEIGHT, qrBitmap)
+    oled.sendBuffer();
+}
+```
+
+##### ==oled + basic animation==
+
+The workflow:
+--1. Find a gif at [tenor](https://tenor.com/). Download it
+--2. Convert the gif using the tools at: [ezgif](https://ezgif.com/gif-to-bitmap)
+	-- if the original gif is too large—resize or crop using the same tool located at "video tools"
+--3. You can copy the active code  and/or  directly download the `.h` file itslef
+
+==main.cpp==
+```c
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <bitmap_anim.h>
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0);
+
+void setup(){
+  oled.begin();
+}
+
+void loop(){
+  for (int frame = 0; frame < BITMAP_ANIM_FRAME_COUNT; frame++){
+    oled.clearBuffer();
+    oled.drawXBMP(0,0,BITMAP_ANIM_WIDTH, BITMAP_ANIM_HEIGHT, (const uint8_t*)pgm_read_ptr(&(bitmap_anim_frames[frame])));
+    oled.sendBuffer();
+    delay(bitmap_anim_delays[frame]); //array indexing to the value of delay inside the bitmap_anim.h 
+  }
+
+}
+```
+
+==bitmap_anim.h==
+>[!bitmap.anim_h]- bitmap.anim.h
+>```c
+// ==========================================================================
+// Bitmap animation generated by ezgif.com/gif-to-bitmap
+// Dimensions: 128 x 64 px | Frames: 8 | Total Size: 8 KB (8192 bytes)
+// Format: MONO (XBM)
+>
+// ==========================================================================
+#ifndef BITMAP_ANIM_H
+#define BITMAP_ANIM_H
+#include <avr/pgmspace.h> // Arduino AVR Flash memory support
+#define BITMAP_ANIM_WIDTH  128
+#define BITMAP_ANIM_HEIGHT 64
+#define BITMAP_ANIM_FRAME_COUNT 8
+#define BITMAP_ANIM_BYTES_PER_FRAME 1024
+// Frame delays in milliseconds
+const uint16_t bitmap_anim_delays[BITMAP_ANIM_FRAME_COUNT] = {
+    60, 60, 60, 60, 60, 60, 60, 60
+};
+// Frame 0 (delay: 60 ms)
+const unsigned char bitmap_anim_frame_0[] PROGMEM = {
+>//arrays
+};
+>.............
+// Frame 7 (delay: 60 ms)
+const unsigned char bitmap_anim_frame_7[] PROGMEM = {
+>//arrays
+};
+// Array of frame pointers
+const unsigned char* const bitmap_anim_frames[BITMAP_ANIM_FRAME_COUNT] PROGMEM = {
+    bitmap_anim_frame_0,
+    bitmap_anim_frame_1,
+    bitmap_anim_frame_2,
+    bitmap_anim_frame_3,
+    bitmap_anim_frame_4,
+    bitmap_anim_frame_5,
+    bitmap_anim_frame_6,
+    bitmap_anim_frame_7
+};
+#endif // BITMAP_ANIM_H
+>```
+
+---
+##### ==oled + two bit arrays + btn==
+- [[Study&Learn_Section#==**millis()**==]]
+- [[Study&Learn_Section#==arrays and arrays indexing==]] to understand how the value of delay is get
+- [[Libraries#==drawXBMP();==]]
+- [[#==OLED + bitmap array==]] to display qrcode
+
+
+```c
+#include <Arduino.h>
+#include <U8g2lib.h>
+#include <bitmap_anim.h>
+#include <qrcode.h>
+
+unsigned long previousMillis = 0;
+int current_frame = 0;
+
+//bnt read
+int btn_pin = 4;
+bool btn_condition = false;
+
+//oled display
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0);
+unsigned long current_display = 0;
+
+void setup(){
+  pinMode(btn_pin, INPUT);
+  oled.begin();
+}
+void loop(){
+  //reading btn input
+  int btn_status = digitalRead(btn_pin);
+
+  //change state when pressed
+  if (btn_status == HIGH && !btn_condition){
+    current_display = (current_display + 1) % 2;
+    btn_condition = true;
+  }
+
+  if(current_display == 0){
+    unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= bitmap_anim_delays[current_frame]){
+      previousMillis = currentMillis;
+      oled.clearBuffer();
+      oled.drawXBMP(0,0,BITMAP_ANIM_WIDTH, BITMAP_ANIM_HEIGHT, (const uint8_t*)pgm_read_ptr(&(bitmap_anim_frames[current_frame])));
+      oled.sendBuffer();
+      current_frame++;
+      if (current_frame >= BITMAP_ANIM_FRAME_COUNT){
+        current_frame = 0;
+      }
+    }
+    }
+  if(current_display == 1){
+      //current display 1
+      oled.clearBuffer();
+      oled.drawXBMP(38, 7, 50, 50, qrBitmap);
+      oled.sendBuffer();
+  }
+
+  if (btn_status == LOW){
+    btn_condition = false;
+  }
+}
+```
+
+##### ==MQ-2 Setup==
+---
+Using the MQ-2 Unified Library
+```c
+#include <MQUnifiedsensor.h>
+
+// Hardware configuration
+#define Board "Arduino UNO"
+#define Pin A0
+#define Voltage_Resolution 5
+#define ADC_Bit_Resolution 10
+#define Type "MQ-2"
+
+MQUnifiedsensor gas_sensor(
+  Board,
+  Voltage_Resolution,
+  ADC_Bit_Resolution,
+  Pin,
+  Type
+);
+
+
+void setup() {
+  Serial.begin(9600);
+  // LPG regression model
+  gas_sensor.setRegressionMethod(1);
+  gas_sensor.setA(574.25);
+  gas_sensor.setB(-2.222);
+  gas_sensor.init();
+
+  // Calibrate R0
+  float calcR0 = 0;
+  for (int i = 0; i < 10; i++) {
+    gas_sensor.update();
+    calcR0 += gas_sensor.calibrate(9.83);
+  }
+  
+  gas_sensor.setR0(calcR0 / 10);
+  Serial.println("Calibration done.");
+} 
+void loop() {
+  gas_sensor.update();
+  // Calculate LPG concentration
+  gas_sensor.readSensor(false);
+  Serial.print("LPG: ");
+  Serial.println(gas_sensor.readSensor(false));
+  delay(1000);
+}
+```
+
+
+**==The Breakdown==**
+
+**Object Creation**
+```c++
+#include <MQUnifiedsensor.h>
+
+// Hardware configuration
+#define Board "Arduino UNO"
+#define Pin A0
+#define Voltage_Resolution 5
+#define ADC_Bit_Resolution 10
+#define Type "MQ-2"
+
+MQUnifiedsensor gas_sensor(
+  Board,            
+  Voltage_Resolution,
+  ADC_Bit_Resolution,
+  Pin,
+  Type
+);
+```
+- `Voltage Resolution` —  is the [[Study&Learn_Section#**==Reference Voltage==**|Reference Voltage]]
+
+---
+
+##### ==KY-037 Sound Sensor==
+A basic reading first:  
+```c
+#include <Arduino.h>
+
+int soundPin = A0;
+unsigned long previousMillis = 0;
+
+
+void setup(){
+  Serial.begin(9600);
+  pinMode(soundPin,INPUT);
+}
+void loop(){
+  float soundValue = analogRead(soundPin);
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= 500){
+     Serial.println(soundValue);
+     previousMillis = currentMillis;
+  }
+}
+```
+With this setup:
+- can observe the value of analogRead
+- can compute the voltage using the formula at [[Study&Learn_Section#**==Reference Voltage==**]]
+
+Small exercise or project to do:
+Components: LED, KY-037, 2X buttons, LED 
+Visualization: LED is for displaying the `analogRead` from `KY-037` , the buttons are used to change the threshold of the `ky-037` , the LED is there for lighting -ofcourse

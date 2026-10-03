@@ -25,12 +25,18 @@ Date Generated: August 29, 2026
 >- [[#**==Potentiometer==**]]
 >- [[#**==Analog To Digital (ADC)==**]]
 >- [[#==**Voltage vs Signals**==]]
+>- 
 >
 >[[#Random Syntax Fundamentals]]
 >- [[#variables]]
+>- [[#==arrays and arrays indexing==]]
+>- [[#==Modulo==]]
 >- [[#==**millis()**==]]
 >- [[#==functions==]]
 >- [[#==analogRead()==]]
+>- [[#==Convert float into string==]]
+>- [[#==Convert int value into string==]]
+>- 
 
 ### Use VsCode as IDE for microcontrollers
 ---
@@ -306,20 +312,20 @@ setting_num / 50lines  then multiply by which line the needle points.
 ==*Note*: ==
 - Vref is a property of a [[#**==Analog To Digital (ADC)==**|ADC]] which is inside the microcontroller
 - Vref is not a component's required supply voltage.
-- In Arduino uno, the default Vred is 5volts — but can be change via `analogReference()` or some external AREF pin
+- In Arduino uno, the default Vref is 5volts — but can be change via `analogReference()` or some external AREF pin
 
 ==*Formula*:==
+To convert voltage to ADC:
 ```
 digital_value = (input_voltage / reference_voltage) × 1023
 ```
-
-
-==*Why is it needed?*==
-
+To convert ADC to voltage:
+```
+analog_value = analogRead(A0) * (5.0 / 1023.0);
+```
 
 
 ----
-
 
 ### Random Modules & Microcontroller Fundamentals
 ---
@@ -484,7 +490,7 @@ Uses the  [[#**==Input Pins==**|input pins]] to read those variable voltage
 >Two outer pins can be switched, though the knob direction will reverse as well
 ```
 5v———>>clockwise>>———gnd  == low resistance to far right knob 
-5v———<<counterCL<<————5v    == low resistance to far left knob
+gnd———<<counterCL<<————5v    == low resistance to far left knob
 ```
 
 Think of potentiometer having two resistor:
@@ -505,9 +511,11 @@ A hardware component in a microcontroller that converts analog(continuous voltag
 	`0 - 1023` - for 10bit  adc like arduino uno
 	`0 - 4095` - for 12 bit adc like esp32
 
+
 **==Why ADC?==**
-— Hardware components potentiometer, sensors (temp, light, etc) produces `analog voltage` — a continuous range of voltage values.
-— But a microcontroller processes information digitally, using binary values.
+- Those analog voltages usually comes from components like (sensors, or potentiometers)
+-  Microcontroller processes information digitally, using binary values not. 
+- The formula is at [[#**==Reference Voltage==**]]
 
 ---
 ##### ==**Voltage vs Signals**==
@@ -518,7 +526,49 @@ Signal
 - A voltage but with variation/pattern 
 - `Analog Signal` — continuous range(e.g. Potentiometer output) uses [[#==analogRead()==|analogRead()]]
 - `Digital Signal` — discrete state only either true or false
- 
+
+---
+##### **==Components with Analog Output and Digital Output==**
+
+A component with `AO` and `DO` pins can be used together.
+
+Example: 
+- `Analog Ouput` — focused on reading 
+- `Digital Ouput` — Focused on reading the set threshold
+
+Example are:
+[[Components and Modules#==MQ-2 Gas Sensor==]]
+[[Components and Modules#==KY-037 Sound Sensor==]]
+
+```
+                 MQ-2 sensing
+                      │
+             gas concentration
+                      ↓
+             sensor response
+                      │
+                ┌─────┴─────┐
+                ↓           ↓
+               AO           DO
+           Analog Output  Digital Output
+                │           │
+                ↓           ↓
+    "How is the read?"  "Did it exceed??"
+                │           │
+                ↓           ↓
+          analogRead()    digitalRead()
+                │           │
+             0–1023       HIGH / LOW
+```
+With this, its possible to setup a different logic and resposnse.
+
+==Most components with these setup typically has `LM393 comparator` and [[#**==Potentiometer==**|Potentiometer]]==
+Reference: https://youtu.be/SqONrFwa4PA?si=tAhR_df4aBzEzhDb&t=297
+
+- The way this works basically is the voltage from analog  went to the `LM393 comparator` which then compares to the value set at the potentiometer.
+- If the threshold set at potentiometer reached— outputs Low digital signal and output HIGH digital signal when
+
+
 ### Random Syntax Fundamentals
 ---
 
@@ -547,7 +597,7 @@ int myFunction(int x, int y) {
 Is basically there to include Arduino framework definitions/declarations to enable to use Arduino functions and features.
 
 ---
-##### variables
+##### ==variables==
 ---
 Directly using pin
 ```
@@ -563,7 +613,52 @@ pinMode(ledPin,OUTPUT);
 This is recommended for larger chunks of code. 
 - Easy to read
 - Easy to change
+
+
+---
+##### ==arrays and arrays indexing==
+
+For reference how its used: [[Code_Artifacts#==OLED + bitmap array==]]
+
+==Creating array for example:==
+```c
+int numbers[] = {1,2,3,4,5};
+int numbers[5] = {1,2,3,4,5}; //explicitly telling the array size
+```
+
+==Indexing an array:==
+```c
+//suppose you have an array:
+int numbers[] = {1,2,3,4,5};
+
+//calling
+numbers[0] //—— 1
+numbers[3] //—— 4 
+//...........
+```
+
+Function + array indexing:
+Used at : [[Code_Artifacts#==oled + basic animation==]] 
+```c
+delay(bitmap_anim_delays[frame]);
+```
+- `delay()` — the function
+- `bitmap_anim_delays` — an array, contains value `e.i {60, 120 ,400, 30..........}`
+- `[frame]` — a variable containing an `int` to tell which index in the array to access `e.i: [0[, [1], [2]......`
 ****
+##### ==Modulo==
+Reference usage: [[Code_Artifacts#==OLED + DHT22==]]
+
+Uses the symbol : `%` 
+An operator to take the remainder after a division
+
+Example:
+```c++
+1 % 3 = 1
+```
+Can be read as: *How many group of 3 can you take from numerator(1). Answer is zero and the remaining is still 1.*
+
+---
 
 #### ==**millis()**==
 - good replacement for `delay`

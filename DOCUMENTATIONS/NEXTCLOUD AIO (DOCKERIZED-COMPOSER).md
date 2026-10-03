@@ -423,7 +423,7 @@ SSL Certificate
 Cloudflare only has 100mb file upload
 	see this for more: https://github.com/nextcloud/all-in-one#notes-on-cloudflare-proxytunnel
 
-	```Cloudflare only supports uploading files up to 100 MB in the free plan, if you try to upload bigger files you will get an error (413 - Payload Too Large) if no chunking is used (e.g. for public uploads in the web, or if chunks are configured to be bigger than 100 MB in the clients or the web). If you need to upload bigger files, you need to disable the proxy option in your DNS settings. Note that this will both disable Cloudflare DDoS protection and Cloudflare Tunnel as these services require the proxy option to be enabled.```
+	```Cloudflare only supports uploading files up to 100 MB in the free plan, if you try to upload bigger files you will get an error (413 - Payload Too Large) if no chunking is used (e.g. for public uploads in the web, or if chunks are configured to be bigger than 100 MB in the clients or the web). If you need to upload bigger files, you need to disable the proxy option in your DNS settings. Note that this will both disable Cloudflare DDoS protection and Cloudflare Tunnel as these services require the proxy option to be enabled.```
 
 
 
@@ -484,7 +484,73 @@ cd /var/lib/docker/volumes/nextcloud_aio_nextcloud/_data/data/
 
 
 
+#### ==**Cloudfalred tunnel approach**==
+In case a network provided by an ISP is behind a CGNAT. 
 
+Workflow:
+```
+1. I-verify kung tumatakbo pa ba ang Docker/mastercontainer mo
+2. I-adjust ang compose.yaml (comment out ports 80/8443, set APACHE_PORT)
+3. I-restart ang mastercontainer gamit ang bagong config
+4. I-dagdag ang Nextcloud ingress rule sa cloudflared config.yml (homelab_tunnel)
+5. I-route ang bagong subdomain sa DNS
+6. I-restart ang cloudflared service
+7. I-access ang AIO interface via LAN IP:8080 (hindi domain, dahil self-signed cert lang siya)
+8. I-type ang domain sa AIO interface, tapos ipapatupad na niya ang lahat ng containers
+9. I-verify na accessible na sa labas via https://cloud.yourdomain.com
+```
+
+##### ==Step 1: Verify the current state of the Docker==
+```
+docker ps -a
+```
+
+##### ==Step 2: Change the compose file==
+Comment the port 80:80 and port 8443:8443, set `APACHE_PORT: 11000`.
+Similar approach to what the compose file of  [[#**USING CLOUDFLARE + NGINX PROXY MANAGER**]]
+
+**Note:** if migrating from an existing NPM setup, this is already done — just verify via `cat compose.yaml | grep -A 20 "ports:"`, no need to redo.
+
+Restart the mastercontainer if necessary. 
+
+##### ==Step 3: Add nextcloud ingress rule in config.yml==
+
+For cloudflared setup. Refer to: [[SSH_Setup#Cloudflare tunnel]]
+
+Config.yml
+```nano
+tunnel: <tunnelID>
+credentials-file: /home/<user>/.cloudflared/<TUNNEL_ID>
+
+ingress:
+  - hostname: <subdomain>.<yourdomain>.com
+    service: http://localhost:11000
+  - service: http_status:404
+
+```
+the `- service: http_status:404` should always be at end if have multiple service
+
+##### ==Step 4: Route the DNS to the subdomain==
+```
+cloudflared tunnel route dns homelab_tunnel <yoursubdomain>.<yourdomain>.com
+```
+A message should appear:
+```
+INF Added CNAME <yoursubdomain>.<yourdomain>.com which will route to this tunnel tunnelID=<tunnelID>
+```
+
+##### ==Step 5: Verify if the new ingress rule is applied==
+```
+sudo systemctl status cloudflared
+```
+
+##### ==Step 6: (If migrating from NPM) Retire the NPM==
+Verify Cloudflare Tunnel is truly serving the traffic — not NPM — before retiring it:
+```
+docker stop nginx-proxy-manager
+```
+Reload/access `https://cloud.yourdomain.com` again. If still accessible, Cloudflare Tunnel is confirmed as the actual route.
+Keep NPM stopped (not removed) for a few days as fallback before fully retiring it (`docker compose down` / `docker rm`).
 
 ## **Problems Encountered.** 
 ---
