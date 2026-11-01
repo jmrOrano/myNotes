@@ -3,5 +3,5 @@
   "showLineNumber": true,
   "showInlineTitle": true,
   "useMarkdownLinks": false,
-  "alwaysUpdateLinks": false
+  "alwaysUpdateLinks": true
 }

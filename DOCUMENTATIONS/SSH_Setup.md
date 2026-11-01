@@ -20,7 +20,7 @@ Purpose: *To keep track of how i configured it and set it up*
 
 
 #### **Uncomplicated Architecture**
-```
+```c
 Your PC
    │
    ▼

@@ -244,6 +244,134 @@ Example:
 
 **Next step (not yet implemented):** wrap the speed-up method into a `.bat` file for one-click conversion instead of manual command typing.
 
+
+---
+### install pdftoppm
+A CMD Tool to convert pdf to png
+
+```
+winget install oschwartz10612.Poppler
+```
+
+```
+pdftoppm -v
+```
+
+==Usage:==
+```
+pdftoppm -r 300 sample.pdf page -png
+```
+
+
+### Swap all windows between two monitors (AutoHotkey)
+---
+*Date: October 08, 2026*
+*Purpose: One hotkey to swap everything between Monitor 1 and Monitor 2 (side-by-side). E.g. Obsidian on Monitor 1 and browsers on Monitor 2 become browsers on Monitor 1 and Obsidian on Monitor 2.*
+
+```
+Monitor 1        Monitor 2
+Obsidian         Chrome, Firefox
+      ---- HOTKEY ----
+Chrome, Firefox  Obsidian
+```
+
+#### ==🔵Setup
+```
+Machine & OS: Windows 11
+Tools: git, AutoHotkey v1.1 (NOT v2, the syntax is different)
+```
+
+--1. ==Install AutoHotkey v1==
+```
+winget install AutoHotkey.AutoHotkey
+```
+If it installs v2, the script will not run. Get v1.1 from the AHK site.
+
+--2. ==Get the original source (gist is a git repo)==
+```
+git clone https://gist.github.com/62630392c02420fab9c9f009aa765b39.git monswap
+```
+Original author: szkrd (based on MonSwap by Alan Henager, AutoHotkey forum thread t=68311).
+Gist: https://gist.github.com/szkrd/62630392c02420fab9c9f009aa765b39
+
+#### ==🔵Why the original did not work for me==
+The original `monswap-top-bottom.ahk` is for **vertically stacked** monitors. For side-by-side:
+- It only moves the Y-axis. `NewX` is never set, so X stays unchanged.
+- Monitor detection uses the window's Y center, which is the same range on both monitors when side-by-side.
+- Maximized windows are not restored before moving, so they often do not move.
+- Windows are not resized when the monitors have different resolutions.
+
+#### ==🔵Fixed version: `monswap-side-by-side.ahk`==
+Key changes: use X for monitor detection, scale X/Y/width/height between work areas, restore maximized windows before moving then maximize again.
+```ahk
+#NoEnv
+SetWinDelay, 0
+
+; Hotkey: Ctrl + Win + Z
+^#z::
+    DetectHiddenWindows, Off
+    WinGet, WinArray, List
+    Loop, %WinArray% {
+        WinID := WinArray%A_Index%
+        WinGetClass, cls, ahk_id %WinID%
+        if (cls = "Shell_TrayWnd" or cls = "Shell_SecondaryTrayWnd" or cls = "Progman" or cls = "WorkerW")
+            continue
+        WinGetTitle, title, ahk_id %WinID%
+        if (title = "")
+            continue
+
+        WinGet, state, MinMax, ahk_id %WinID%
+        if (state != 0)            ; minimized (-1) or maximized (1)
+            WinRestore, ahk_id %WinID%
+
+        SwapMon(WinID)
+
+        if (state = 1)
+            WinMaximize, ahk_id %WinID%
+        else if (state = -1)
+            WinMinimize, ahk_id %WinID%
+    }
+return
+
+SwapMon(WinID) {
+    SysGet, M1, MonitorWorkArea, 1
+    SysGet, M2, MonitorWorkArea, 2
+    M1W := M1Right - M1Left
+    M1H := M1Bottom - M1Top
+    M2W := M2Right - M2Left
+    M2H := M2Bottom - M2Top
+
+    WinGetPos, X, Y, W, H, ahk_id %WinID%
+    cx := X + W / 2
+
+    if (cx >= M1Left and cx < M1Right) {        ; Monitor 1 -> Monitor 2
+        nx := M2Left + (X - M1Left) * M2W / M1W
+        ny := M2Top  + (Y - M1Top)  * M2H / M1H
+        nw := W * M2W / M1W
+        nh := H * M2H / M1H
+    } else {                                    ; Monitor 2 -> Monitor 1
+        nx := M1Left + (X - M2Left) * M1W / M2W
+        ny := M1Top  + (Y - M2Top)  * M1H / M2H
+        nw := W * M1W / M2W
+        nh := H * M1H / M2H
+    }
+    WinMove, ahk_id %WinID%, , %nx%, %ny%, %nw%, %nh%
+}
+```
+
+#### ==🔵Usage
+- Double-click the `.ahk` file (green H icon appears in the tray).
+- Press `Ctrl+Win+Z` to swap.
+- To change the hotkey, edit `^#z` (e.g. `^!m` = Ctrl+Alt+M).
+
+#### ==🔵Notes / limitations
+- Swaps **all** visible windows, not only specific apps. To limit it to certain apps, filter by `ahk_exe` (e.g. `obsidian.exe`, `chrome.exe`, `firefox.exe`).
+- Assumes exactly 2 monitors. With a 3rd monitor, windows not on Monitor 1 go to Monitor 1.
+- Mixed DPI scaling can cause small size/position errors.
+
+**Next step (not yet implemented):** auto-start on boot and move the repo from the flash drive to the home directory on C:.
+
+
 ## **Troubleshooting Section**
 ---
 ### Windows Sudden Crashed and Rebooted

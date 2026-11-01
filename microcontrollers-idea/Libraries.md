@@ -1,5 +1,5 @@
 
-#### **==U8g2==**
+#### **==🟢U8g2==**
 ---
 A library for many oled displays
 Check the [[Code_Artifacts#==Simple OLED Display==|code artifacts]] for example usage
@@ -230,7 +230,7 @@ Memory usage:
 
 ---
 
-#### ==**dht sensor library**==
+#### ==🟢**dht sensor library**==
 *Note*: not the universal library
 A library for dht 11, 22, etc  by Adafruit
 
@@ -273,3 +273,194 @@ void loop() {
   delay(2000);
 }
 ```
+
+---
+#### ==🟢**MQUnifiedSensor**==
+A library by  Miguel Califa
+
+[[Code_Artifacts#==MQ-2 Warm Up monitoring==]]
+[[Code_Artifacts#==MQ-2 Setup==]]
+
+##### ==🟢**getVoltage()**==
+Sample use: [[MQ-2#==MQ-2 Setup Voltage Reading==]]
+
+Used to get the output voltage of a sensor in volts. 
+Its like from [[Study&Learn_Section#**==Analog To Digital (ADC)==**|ADC]] back to analog Voltage.
+
+##### ==🟢**calibrate()**==
+Sample use: [[MQ-2#==MQ-2 Setup Calibration==]]
+
+Used to estimate the resistance of a sensor in `R0`
+- `Rs` — resistance of sensor in current conditon 
+- `R0` — reference or will serve as a ruler
+Example:
+```c++
+#define RatioMQ2CleanAir 9.83
+float lecture = gas_sensor.calibrate(RatioMQ2CleanAir);
+```
+The value is reads in ``kΩ``
+
+**==🔴The purpose==** is to have reference point to interpret the next sensor reading.
+Example:
+```
+- Calibrated `R0` = 2.8 kΩ
+- Current `Rs` = 1.4 kΩ
+- Therefore, `Rs / R0 = 0.5`
+```
+The ratio `0.5` means — the current sensor resistance reached half of the sensor reference resistance.
+```
+Reference(R0)
+0------------------------------2.8k
+               |
+            1.4k(Current resistance)
+```
+
+==🔴**Overall process:**==
+`Voltage → Rs → R0 through calibration → Rs / R0 → Estimated gas concentration`
+**Key idea:** `R0` is not the gas reading itself. It is the reference value used to help interpret future readings.
+
+##### ==🟢**Rs/R0: The purpose**==
+
+In some sample codes at [[MQ-2]]— the `RatioMQ2CleanAir = 9.83` is  an assumption that the ratio of the sensor resistance to clean air is `9.83` 
+
+==🔴Ratio (Rs/R0)    General Interpretation==
+**Important:** The interpretation of `Rs/R0` depends on the target gas and its calibration curve.
+ - `Rs/R0` represents the sensor's current resistance relative to its reference resistance.
+ - `A lower ratio ` — may indicate a higher concentration of a particular target gas.
+ - `A higher ratio ` — may indicate a lower concentration of that target gas.
+
+ - The relationship and conversion to ppm depend on the target gas and its calibration model.
+
+==**Note:** ==The MQ-2 responds to multiple gases and cannot identify a specific gas from the ratio alone.
+
+---
+
+##### **==🟢setRegressionMethod() & setA() and setB()==**
+
+Used to set a mathematical model that the library used to convert the `Rs/R0)` raation into an estimated PPM.
+```c++
+void setup() {
+  //Set math model to calculate the PPM concentration and the value of constants
+  MQ2.setRegressionMethod(1); //_PPM =  a*ratio^b
+  MQ2.setA(574.25); MQ2.setB(-2.222); // Configure the equation to to calculate LPG concentration
+  /*
+    Exponential regression:
+    Gas    | a      | b
+    H2     | 987.99 | -2.162
+    LPG    | 574.25 | -2.222
+    CO     | 36974  | -3.109
+    Alcohol| 3616.1 | -2.675
+    Propane| 658.71 | -2.168
+  */
+```
+
+Equation: 
+```
+PPM = a(Rs / R0 ) ^b
+```
+
+
+---
+
+
+#### ==🟢**SCD41** ==
+Learn about SCD41 sensor: [[Components and Modules#==🟡SCD41 Co2 Sensor==]]
+See the initial setup: [[SCD41]]
+##### ==startPeriodicMeasurement()==
+
+A function tell to sensor to start to measure continuously
+- Only called **once**
+```c
+void setup(){
+  Serial.begin(115200);
+  Wire.begin();
+  co2_sensor.begin(Wire, SCD41_I2C_ADDR_62);
+  co2_sensor.startPeriodicMeasurement();
+}
+```
+
+##### ==getDataReadyStatus()==
+
+A method to check if there is new measurement data that can be read
+##### ==readMeasurement()==
+
+A method to get the latest CO2 reaading, temperature and humidity reading.
+
+#### **==🟢ESP32—Wifi.h==**
+A Class that contains lots of method/functions provided in ESP32 Arduino framework
+Located typically at : 
+==🟣`C:\Users\<user>\AppData\Local\Arduino15\packages\esp32\hardware\esp32`==
+
+##### ==🟡Wifi.begin()==
+- Refer to [[001Stage1_ConnectToWifi#Connecting ESP32 to Wifi]] to how to use it
+- An already existing global object that the wifi.h library as part of Arduino framework
+- This is the method that starts the connection process 
+
+##### ==🟡Wifi.status()==
+- A method that returns the current status of Wifi-Connection
+- It returns the status 
+	- `WL_CONNECTED` — means connected to Wifi
+	- `WL_DISCONNECTED` — Disconnected
+	- `WL_CONNECT_FAILED` — Failed to connect
+
+#### **==🟢ESP32—WiFiClientSecure.h==**
+A Class that contains lots of method/functions provided in ESP32 Arduino framework
+Located typically at : 
+==🟣`C:\Users\<user>\AppData\Local\Arduino15\packages\esp32\hardware\esp32`==
+- Look at [[002Stage2_InternetAccess]] on how to set it up
+##### ==WiFiClientSecure `<name>`==
+A `Class` that serves as a blueprint for secure network connection using `TLS/SSL`
+- A secure connection handler for HTTPS request of the ESP32.
+- **Call it once** is enough
+- Read example at : [[001Stage1_ConnectToWifi#==ESP32 Internet Access==]]
+```c++
+WiFiCientSecure nameOfObject;
+```
+
+##### ==setInsecure()==
+A method inside the `WiFiClienSecure` class. 
+- Very insecure, only do for testing
+- Because, it doesnt check the certificate given by the server. Read about CA at: [[Chain_of_Trust_(Certificate_Authority)]]
+
+##### ==useBuiltinCACertBundle()==
+A method inside the `WiFiClienSecure` class. 
+- No need to find CA certificates for each Public API 
+- **Note**: It still depends on the availability, meaning—not all CA are listed in the bundle 
+
+#### ==🟢**ESP32—HTTPClient.h**==
+- A Class that contains lots of method/functions provided in ESP32 Arduino framework
+- Located typically at : 
+==🟣`C:\Users\<user>\AppData\Local\Arduino15\packages\esp32\hardware\esp32`==
+
+- Look at : [[002Stage2_InternetAccess]] on how to set it up
+
+##### ==HTTPClient `<name>`==
+A class manage HTTP request and response
+```c
+HTTPClient nameOfObject;
+```
+
+##### ==.begin()==
+A method to initialize
+- It uses the existing object of the [[#==WiFiClientSecure `<name>`==]] as the first argument and accepts a website name for a second argument
+- It is Necessary to call this method again if want to get info at interval rate. Use [[Study&Learn_Section#==**millis()**==|millis()]] for that approach
+```c
+http.begin(client, "https://example.com")
+```
+Read the basic example at: [[002Stage2_InternetAccess]]
+
+##### ==.GET()==
+A method of `HTTPClient` that sends `HTTP GET` request
+- A method that returns error code in an `int` data type
+	- `HTTPClient error` — `-1` to `-11` 
+	- `HTTP response status code` — like `302`, `200`, `404`
+Read example at : [[002Stage2_InternetAccess]]
+
+##### ==getString()==
+A method of `HTTPClient` 
+- Returns `string` containing the response body from the server
+- For example, read at : [[002Stage2_InternetAccess]]
+
+>Note: 
+>*The server decides on what type of string content it will return to the client.*
+>*Request to a typical website returns a typical html body.But, Request to dedicated API endpoint may return other types of data like JSON*

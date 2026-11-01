@@ -1,4 +1,4 @@
-# Everything a Host Does to Speak on the Internet
+## Everything a Host Does to Speak on the Internet
 
 ---
 

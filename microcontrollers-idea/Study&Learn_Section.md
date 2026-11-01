@@ -14,6 +14,7 @@ Date Generated: August 29, 2026
 >- [[#**Ohms Law**]]
 >- [[#**LED**]]
 >- [[#**Analog Multimeter**]]
+>- [[#**==Reference Voltage==**]]
 >
 >  
 >  [[#Random Modules & Microcontroller Fundamentals]]
@@ -29,6 +30,7 @@ Date Generated: August 29, 2026
 >
 >[[#Random Syntax Fundamentals]]
 >- [[#variables]]
+>- [[#==Datatypes==]]
 >- [[#==arrays and arrays indexing==]]
 >- [[#==Modulo==]]
 >- [[#==**millis()**==]]
@@ -597,6 +599,22 @@ int myFunction(int x, int y) {
 Is basically there to include Arduino framework definitions/declarations to enable to use Arduino functions and features.
 
 ---
+
+##### ==Datatypes==
+
+| Type            | Basic Idea                                  | Example                          |
+| :-------------- | ------------------------------------------- | -------------------------------- |
+| `bool`          | true or false                               | `bool state = false;`            |
+| `int`           | whole numbers                               | `int count = 65535;`             |
+| `float`         | decimal num<br>*max 16bits*                 | `float temp = 31.9;`             |
+| `char`          | one character                               | `char letter = A;`               |
+| `byte`          | small unsigned whole number<br>*only 8bits* | `byte value = 255;`              |
+| `unsigned int`  | whole num, no negatives                     | `unsigned int count = 50;`       |
+| `unsigned long` | larger whole numbers, no negative           | `unsigned long time = millis();` |
+| `string`        | text                                        | `string text = "Namae";`         |
+| `uint16_t`      | unsigned integer with 16bits size           |                                  |
+
+
 ##### ==variables==
 ---
 Directly using pin
@@ -614,8 +632,28 @@ This is recommended for larger chunks of code.
 - Easy to read
 - Easy to change
 
+---
+
+##### ==`#define` vs typical variable declaration==
+
+Text replacement before compilation of code
+```
+#define Pin A0
+#define Voltage_Resolution 5
+```
+
+vs
+
+named storage/value that C can understand
+```
+const int Pin = A0;
+const int Voltage_Resolution = 5;
+```
+
+
 
 ---
+
 ##### ==arrays and arrays indexing==
 
 For reference how its used: [[Code_Artifacts#==OLED + bitmap array==]]
@@ -712,6 +750,51 @@ digitalWrite(LED, HIGH);
 - may be perfectly acceptable to execute repeatedly if the desired result is simply to keep the LED HIGH.
 
 
+==🔵**Types of functions.**==
+*for beginner there are two types:*
+
+==**Function that can return a value**==
+Example is the function used at : [[Code_Artifacts#==OLED + LED + Poteniometer + Button==]]  
+which is used to convert an `int` data type into `string`
+```c++
+char* intoStr(int value){
+  static char buf[5];
+  sprintf(buf,"%d",value);
+  return buf;
+}
+```
+- The data type of the returned value should match the function’s return type( `char*`, `int`, `string`  )
+
+==**Function that doesnt return value**==
+```c++
+void function_name() {
+    digitalWrite(LED_PIN, HIGH);
+}
+```
+
+
+
+---
+##### ==function in a different file location==
+A `modular programming` 
+Example usage:
+- [[Code_Artifacts#==OLED + bitarray in different file location==]]
+- [[Code_Artifacts#==Using a dedicated "h file" to store functions==]]
+
+In PIO, the folder structure is:
+```
+your-project/
+├── include/
+│   └── file.h
+├── src/
+│   └── main.cpp
+└── platformio.ini
+```
+- `src` — for cpp files
+- `include/` — for `.h` / header files
+
+
+
 ----
 
 #### ==analogRead()==
@@ -750,8 +833,7 @@ This is mainly done to display the value using the [[Libraries#==drawStr()==|dra
 Using the 
 ```c++
 sprintf()
-
- sprintf(buf,"%d",value);
+sprintf(buf,"%d",value);
 ```
 
 Suppose you there is a number `1000`  and want to convert it to `"1000"` 
@@ -765,19 +847,20 @@ int value = 1000;
 char buf[5];
 sprintf(buf, "%d", value);
 ```
-- `char buf[5]`  — setting a buffer max of 5 places, the extra 1 is for null-terminator
+- `char buf[5]`  — creating a container/buffer with 5 slots, extra 1 for null termintor
 - `value` — the variable containing the int value
-- `"%d"` — specificier decimal
+- `"%d"` — specifier decimal
 - `buf` — where the string value will get stored.
 
 ---
 
 
 #### ==Convert float into string==
+Example usage: [[Code_Artifacts#==OLED + DHT22==]]
 
 Using the 
 ```c++
-dtostfr()
+dtostrf()
 
 dtostrf(value, width, precision, buffer);
 ```
@@ -790,10 +873,53 @@ Suppose there is a float with value of  : `30.3095` and want to turn it into `30
 float numbers = 30.30956;
 
 //converting
-char buf[7];
+char buf[7]; //creating container with 7 slots with extra 1 for null terminator
 dtostrf(numbers, 1, 2, buf);
 ```
 - `numbers` — a float variable containing float 
 - `1`—minimum width
 - `2` — Decimal places
 - `buf` — variable where to store the converted float into string
+
+----
+
+#### Center a string into x-axis
+
+//helper function to center a text on x axis
+```c
+int x_value(char* text){
+  int textWidth = oled.getStrWidth(text);
+  int x = (128 - textWidth) /2;
+  return x;
+}
+```
+
+#### ==Buffer==
+Example usage:
+- [[#==Convert float into string==]]
+- [[#==Convert int value into string==]]
+
+A temporary storage area where we put data while a program processes it or uses it.
+```
+┌───┬───┬───┬───┐
+│ A │ B │ C │ D │
+└───┴───┴───┴───┘
+```
+- Each slot can hold a piece of data. Together, they form a storage area.
+==🔴Important reminder  ==
+The `[A] [B] [C] [D]` representation is only a simplified illustration. A buffer can hold characters, bytes, or other kinds of data, depending on the program.
+
+==🔴How is it different to [[#==variables==]] ?==
+- **Variable** — a named way to store and access a value in code.
+	- a `named buffer` for example is
+	```c
+	char buffer[7];
+	```
+	- *char* — the type of data
+	- `buffer` — the variable name
+	- `[7]` — the number of elements 
+- **Buffer** — memory used to temporarily hold data, often a collection of bytes or characters.
+
+
+---
+

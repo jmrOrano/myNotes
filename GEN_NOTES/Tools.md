@@ -84,7 +84,7 @@ Why?
 - smaller payload = faster loading
 ```
 
-## **bunzip2/bzip2**
+## ==**bunzip2/bzip2**==
 ---
 *June 07, 2026*
 *Slower then [[#**Gunzip**]] but compresses smaller.*
@@ -102,7 +102,7 @@ Why?
 
 ### Practical Usage
 
->**Decompressing**
+>==**Decompressing**==
 ```bash
 # ORIGINAL FILE.BZ2 GETS DELETED
 bunzip2 file.bz2    OR  bzip -d file.bzip2
@@ -115,11 +115,11 @@ bzcat file.txt
 -it decompresses, prints to terminal, but does not create a file
 ```
 
->**Compression**
+>==**Compression**==
 ```bash
 bzip2 -z file.txt
 ```
-## **tar**
+## ==**tar**==
 *June 07, 2026*
 *— Tape Archive*  — Bundle files together. It creates a copy — Does not remove or modify original files.
 
@@ -157,13 +157,13 @@ tar -cvf output.tar thisFolder/
 >**2. Using Compression**
 ```bash
 #For GZIP
-tar -cvfz output.tar.gz ThisFolder/
+tar -czvf output.tar.gz ThisFolder/
 
 #For bzip2
-tar -cvfj output.tar.bz2 ThisFolder/
+tar -cjvf output.tar.bz2 ThisFolder/
 
-#For xz 
-tar -cvfJ output.tar.xz ThisFolder/
+#For xz most compressed
+tar -cJvf output.tar.xz ThisFolder/
 ```
 
 >**3. Extracting Archives**

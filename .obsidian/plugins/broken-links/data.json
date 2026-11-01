@@ -6,7 +6,10 @@
     "GEN_NOTES/Docker-Reference.md",
     "DOCUMENTATIONS",
     "DOCUMENTATIONS/DOCKER SETUP  2.md",
-    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md"
+    "DOCUMENTATIONS/NEXTCLOUD AIO (DOCKERIZED-COMPOSER).md",
+    "DOCUMENTATIONS/NEXTCLOUD AIO/Nextcloud AIO - Overview & Basic Setup.md",
+    "GEN_NOTES",
+    "DOCUMENTATIONS/NEXTCLOUD AIO"
   ],
   "expandedFileItems": [],
   "expandedLinkItems": [],

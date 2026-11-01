@@ -7,9 +7,9 @@ tags:
 status: exploring
 Date Generated: August 15, 2026
 ---
-# **The idea**
+# **The idea — Room Microclimate and Indoor-Environment Logger**
 ---
-To build a year-long indoor microclimate dataset and investigate the relationship between my local room conditions and seasonal/weather patterns in my country. 
+To build a year-long indoor-environment dataset for one room: temperature, relative humidity, CO2, and particulate matter (PM1/PM2.5/PM10). The goal is to investigate how those local conditions relate to room operation and seasonal/outdoor-weather patterns in my country.
 
 ---
 ## **Source of Idea**
@@ -27,13 +27,12 @@ The initial plan  is use the ff tools, and technologies:
 - [[Tools#**Cron**|Cron]] – to perform git
 - [[Git Workflow & Commands|Git]] – to serve as a backup or snapshot
 - **Esp32** — a the main controller
-- **Temp and Humidity Sensor** — Options are: 
-	- `DHT22`, - for starter only sensor 
-	- `SHT31`, 
-	- `SHT35`, 
-	- `BME280`, – adds atmospheric pressure
-	- `BME680/BME688` – adds gas/air-quality-related measurements
-- **CSV file or SQLite** – for the storage file of logs 
+- **Official sensor stack** — dedicated modules with distinct roles:
+	- `SHT31` or `SHT41` — temperature and relative humidity
+	- `SCD41` — NDIR carbon-dioxide (CO2) measurement
+	- `SPS30` — PM1, PM2.5, and PM10 particulate-matter measurement
+	- `BME688` — optional future experimental VOC/IAQ trend sensor; not an official CO2, PM, named-gas, or safety sensor
+- **SQLite** – authoritative storage for readings, weather context, and event logs; CSV exports are for sharing/analysis
 - A laptop that runs 24/7 — An endpoint for the data. 
 
 ---
@@ -43,10 +42,13 @@ The initial plan  is use the ff tools, and technologies:
 ---
 **Answer**: Yes, but dont make the ESP32 responsible for everything. 
 
-**Local Sensor measures the:**
+**The local sensor stack measures:**
 - timestamp
 - temperature
-- relateive humidity
+- relative humidity
+- CO2 (ppm)
+- PM1, PM2.5, and PM10 (ug/m3)
+- device uptime and sensor/read-status metadata
 
 **External Weather data like a dedicated server periodically  retrieves the ff:**
 - timestamp
@@ -79,7 +81,7 @@ ESP32
   ├── rain
   └── wind
 ```
-Though this schema architecture will be at `Phase 5` for the question of [[#Can this project scale to progressively harder?]]]
+The external-weather integration is built during the final development phase, then becomes part of the official dataset from its first day.
 
 
 ---
@@ -133,7 +135,7 @@ So storage is basically a non-issue.
 
 ### What to do with the data collected?
 ---
-**Answer**: For now as of writing this `August 15, 2026` — The dataset will be generate will be useful only to me (i guess) since the setting done locally inside my room. I can share to others as a proof and strengthen an observation at which point of year has the highest humidity. 
+**Answer**: The setting is local, so the dataset primarily describes this room rather than every home. Its value comes from comparisons and context: indoor-versus-outdoor temperature/RH deltas, seasonal patterns, rain and wind, AC/window/fan events, CO2 as a ventilation/occupancy proxy, and PM events such as dust or smoke. It can support observations about how this particular room responds to weather and room operation; it is not a general air-safety certification.
 
 ---
 ### Where is the best location and placement for the sensor to accurately represent my room's ambient temperature and humidity?
@@ -159,57 +161,45 @@ I added this as part of the problem [[#Potential Problems]]
 ---
 **Answer**: Yes. It can be done phase by phase
 
-> **Phase 1 — Sensor**
-	ESP32 + DHT22
+> **Phase 1 — Temperature/RH foundation**
+> ESP32 + SHT31/SHT41 + OLED
 
-Learn:
-- GPIO
-- Sensor Communication
-- ESP32 Programming
-- Sampling
+Learn and verify:
+- I2C, ESP32 programming, sampling, display, and temperature/RH sanity checks
 
 ================================
 
->**Phase 2 — Data logging**
->	ESP32 ——> HTTP/MQTT ——> Linux Server
+> **Phase 2 — CO2 integration**
+> Add SCD41
 
-Learn:
-- Networking
-- API's
-- MQTT
-- Systemd/cron
-- File Handling
+Learn and verify:
+- NDIR CO2 readings, warm-up/field-calibration requirements, ventilation response
 
 ================================
 
->**Phase 3 — Database**
->	ESP32 ——> Python ——> SQLite
+> **Phase 3 — Particulate-matter integration**
+> Add SPS30
 
-Learn:
-- SQL
-- Schema design
-- timestamps
-- querying
+Learn and verify:
+- PM1/PM2.5/PM10 fields, I2C/UART interface, startup/fan behavior, particle-response testing
 
 ================================
 
->**Phase 4 — Visualization**
->	SQLite ——> pandas ——> matplotlib
+> **Phase 4 — Reliable local logging**
+> Integrated sensor stack ——> Python listener ——> SQLite
 
-Generates:
-- Temp over time
-- Humidty over time
-- Temp vs Humidity
-- Daily Cycle
-- Monthly Trends
+Learn and verify:
+- common timestamps, validation, missing values, status fields, power/restart behavior, schema design, and querying
 
 ================================
 
->**Phase 5 — External Weather**
->	Weather API ——> Local Sensor + Outdoor Weather
+> **Phase 5 — Network, weather context, and analysis**
+> ESP32 ——> HTTP/MQTT ——> local server ——> SQLite + Weather API ——> pandas/matplotlib
 
-This is where the actual data correlation comes into play.
-And will perform "differential or delta analysis"
+Learn and verify:
+- transport/retries, daily backup, timestamp joins, event-log joins, charts, and indoor-to-outdoor differential analysis
+
+Only after all five development phases are stable does the official year-long dataset begin.
 
 
 ---
@@ -228,13 +218,28 @@ And will perform "differential or delta analysis"
 >Sensor placement. The  easiest option i have right now is to place it near the wall by sticking it and powering it by powerbank. But this could affect the entire data quality.
 >I can look for longer cables to hang the sensor below the ceiling while the microcontroller is  attach and sticking against the wall but im not sure if a cable with length like 1m for this project even exist.
 
-**Update**: Confirmed — longer wires (e.g. extended DuPont/jumper wires, or extending the DHT22 leads) do exist and are commonly used for this exact purpose (DIY humidors, incubators, etc). This makes ceiling/mid-room hanging feasible while keeping the ESP32 itself mounted on the wall.
+**Update**: Longer, suitable sensor cables do exist. The final choice must be compatible with each module, especially the SPS30 connector, and should be tested during development. This makes representative mid-room placement feasible while keeping the ESP32 itself mounted on the wall.
 
 **Plan**: Will test sensor placement for about 1-3 days to determine the best spot before committing to a permanent position.
 
 ---
 
 **Addition**: track any physical setup changes (e.g. "moved sensor away from AC vent on [date]") in a log/metadata field — these can skew interpretation later if the context isn't recorded.
+
+---
+
+## Operating-condition event log
+---
+The room is intentionally not treated as a perfectly controlled laboratory. AC use, an open window, the fan, weather, and occupancy are part of the room's real microclimate. The data is useful when those contexts are recorded rather than ignored.
+
+Record meaningful changes in a small event log:
+- AC on/off and optional set temperature
+- window open/closed
+- fan on/off
+- notable occupancy or activity such as sleeping, cleaning, or a nearby smoke/dust event
+- power loss, server restart, network loss, sensor fault, maintenance, and firmware/configuration changes
+
+Use `timestamp_start`, optional `timestamp_end`, `event_type`, `event_value`, and a short note. The goal is consistent context, not perfect minute-by-minute surveillance.
 
 ---
 
@@ -249,15 +254,15 @@ And will perform "differential or delta analysis"
 
 [Physical Layer]
 
-  DHT22 Sensor
+  SHT31/SHT41 + SCD41 + SPS30
       │
-      │ (data pin, extended wire — TBD length after 1-3 day placement test)
+      │ (I2C/UART; final cable lengths and placement follow the development test)
       │
       ▼
-  ESP32 (mounted on wall, powered via USB)
+  ESP32 + OLED (mounted away from sensing location heat, powered via USB)
       │
-      │  reads temp + humidity every 5 min
-      │  attaches: timestamp, last_boot/uptime
+      │  reads temp/RH, CO2, and PM on their validated schedules
+      │  attaches: timestamp, uptime, firmware version, and sensor status
       │
       ▼
 
@@ -301,7 +306,7 @@ And will perform "differential or delta analysis"
       │  writes to storage (CSV or SQLite — TBD)
       │
       ▼
-  data/2026.csv   (or)   data/sensor.db
+  sensor.db (SQLite; CSV exports when needed)
 
 
 -----------------------------------------------------
@@ -344,11 +349,12 @@ And will perform "differential or delta analysis"
   OPEN DECISIONS (not yet locked in)
 =====================================================
   - Transport: HTTP vs MQTT
-  - Storage: CSV vs SQLite
-  - Sensor: DHT22 (starter) vs upgrade (SHT31/BME280)
+  - Storage: SQLite as the official store; CSV export format to finalize
+  - Temperature/RH sensor: SHT31 vs SHT41
+  - Sensor stack: SHT31/SHT41 + SCD41 + SPS30
   - Sensor placement: pending 1-3 day test
-  - Metadata fields to finalize: timestamp, temp, humidity,
-    last_boot/uptime, placement_note (optional, only on change)
+  - Metadata fields to finalize: timestamps, temp, RH, CO2, PM fields,
+    uptime, firmware version, sensor status, and placement/configuration notes
 =====================================================
 ```
 
@@ -360,13 +366,18 @@ And will perform "differential or delta analysis"
 
 ## Sensor Architecture Decision
 ---
-**Decision**: Do NOT implement air quality in Phase 1. Keep Phase 1 focused on Temp + Humidity only — matches the original hypothesis (indoor RH vs Southwest Monsoon) directly, without adding extra dimensions (pressure, gas, VOC, CO2, PM2.5) that turn the project into a general environmental station instead of a focused microclimate experiment.
+**Decision**: The official dataset will use three dedicated sensors, but they will be implemented one at a time during development. The year-long dataset does not start after Phase 1. It starts only when the complete stack, local logging, weather context, and event logging are integrated and stable.
 
-**Design principle**: treat each measurement as an independent variable (timestamp → temp, humidity, pressure*, air_quality*, *=future) rather than requiring every environmental variable from day one. This makes the system "capable of progressively collecting measurements" instead of needing everything upfront — compatible with the Phase 1→5 plan.
+**Official stack**:
+- `SHT31` or `SHT41` — the official temperature and relative-humidity source
+- `SCD41` — direct NDIR CO2 measurement; a ventilation/occupancy indicator
+- `SPS30` — PM1, PM2.5, and PM10 measurement
 
-**Adding vs Replacing**: when upgrading sensor (e.g. DHT22 → BME680), don't have to fully replace — can run both simultaneously for overlapping measurements (comparison/experimentation). But this raises a new question: **which sensor is the "official" source of truth** for temp/humidity continuity in the dataset if both are logging? Needs to be explicit in metadata/schema if this route is taken — otherwise ambiguous during analysis. → Add as an Open Decision if sensor overlap is ever attempted.
+**Why dedicated sensors**: temperature/RH, CO2, and particulate matter are different physical measurements. A single generic "air-quality" number would make the final interpretation less clear. The project measures named variables, not a universal good/bad-room score.
 
-**Schema handling for missing older data**: when a new measurement (e.g. air_quality) is added later, older records simply won't have that column — treat as missing/NULL, not zero. Not a blocker, just needs correct handling in analysis (pandas).
+**BME688 policy**: BME688 can be added later as an optional experimental VOC/IAQ-trend channel. Its baseline-adaptive output is not the official temperature/RH source, does not measure actual CO2, does not identify every gas in the room, and is not a safety alarm. It must not replace the SCD41 or SPS30.
+
+**Schema rule**: the official schema is frozen at the start of the official run. Missing readings are `NULL`, never zero. A future experimental sensor receives separate fields and explicit configuration metadata rather than silently changing the meaning of the official series.
 
 ## Display
 ---
@@ -376,16 +387,16 @@ And will perform "differential or delta analysis"
 | :-----------------------------------------: | ---------------------------------------------------------------------------------------------------------------- | --- |
 |                  16x2 LCD                   | Familiar (same as old Arduino setup), cheap, simple — but limited info, more wiring, less flexible for future UI |     |
 |                  20x4 LCD                   | Bigger version, fits more fields (temp/hum/pressure/log status) — nice for monitoring station look               |     |
-|            **OLED** \| Preferred            | same I2C bus as BME280/680 (no extra wiring complexity), flexible layout, can evolve UI as sensors are added     |     |
+|            **OLED** \| Preferred            | shares I2C with the SHT and SCD41 modules, flexible layout, can evolve UI as sensors are integrated              |     |
 | TFT (color) \| Unnecessary for this project | adds UI/software complexity without contributing to the actual research                                          |     |
 **Use case**: gives a local human-facing interface (everyday room monitor) while the laptop remains the actual data endpoint — display isn't just decoration.
 
 **UI evolution concept**:
 ```
-Phase 1:          Later (w/ pressure):     Later (w/ air quality):
+Phase 1:          After CO2 phase:         After PM phase:
 ┌──────────────┐  ┌──────────────┐        ┌──────────────┐
 │ 28.7°C 82%RH │  │ 28.7°C 82%RH │        │ 28.7°C 82%RH │
-│ LOG: OK      │  │ 1011 hPa     │        │ Air: GOOD    │
+│ LOG: OK      │  │ CO2: 850 ppm │        │ PM2.5: 8     │
 └──────────────┘  └──────────────┘        └──────────────┘
 ```
 
@@ -400,16 +411,21 @@ Breadboard → Prototype works → Test placement → Maybe permanent install �
 
 Soldering iron, solder, flux, perfboard — only needed once circuit is stable and ready to become a permanent device. Not needed for first prototype. If/when that stage comes, can figure out the right flux/solder type then — no need to buy now.
 
-## Initial BOM (Phase 1 — breadboard prototype)
+## Initial BOM (development prototype, leading to the official stack)
 ---
-**Core**
+**Core controller and prototype hardware**
 - ESP32 development board
-- DHT22 (sensor — see Sensor Architecture Decision above)
 - Breadboard
 - Jumper wires — male-to-male
 - Jumper wires — male-to-female
+- Jumper wires — female-to-female
 - USB **data** cable for ESP32 (not charging-only — common mistake)
 - USB power adapter (separate item from the cable — easy to forget)
+
+**Official sensor stack**
+- SHT31 or SHT41 breakout/module — temperature + relative humidity
+- SCD41 breakout/module — NDIR CO2
+- SPS30 module — PM1/PM2.5/PM10; include the correct cable/connector for the module
 
 **Display** (choose one, OLED preferred — see Display section above)
 - 16x2 LCD + I2C backpack, or
@@ -417,11 +433,11 @@ Soldering iron, solder, flux, perfboard — only needed once circuit is stable a
 - Small I2C OLED (SSD1306)
 
 **Sensor placement**
-- Longer cable/wire for DHT22 (extended DuPont/jumper wires, or extend the DHT22 leads directly)
+- Longer, appropriate sensor cable only after the 1-3 day placement test
 - Basic mounting material
 - Eventually: a ventilated enclosure
 
-**Not needed yet**: soldering iron, solder, flux, perfboard, custom PCB — see Prototyping Platform decision above.
+**Not needed yet**: soldering iron, solder, flux, perfboard, custom PCB, or BME688. Add the BME688 only as a separately labelled future experiment, never as a replacement for the official CO2 or PM sensors.
 
 ---
 
@@ -431,6 +447,8 @@ Soldering iron, solder, flux, perfboard — only needed once circuit is stable a
 ## Core idea: build through Phase 5 first, then start official logging
 ---
 The plan is to treat Phase 1 to Phase 5 [[#Can this project scale to progressively harder?||(Read this) ]]as a build-and-learn stage, not as the real data collection. This means every reading gathered while wiring up the sensor, testing the display, testing the transport method, and testing sensor placement is just practice data — not the "official" dataset. The official, year-long logging only begins once all 5 phases are working together and stable.
+
+For this plan, "all phases" means the full official stack is present: SHT31/SHT41 for temperature and RH, SCD41 for CO2, SPS30 for PM, the local endpoint and SQLite storage, weather context, and an event log. The sensors are developed progressively; they are frozen together only at the official start.
 
 **Why do it this way:**
 
@@ -447,4 +465,5 @@ The risk of this approach is getting stuck trying to make Phase 5 "perfect" befo
 
 - The goal of Phase 1-5 is not to build something flawless, it's to build something stable and working. Stable is enough to start. Waiting for perfect usually just means waiting forever, since there's always something more to improve.
 - A simple way to avoid this trap is to set a clear, minimum checklist of what "done enough" looks like before moving to official logging (e.g. sensor placement finalized, transport working reliably, storage format decided, weather API connected). Once that checklist is met, start — even if the system isn't the most optimized version it could be.
+- The minimum checklist also requires a 1-2 week integrated soak test, correct restart/gap logging, and a working event log for AC, window, fan, and configuration changes.
 - Improvements can still happen later, but they happen as intentional, tracked changes to an already-running project, not as an excuse to keep delaying the actual start.

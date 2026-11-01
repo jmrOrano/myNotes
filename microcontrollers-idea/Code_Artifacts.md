@@ -12,6 +12,10 @@ tag: study
 >- [[#==OLED + LED + Poteniometer + Button==]]
 >- [[#==OLED + DHT22==]]
 >- [[#OLED + bitmap array]]
+>- [[#==OLED + bitarray in different file location==]]
+>- [[#==oled + basic animation==]]
+>- [[#==oled + two bit arrays + btn==]]
+>- [[#==KY-037 Sound Sensor==]]
 
 ##### ===Millis with PMW===
 ---
@@ -954,81 +958,8 @@ void loop(){
 }
 ```
 
-##### ==MQ-2 Setup==
 ---
-Using the MQ-2 Unified Library
-```c
-#include <MQUnifiedsensor.h>
 
-// Hardware configuration
-#define Board "Arduino UNO"
-#define Pin A0
-#define Voltage_Resolution 5
-#define ADC_Bit_Resolution 10
-#define Type "MQ-2"
-
-MQUnifiedsensor gas_sensor(
-  Board,
-  Voltage_Resolution,
-  ADC_Bit_Resolution,
-  Pin,
-  Type
-);
-
-
-void setup() {
-  Serial.begin(9600);
-  // LPG regression model
-  gas_sensor.setRegressionMethod(1);
-  gas_sensor.setA(574.25);
-  gas_sensor.setB(-2.222);
-  gas_sensor.init();
-
-  // Calibrate R0
-  float calcR0 = 0;
-  for (int i = 0; i < 10; i++) {
-    gas_sensor.update();
-    calcR0 += gas_sensor.calibrate(9.83);
-  }
-  
-  gas_sensor.setR0(calcR0 / 10);
-  Serial.println("Calibration done.");
-} 
-void loop() {
-  gas_sensor.update();
-  // Calculate LPG concentration
-  gas_sensor.readSensor(false);
-  Serial.print("LPG: ");
-  Serial.println(gas_sensor.readSensor(false));
-  delay(1000);
-}
-```
-
-
-**==The Breakdown==**
-
-**Object Creation**
-```c++
-#include <MQUnifiedsensor.h>
-
-// Hardware configuration
-#define Board "Arduino UNO"
-#define Pin A0
-#define Voltage_Resolution 5
-#define ADC_Bit_Resolution 10
-#define Type "MQ-2"
-
-MQUnifiedsensor gas_sensor(
-  Board,            
-  Voltage_Resolution,
-  ADC_Bit_Resolution,
-  Pin,
-  Type
-);
-```
-- `Voltage Resolution` —  is the [[Study&Learn_Section#**==Reference Voltage==**|Reference Voltage]]
-
----
 
 ##### ==KY-037 Sound Sensor==
 A basic reading first:  
@@ -1058,4 +989,86 @@ With this setup:
 
 Small exercise or project to do:
 Components: LED, KY-037, 2X buttons, LED 
-Visualization: LED is for displaying the `analogRead` from `KY-037` , the buttons are used to change the threshold of the `ky-037` , the LED is there for lighting -ofcourse
+Visualization: O
+LED is for displaying the `analogRead` from `KY-037` , the buttons are used to change the threshold of the `ky-037` , the LED is there for lighting -ofcourse
+
+
+---
+
+##### ==Using a dedicated "h file" to store functions==
+Read: [[Study&Learn_Section#==function in a different file location==]]
+
+A `modularization` method.
+
+Include/button.h
+```c++
+#include<Arduino.h>
+#ifndef BUTTONS_H
+#define BUTTONS_H
+  
+//using 'extern' syntax to use the variables that is in  the main.cpp
+extern int btn1;
+extern int btn2;
+extern bool btn1State;
+extern bool btn2State;
+extern int btn1Reading;
+extern int btn2Reading;
+extern unsigned int threshold;
+
+void handleButtons(){
+    //btn1 for decrements
+    if(btn1Reading == HIGH && !btn1State){
+        btn1State = true;
+        threshold = threshold - 1;
+        Serial.println(threshold);
+    }
+    //btn2 for increase
+    if(btn2Reading == HIGH && !btn2State){
+        btn2State = true;
+        threshold = threshold + 1;
+        Serial.println(threshold);
+    }
+
+    //handles unpressed btn 1 and 2
+    if(btn1Reading == LOW){
+        btn1State = false;
+    }
+    if(btn2Reading == LOW){
+        btn2State = false;
+    }
+}
+#endif  
+```
+
+main.cpp:
+```c++
+#include <Arduino.h>
+#include <buttons.h> 
+
+//global var for functions to use
+int btn1 = 7;
+int btn2 = 6;
+int btn1Reading;
+int btn2Reading;
+bool btn1State = false;
+bool btn2State = false;
+unsigned int threshold = 511;
+  
+void setup(){
+  Serial.begin(9600);
+  pinMode(btn1, INPUT);
+  pinMode(btn2, INPUT);
+}
+
+void loop(){
+  //readings
+  btn1Reading = digitalRead(btn1);
+  btn2Reading = digitalRead(btn2);
+
+  //the function for handling the buttons
+  //located at include/button.h
+  handleButtons();
+
+
+}
+```
